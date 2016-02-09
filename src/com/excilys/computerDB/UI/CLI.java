@@ -46,7 +46,7 @@ public class CLI {
 				}
 				else if(res.trim().equals("quit"))
 				{
-					res="quit";
+					
 				}else 
 				{
 					System.out.println("Wrong input");
@@ -146,7 +146,7 @@ public class CLI {
 	}
 	/**
 	 * display all computer with the id corresponding to the parameter "id"
-	 * @param id
+	 * @param id : Computer id
 	 */
 	public static void displayById(int id)
 	{
@@ -301,6 +301,7 @@ public class CLI {
 		
 		return computer;
 	}
+	
 	/**
 	 * Allow a user to write down a date, and send it back in Timestamp format
 	 * @return a date in TimeStamp format

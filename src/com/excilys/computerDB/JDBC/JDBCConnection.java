@@ -4,7 +4,13 @@ import java.sql.*;
 
 
 
-
+/**
+ * This class is used to access the connection to the database.
+ * This is a singleton type.
+ * You can get a reference of the connection by using the getInstance() methode
+ * @author excilys
+ *
+ */
 public class JDBCConnection {
 
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
@@ -61,7 +67,11 @@ public class JDBCConnection {
 		   }
     
 	   }
-	   
+	   /**
+	    * Take a sql request in Params(String type) and execute it.
+	    * @param sql SQL request
+	    * @return
+	    */
 	   public ResultSet sendRequest (String sql)
 	   {
 		   

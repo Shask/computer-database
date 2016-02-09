@@ -1,7 +1,14 @@
 package com.excilys.computerDB.BusinessObject;
 
 import java.sql.Timestamp;
-
+/**
+ * Class that defines a computer by an an id and a name
+ * You need at least a name to create one,
+ * It contains some information about the computer like the company that made it, the introduced Date and the discontinued date
+ * 
+ * @author excilys
+ *
+ */
 public class Computer {
 
 	private int id;

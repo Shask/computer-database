@@ -10,7 +10,12 @@ import java.util.List;
 import com.excilys.computerDB.BusinessObject.Company;
 import com.excilys.computerDB.DAO.CompanyDAO;
 import com.excilys.computerDB.JDBC.JDBCConnection;
-
+/**
+ * Implements CompanyDAO
+ * This class allow you to acces companies in the database use its methodes
+ * @author excilys
+ *
+ */
 public class CompanyDAOImpl implements CompanyDAO {
 	
 	//Reference to the database connection

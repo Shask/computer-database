@@ -10,7 +10,12 @@ import com.excilys.computerDB.BusinessObject.Company;
 import com.excilys.computerDB.BusinessObject.Computer;
 import com.excilys.computerDB.DAO.ComputerDAO;
 import com.excilys.computerDB.JDBC.JDBCConnection;
-
+/**
+ * Implement Computer DAO
+ * This class is used to access the computer in the database
+ * @author excilys
+ *
+ */
 public class ComputerDAOImpl implements ComputerDAO{
 
 	//Reference to the database connection

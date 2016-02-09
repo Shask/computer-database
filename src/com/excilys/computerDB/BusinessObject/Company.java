@@ -1,5 +1,9 @@
 package com.excilys.computerDB.BusinessObject;
-
+/**
+ * Class that defines a company by an id and its name
+ * @author excilys
+ *
+ */
 public class Company {
 
 	private int id;
