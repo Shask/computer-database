@@ -252,7 +252,7 @@ public class CLI {
 	}
 	
 	/**
-	 * Allow the user to create a computer using CLI without puting it in DB
+	 * Allow the user to create a computer using CLI without putting it in DB
 	 * @return computer newly created 
 	 * 
 	 */
@@ -309,13 +309,12 @@ public class CLI {
 	public static Timestamp dateUserInput()
 	{
 		Scanner scanner = new Scanner(System.in);
-		int year = 0;
+		
+		int year = 00;
 		int month = 0;
 		int day=0;
-	
-		
-		String res = "";
-		while(year<1970 || month>2015)
+
+		while(year<1970 || year>2050)
 		{
 			System.out.print("Enter year (after 1970): ");
 			year = Integer.parseInt(scanner.nextLine());
@@ -328,7 +327,7 @@ public class CLI {
 			month = Integer.parseInt(scanner.nextLine());
 		}
 		while(day<1 || day>31)
-		{
+		{String res = "";
 			System.out.print("Enter day : ");
 			day = Integer.parseInt(scanner.nextLine());
 		}

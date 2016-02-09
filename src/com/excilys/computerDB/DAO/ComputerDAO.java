@@ -2,7 +2,7 @@ package com.excilys.computerDB.DAO;
 
 import java.util.List;
 
-import com.excilys.computerDB.BusinessObject.Company;
+
 import com.excilys.computerDB.BusinessObject.Computer;
 
 public interface ComputerDAO {

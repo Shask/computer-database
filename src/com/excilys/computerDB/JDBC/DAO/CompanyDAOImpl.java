@@ -3,7 +3,6 @@ package com.excilys.computerDB.JDBC.DAO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import com.excilys.computerDB.DAO.CompanyDAO;
 import com.excilys.computerDB.JDBC.JDBCConnection;
 /**
  * Implements CompanyDAO
- * This class allow you to acces companies in the database use its methodes
+ * This class allow you to access companies in the database use its methods
  * @author excilys
  *
  */
@@ -25,7 +24,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 		DB = JDBCConnection.getInstance();
 	}
 	/**
-	 * @return a list of all the company names and id from the database
+	 * @return a limport java.sql.Statement;ist of all the company names and id from the database
 	 * 
 	 */
 	@Override
