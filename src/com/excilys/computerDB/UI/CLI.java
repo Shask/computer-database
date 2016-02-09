@@ -264,15 +264,26 @@ public class CLI {
 		res= scanner.next();
 		Computer computer = new Computer(res);
 		System.out.println();
-		System.out.println("Introducing date : ");
-		computer.setIntroduced(dateUserInput());
 		System.out.println("Discontinued date Y/N: ");
 		res= scanner.next();
 		if(res.equals("Y"))
-			computer.setDiscontinued(dateUserInput());
-		else 
+		{
+			System.out.println("Introducing date : ");
+			computer.setIntroduced(dateUserInput());
+			
+			System.out.println("Discontinued date Y/N: ");
+			res= scanner.next();
+			if(res.equals("Y"))
+				computer.setDiscontinued(dateUserInput());
+			else 
+				computer.setDiscontinued(null);
+		}
+		else
+		{
+			computer.setIntroduced(null);
 			computer.setDiscontinued(null);
-	
+		}
+
 		boolean doesCompanyExist = false;
 		while(!doesCompanyExist)
 		{
@@ -281,8 +292,6 @@ public class CLI {
 			if(res.equals("list"))
 			{
 				displayAllCompanies();
-				System.out.println("Enter Company id :");
-				res= scanner.next();
 			}
 			else 
 			{

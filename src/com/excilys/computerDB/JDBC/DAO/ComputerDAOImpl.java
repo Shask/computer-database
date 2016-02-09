@@ -99,7 +99,7 @@ public class ComputerDAOImpl implements ComputerDAO{
 		 try {
 			while(rs.next())
 			 {
-				Computer c = new Computer(rs.getString("name"));
+				Computer c = new Computer(rs.getInt("id"),rs.getString("name"));
 				c.setIntroduced(rs.getTimestamp("introduced"));
 				c.setDiscontinued(rs.getTimestamp("discontinued"));
 				c.setCompany(new Company(rs.getInt("cid"),rs.getString("cname")));
