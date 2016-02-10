@@ -28,9 +28,9 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 
 	/**
-	 * @return a list of all the computer names and id from the database
+	 * a list of a 1000 the computer names and id(name and id ONLY) from the database 
+	 * @return a list of a 1000 the computer names and id(name and id ONLY) from the database 
 	 */
-	@Override
 	public List<Computer> findAllShort() {
 		ResultSet rs = DB.sendRequest("SELECT id,name FROM computer LIMIT 1000");
 		List<Computer> computerList = new ArrayList<Computer>();
@@ -48,10 +48,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return computerList;
 	}
 
-	@Override
+	
 	public List<Computer> findAll() {
 		ResultSet rs = DB.sendRequest(
-				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput INNER join company c on comput.company_id=c.id ");
+				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id ");
 		List<Computer> computerList = new ArrayList<Computer>();
 		try {
 			while (rs.next()) {
@@ -71,7 +71,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 	}
 
-	@Override
+	
 	public List<Computer> findById(int id) {
 		ResultSet rs = DB.sendRequest(
 				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id WHERE comput.id ="
@@ -92,7 +92,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return computerList;
 	}
 
-	@Override
+
 	public List<Computer> findByName(String name) {
 		ResultSet rs = DB.sendRequest(
 				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id AS cid, c.name AS cname FROM computer comput "
@@ -113,7 +113,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return computerList;
 	}
 
-	@Override
+
 	public boolean insertComputer(Computer computer) {
 		PreparedStatement ps;
 		try {
@@ -134,7 +134,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return false;
 	}
 
-	@Override
+
 	public boolean updateComputer(int id, Computer computer) {
 		String request = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id= ? WHERE id=?";
 		PreparedStatement ps;
@@ -156,7 +156,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return false;
 	}
 
-	@Override
+	
 	public boolean deleteComputer(int id) {
 		String request = "DELETE FROM computer WHERE id = ?";
 		PreparedStatement ps;

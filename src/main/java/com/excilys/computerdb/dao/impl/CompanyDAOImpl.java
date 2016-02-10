@@ -9,7 +9,7 @@ import java.util.List;
 import com.excilys.computerdb.dao.CompanyDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
 import com.excilys.computerdb.model.Company;
-
+import java.sql.Statement;
 /**
  * Implements CompanyDAO This class allow you to access companies in the
  * database use its methods
@@ -27,13 +27,12 @@ public class CompanyDAOImpl implements CompanyDAO {
 	}
 
 	/**
-	 * @return a limport java.sql.Statement;ist of all the company names and id
+	 * @return a list of all the company names and id
 	 *         from the database
 	 * 
 	 */
-	@Override
 	public List<Company> findAll() {
-		ResultSet rs = DB.sendRequest("SELECT * FROM company LIMIT 1000");
+		ResultSet rs = DB.sendRequest("SELECT * FROM company");
 		List<Company> companyList = new ArrayList<Company>();
 		try {
 			while (rs.next()) {
@@ -47,7 +46,6 @@ public class CompanyDAOImpl implements CompanyDAO {
 		return companyList;
 	}
 
-	@Override
 	public List<Company> findById(int id) {
 		ResultSet rs = DB.sendRequest("SELECT * FROM company WHERE id =" + id);
 		List<Company> companyList = new ArrayList<Company>();
@@ -65,7 +63,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 		return companyList;
 	}
 
-	@Override
+
 	public List<Company> findByName(String name) {
 		ResultSet rs = DB.sendRequest("SELECT * FROM company WHERE name =" + name);
 		List<Company> companyList = new ArrayList<Company>();
@@ -88,7 +86,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 *            to insert uses only the name of the company(Ignore the id and
 	 *            let the DB apply one)
 	 */
-	@Override
+
 	public boolean insertCompany(Company company) {
 		PreparedStatement ps;
 		try {
@@ -105,13 +103,13 @@ public class CompanyDAOImpl implements CompanyDAO {
 		return false;
 	}
 
-	@Override
+
 	public boolean updateCompany(int id) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+
 	public boolean deleteCompany(Company company) {
 		// TODO Auto-generated method stub
 		return false;

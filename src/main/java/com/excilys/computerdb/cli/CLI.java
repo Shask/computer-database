@@ -1,5 +1,6 @@
 package com.excilys.computerdb.cli;
 
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,48 +8,57 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
 import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
 
 public class CLI {
-	
+
 	private static Scanner scanner = new Scanner(System.in);
-	
+
 	public static void main(String args[]) {
 
 		String res = "";
-		
-		while (!"quit".equals(res)) {
 
+		while (!"quit".equals(res)) {
 			displayMenu();
 			res = scanner.next();
-			if (res.trim().equals("1")) {
+			switch (res) {
+			case "1":
 				displayAllComputer();
-			} else if (res.trim().equals("2")) {
+				break;
+			case "2":
 				displayAllCompanies();
-			} else if (res.trim().equals("3")) {
+				break;
+			case "3":
 				displayComputerDetail();
-			} else if (res.trim().equals("4")) {
+				break;
+			case "4":
 				createComputer();
-			} else if (res.trim().equals("5")) {
+				break;
+			case "5":
 				updateComputer();
-			} else if (res.trim().equals("6")) {
+				break;
+			case "6":
 				deleteComputer();
-			} else {
+				break;
+			case "quit":
+				System.out.println("Bye ...");
+				return;
+			default:
 				System.out.println("Wrong input");
-
 			}
 		}
 		if (scanner != null) {
-			 
+			scanner.close();
 		}
-
 	}
 
 	/**
-	 * Display a simple menu
+	 * Display a simple menu on System.out
 	 */
 	public static void displayMenu() {
 		System.out.println("======================================");
@@ -96,10 +106,7 @@ public class CLI {
 	 * before
 	 */
 	public static void displayComputerDetail() {
-
-		String res = "";
-
-		while (!res.equals("quit")) {
+		while (true) {
 			System.out.println("======================================");
 			System.out.println("|     COMPUTER DETAIL OPTIONS        |");
 			System.out.println("======================================");
@@ -107,27 +114,36 @@ public class CLI {
 			System.out.println("|   1. Display using computer id     |");
 			System.out.println("|   2. Display using computer name   |");
 			System.out.println("|   3. List all computer and chose   |");
-			System.out.println("|   quit.To quit                     |");
+			System.out.println("|                      quit.To quit  |");
 			System.out.println("======================================");
 
-			res = scanner.next();
-			if (res.equals("1")) {
+			String res = scanner.next();
+			switch(res)
+			{
+			case "1":
 				System.out.print("Enter id : ");
 				res = scanner.next();
 				displayById(Integer.parseInt(res));
-
-			} else if (res.equals("2")) {
+				break;
+			case "2":
 				System.out.print("Enter name (or part of the name) : ");
 				res = scanner.next();
 				displayByName(res);
-			} else if (res.equals("3")) {
+				break;
+			case "3":
 				displayAllComputer();
 				System.out.print("Enter id : ");
 				res = scanner.next();
 				displayById(Integer.parseInt(res));
+				break;
+			case "quit":
+				return;
+				default:
+					System.out.println("Wrong input");
 			}
+			
 		}
-		 
+
 	}
 
 	/**
@@ -167,7 +183,7 @@ public class CLI {
 	 */
 	public static void deleteComputer() {
 		System.out.print("Enter id of the computer to delete (or type list to get a list): ");
-		
+
 		String res = "";
 		res = scanner.next();
 		if (res.equals("list")) {
@@ -182,7 +198,6 @@ public class CLI {
 				System.out.println("Delete failed");
 
 		}
-		 
 
 	}
 
@@ -204,7 +219,7 @@ public class CLI {
 		List<Computer> listComputer = compDAO.findById(Integer.parseInt(res));
 		if (listComputer.isEmpty()) {
 			System.out.println("No Computer found with this id");
-			 
+
 			return;
 		}
 		for (Computer c : listComputer) {
@@ -217,7 +232,7 @@ public class CLI {
 		} else {
 			System.out.println("Update failed");
 		}
-		 
+
 	}
 
 	/**
@@ -279,7 +294,7 @@ public class CLI {
 
 			}
 		}
-		 
+
 		return computer;
 	}
 
@@ -317,7 +332,7 @@ public class CLI {
 			System.err.println("Error parsing date");
 			e.printStackTrace();
 		}
-		 
+
 		return ts;
 
 	}
