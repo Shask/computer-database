@@ -51,6 +51,10 @@ public class Computer {
 		this.introduced = new Timestamp(discontinued);
 	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public Company getCompany() {
 		return company;
 	}

@@ -1,14 +1,19 @@
 package com.excilys.computerdb.dao.impl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.excilys.computerdb.dao.ComputerDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
-import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.mapper.ComputerMapper;
 import com.excilys.computerdb.model.Computer;
 
 /**
@@ -21,155 +26,142 @@ import com.excilys.computerdb.model.Computer;
 public class ComputerDAOImpl implements ComputerDAO {
 
 	// Reference to the database connection
-	private JDBCConnection DB;
-
-	public ComputerDAOImpl() {
-		DB = JDBCConnection.getInstance();
-	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDAOImpl.class);
 
 	/**
-	 * a list of a 1000 the computer names and id(name and id ONLY) from the database 
-	 * @return a list of a 1000 the computer names and id(name and id ONLY) from the database 
+	 * a list of all computers from the database
+	 * 
+	 * @return a list of all computers from the database
 	 */
-	public List<Computer> findAllShort() {
-		ResultSet rs = DB.sendRequest("SELECT id,name FROM computer LIMIT 1000");
-		List<Computer> computerList = new ArrayList<Computer>();
-		try {
-			while (rs.next()) {
-				// Add a new Computer in the array from the database
-				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
-
-				computerList.add(c);
-			}
-		} catch (SQLException e) {
-			System.err.println("Error executing request : find All Short");
-			e.printStackTrace();
-		}
-		return computerList;
-	}
-
-	
 	public List<Computer> findAll() {
-		ResultSet rs = DB.sendRequest(
-				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id ");
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id ";
 		List<Computer> computerList = new ArrayList<Computer>();
-		try {
-			while (rs.next()) {
-				// Add a new Computer in the array from the database
-				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
-
-				c.setIntroduced(rs.getTimestamp("introduced"));
-				c.setDiscontinued(rs.getTimestamp("discontinued"));
-				c.setCompany(new Company(rs.getInt("cid"), rs.getString("cname")));
-				computerList.add(c);
-			}
+		// Setup Connection, statement and resultSet into an Automatic Resource
+		// Management try
+		try (Connection connection = JDBCConnection.getConnection();
+				Statement statement = connection.createStatement();
+				ResultSet rs = statement.executeQuery(request);) {
+			computerList = ComputerMapper.mapList(rs);
 		} catch (SQLException e) {
-			System.err.println("Error executing request : find All ");
+			LOGGER.error("Error executing request : find All ");
 			e.printStackTrace();
 		}
 		return computerList;
 
 	}
 
-	
-	public List<Computer> findById(int id) {
-		ResultSet rs = DB.sendRequest(
-				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id WHERE comput.id ="
-						+ id);
-		List<Computer> computerList = new ArrayList<Computer>();
-		try {
-			while (rs.next()) {
-				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
-				c.setIntroduced(rs.getTimestamp("introduced"));
-				c.setDiscontinued(rs.getTimestamp("discontinued"));
-				c.setCompany(new Company(rs.getInt("cid"), rs.getString("cname")));
-				computerList.add(c);
+	public Computer findById(int id) {
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id WHERE comput.id = ?";
+		Computer computer = null;
+		/*
+		 * Setup Connection and prepared statement into an Automatic Resource
+		 * Management try
+		 */
+		try (Connection connection = JDBCConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(request);) {
+			ps.setInt(1, id);
+			try (ResultSet rs = ps.executeQuery();) {
+				computer = ComputerMapper.mapOne(rs);
 			}
 		} catch (SQLException e) {
-			System.err.println("Error executing request : find By Id ");
+			LOGGER.error("Error executing request : Computer : find By Id  ");
 			e.printStackTrace();
 		}
-		return computerList;
+		return computer;
 	}
-
 
 	public List<Computer> findByName(String name) {
-		ResultSet rs = DB.sendRequest(
-				"SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id AS cid, c.name AS cname FROM computer comput "
-						+ "left join company c on comput.company_id=c.id " + "WHERE comput.name LIKE '" + name + "%'");
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued,"
+				+ " c.id AS cid, c.name AS cname FROM computer comput "
+				+ "left join company c on comput.company_id=c.id " + "WHERE comput.name LIKE '?%'";
 		List<Computer> computerList = new ArrayList<Computer>();
-		try {
-			while (rs.next()) {
-				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
-				c.setIntroduced(rs.getTimestamp("introduced"));
-				c.setDiscontinued(rs.getTimestamp("discontinued"));
-				c.setCompany(new Company(rs.getInt("cid"), rs.getString("cname")));
-				computerList.add(c);
+		/*
+		 * Setup Connection and prepared statement into an Automatic Resource
+		 * Management try
+		 */
+		try (Connection connection = JDBCConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(request);) {
+
+			ps.setString(1, name);
+			try (ResultSet rs = ps.executeQuery();) {
+				computerList = ComputerMapper.mapList(rs);
 			}
 		} catch (SQLException e) {
-			System.err.println("Error executing request : find By Name ");
+			LOGGER.error("Error executing request : Computer : find By Name ");
 			e.printStackTrace();
 		}
 		return computerList;
 	}
 
+	public void insertComputer(Computer computer) {
 
-	public boolean insertComputer(Computer computer) {
-		PreparedStatement ps;
-		try {
-			ps = JDBCConnection.getConnection().prepareStatement(
-					"INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)");
+		String request = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
+
+		/*
+		 * Setup Connection and prepared statement into an Automatic Resource
+		 * Management try
+		 */
+		try (Connection connection = JDBCConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);) {
+
 			ps.setString(1, computer.getName());
 			ps.setTimestamp(2, computer.getIntroduced());
 			ps.setTimestamp(3, computer.getDiscontinued());
 			ps.setInt(4, computer.getCompany().getId());
-			ps.executeUpdate();
+			// Get the number a row affected y the request
+			int affectedRow = ps.executeUpdate();
 
-			return true;
+			if (affectedRow == 0) {
+				LOGGER.error("Error Inserting Computer into DB");
+				throw new SQLException("Creation failed");
+			}
+			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+				computer.setId(generatedKeys.getInt(1));
+			}
 		} catch (SQLException e) {
 			System.err.println("Error Inserting Company into DB");
 			e.printStackTrace();
 		}
-
-		return false;
 	}
 
+	public void updateComputer(Computer computer) {
 
-	public boolean updateComputer(int id, Computer computer) {
-		String request = "UPDATE computer SET name = ?, introduced = ?, discontinued = ?, company_id= ? WHERE id=?";
-		PreparedStatement ps;
-		try {
-			ps = JDBCConnection.getConnection().prepareStatement(request);
+		String request = "UPDATE computer SET name = '?', introduced = ?, discontinued = ?, company_id = ?"
+				+ " WHERE id = ?";
+		try (Connection connection = JDBCConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);) {
+
 			ps.setString(1, computer.getName());
 			ps.setTimestamp(2, computer.getIntroduced());
 			ps.setTimestamp(3, computer.getDiscontinued());
 			ps.setInt(4, computer.getCompany().getId());
-			ps.setInt(5, id);
-			ps.executeUpdate();
+			ps.setInt(5, computer.getId());
+			// Get the number a row affected y the request
+			int affectedRow = ps.executeUpdate();
 
-			return true;
+			if (affectedRow == 0) {
+				LOGGER.error("Error Updating Computer into DB");
+				throw new SQLException("Update failed");
+			}
+			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+				computer.setId(generatedKeys.getInt(1));
+			}
 		} catch (SQLException e) {
-			System.err.println("Error Updating Company into DB");
+			LOGGER.error("Error Updating Company into DB");
 			e.printStackTrace();
 		}
-
-		return false;
 	}
 
-	
-	public boolean deleteComputer(int id) {
+	public void deleteComputer(int id) {
 		String request = "DELETE FROM computer WHERE id = ?";
-		PreparedStatement ps;
-		try {
-			ps = JDBCConnection.getConnection().prepareStatement(request);
+		try (Connection connection = JDBCConnection.getConnection();
+				PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setInt(1, id);
 			ps.executeUpdate();
-			return true;
 		} catch (SQLException e) {
-			System.err.println("Error Deleting Company into DB");
+			LOGGER.error("Error Deleting Company into DB");
 			e.printStackTrace();
 		}
-		return false;
 	}
 
 }

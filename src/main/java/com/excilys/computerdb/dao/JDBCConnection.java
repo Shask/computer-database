@@ -2,6 +2,10 @@ package com.excilys.computerdb.dao;
 
 import java.sql.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * This class is used to access the connection to the database. This is a
  * singleton type. You can get a reference of the connection by using the
@@ -11,7 +15,8 @@ import java.sql.*;
  *
  */
 public class JDBCConnection {
-
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(JDBCConnection.class);
 	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String DB_URL = "jdbc:mysql://localhost/computer-database-db?zeroDateTimeBehavior=convertToNull";
 
@@ -19,9 +24,7 @@ public class JDBCConnection {
 	private static final String LOGIN = "admincdb";
 	private static final String PASS = "qwerty1234";
 
-	private static Connection conn;
-	private static Statement stmt;
-
+	
 	private static JDBCConnection instance = new JDBCConnection();
 
 	public static JDBCConnection getInstance() {
@@ -29,7 +32,14 @@ public class JDBCConnection {
 	}
 
 	public static Connection getConnection() {
-		return conn;
+		try {
+			LOGGER.trace("Connecting to database...");
+			return DriverManager.getConnection(DB_URL, LOGIN, PASS);
+		} catch (SQLException e) {
+			LOGGER.error("Error Connecting to the database");
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	private JDBCConnection() {
@@ -38,58 +48,10 @@ public class JDBCConnection {
 		try {
 			Class.forName(JDBC_DRIVER);
 		} catch (ClassNotFoundException e) {
-			System.err.println("Error Registering DB");
-			e.printStackTrace();
-		}
-
-		// Open a connection
-		try {
-			System.out.println("Connecting to database...");
-			conn = DriverManager.getConnection(DB_URL, LOGIN, PASS);
-		} catch (SQLException e) {
-			System.err.println("Error Connecting to the database");
-			e.printStackTrace();
-		}
-		// Creating Statement
-		try {
-			System.out.println("Creating statement...");
-			stmt = conn.createStatement();
-		} catch (SQLException e) {
-			System.err.println("Error Creating Statement");
+			LOGGER.error("Error Registering DB");
 			e.printStackTrace();
 		}
 
 	}
 
-	/**
-	 * Take a sql request in Params(String type) and execute it.
-	 * 
-	 * @param sql
-	 *            SQL request
-	 * @return
-	 */
-	public ResultSet sendRequest(String sql) {
-
-		ResultSet rs = null;
-		try {
-			rs = stmt.executeQuery(sql);
-		} catch (SQLException e) {
-			System.err.println("Error Executing the request");
-			e.printStackTrace();
-		}
-		return rs;
-	}
-
-	@Override
-	public void finalize() {
-		try {
-			System.out.println("Closing database");
-			stmt.close();
-			conn.close();
-		} catch (SQLException e) {
-			System.err.println("Error Closing the database");
-			e.printStackTrace();
-		}
-
-	}
 }

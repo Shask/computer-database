@@ -14,12 +14,12 @@ public interface CompanyDAO {
 	List<Company> findAll();
 
 	/**
-	 * return all companies with the same id (1 if the database is well made)
+	 * return the company with the id in params 
 	 * 
 	 * @param id
-	 * @return
+	 * @return a company
 	 */
-	List<Company> findById(int id);
+	Company findById(int id);
 
 	/**
 	 * return all companies starting with the string in params
@@ -32,16 +32,7 @@ public interface CompanyDAO {
 	/**
 	 * Not used at the moment, companies are not to be modified
 	 */
-	boolean insertCompany(Company company);
+	void insertCompany(Company company);
 
-	/**
-	 * Not used at the moment, companies are not to be modified
-	 */
-	boolean updateCompany(int id);
-
-	/**
-	 * Not used at the moment, companies are not to be modified
-	 */
-	boolean deleteCompany(Company company);
 
 }

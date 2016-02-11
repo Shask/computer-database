@@ -1,6 +1,5 @@
 package com.excilys.computerdb.cli;
 
-
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,8 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.plaf.synth.SynthSeparatorUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdb.dao.CompanyDAO;
 import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
 import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
@@ -17,6 +18,7 @@ import com.excilys.computerdb.model.Computer;
 
 public class CLI {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
 	private static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String args[]) {
@@ -46,10 +48,10 @@ public class CLI {
 				deleteComputer();
 				break;
 			case "quit":
-				System.out.println("Bye ...");
+				LOGGER.trace("Exiting the application");
 				return;
 			default:
-				System.out.println("Wrong input");
+				LOGGER.trace("Wrong input");
 			}
 		}
 		if (scanner != null) {
@@ -81,7 +83,7 @@ public class CLI {
 	 */
 	public static void displayAllComputer() {
 		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		List<Computer> listComputer = compDAO.findAllShort();
+		List<Computer> listComputer = compDAO.findAll();
 		for (Computer c : listComputer) {
 			System.out.println(c);
 		}
@@ -118,8 +120,7 @@ public class CLI {
 			System.out.println("======================================");
 
 			String res = scanner.next();
-			switch(res)
-			{
+			switch (res) {
 			case "1":
 				System.out.print("Enter id : ");
 				res = scanner.next();
@@ -138,10 +139,10 @@ public class CLI {
 				break;
 			case "quit":
 				return;
-				default:
-					System.out.println("Wrong input");
+			default:
+				LOGGER.trace("Wrong input");
 			}
-			
+
 		}
 
 	}
@@ -154,11 +155,11 @@ public class CLI {
 	 */
 	public static void displayById(int id) {
 		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		List<Computer> listComputer = compDAO.findById(id);
-		if (listComputer.isEmpty())
-			System.out.println("No Computer found with this id");
-		for (Computer c : listComputer) {
-			System.out.println(c);
+		Computer computer = compDAO.findById(id);
+		if (computer == null) {
+			LOGGER.debug("No Computer found with this id");
+		} else {
+			System.out.println(computer);
 		}
 	}
 
@@ -172,7 +173,7 @@ public class CLI {
 		ComputerDAOImpl compDAO = new ComputerDAOImpl();
 		List<Computer> listComputer = compDAO.findByName(name);
 		if (listComputer.isEmpty())
-			System.out.println("No Computer found with this id");
+			LOGGER.info("No Computer found with this id");
 		for (Computer c : listComputer) {
 			System.out.println(c);
 		}
@@ -192,11 +193,8 @@ public class CLI {
 			res = scanner.next();
 		} else if (Integer.parseInt(res) > 0 && Integer.parseInt(res) < 99999) {
 			ComputerDAOImpl compDAO = new ComputerDAOImpl();
-			if (compDAO.deleteComputer(Integer.parseInt(res)))
-				System.out.println("Delete successfull");
-			else
-				System.out.println("Delete failed");
-
+			LOGGER.trace("Deleting computer ...");
+			compDAO.deleteComputer(Integer.parseInt(res));
 		}
 
 	}
@@ -216,23 +214,17 @@ public class CLI {
 			res = scanner.next();
 		}
 
-		List<Computer> listComputer = compDAO.findById(Integer.parseInt(res));
-		if (listComputer.isEmpty()) {
-			System.out.println("No Computer found with this id");
-
+		Computer computer = compDAO.findById(Integer.parseInt(res));
+		if (computer == null) {
+			LOGGER.info("No Computer found with this id");
 			return;
 		}
-		for (Computer c : listComputer) {
-			System.out.println("Computer to modify :");
-			System.out.println(c);
-		}
-		Computer c = computerUserInput();
-		if (compDAO.updateComputer(Integer.parseInt(res), c)) {
-			System.out.println("Update successful");
-		} else {
-			System.out.println("Update failed");
-		}
 
+		System.out.println("Computer to modify :");
+		System.out.println(computer);
+
+		Computer c = computerUserInput();
+		compDAO.updateComputer(c);
 	}
 
 	/**
@@ -241,10 +233,8 @@ public class CLI {
 	public static void createComputer() {
 		ComputerDAOImpl compDAO = new ComputerDAOImpl();
 		Computer c = computerUserInput();
-		if (compDAO.insertComputer(c))
-			System.out.println("Insert successful");
-		else
-			System.out.println("Insert Failed");
+		compDAO.insertComputer(c);
+		System.out.println(c);
 	}
 
 	/**
@@ -283,10 +273,10 @@ public class CLI {
 			if (res.equals("list")) {
 				displayAllCompanies();
 			} else {
-				CompanyDAOImpl company = new CompanyDAOImpl();
-				List<Company> listCompany = company.findById(Integer.parseInt(res));
-				if (listCompany.isEmpty())
-					doesCompanyExist = false;
+				CompanyDAO companyDao = new CompanyDAOImpl();
+				Company company = companyDao.findById(Integer.parseInt(res));
+				if (company==null)
+					LOGGER.info("Company");
 				else {
 					doesCompanyExist = true;
 					computer.setCompany(new Company(Integer.parseInt(res), "CompanyTest"));
@@ -329,7 +319,7 @@ public class CLI {
 			ts = new Timestamp(parsedDate.getTime());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			System.err.println("Error parsing date");
+			LOGGER.warn("Error parsing date");
 			e.printStackTrace();
 		}
 
