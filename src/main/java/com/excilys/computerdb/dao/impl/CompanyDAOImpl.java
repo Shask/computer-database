@@ -14,6 +14,8 @@ import com.excilys.computerdb.dao.CompanyDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
 import com.excilys.computerdb.mapper.CompanyMapper;
 import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.service.Page;
+
 import java.sql.Statement;
 
 /**
@@ -32,8 +34,10 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 * 
 	 * 
 	 */
-	public List<Company> findAll() {
-		String request = "SELECT * FROM company";
+	@Override
+	public List<Company> findAll(Page page) {
+		String limitPage = "LIMIT "+((page.getCurrentPage()-1) * page.getPageSize())+", "+page.getCurrentPage() * page.getPageSize();
+		String request = "SELECT * FROM company "+limitPage;
 		List<Company> companyList = new ArrayList<>();
 		//Setup Connection and  statement and resultSet into an Automatic Resource Management try
 		try (Connection connection = JDBCConnection.getConnection();
@@ -46,7 +50,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 		return companyList;
 	}
-
+	@Override
 	public Company findById(int id) {
 		String request = "SELECT * FROM company WHERE id = ? ";
 		Company company = null;
@@ -64,8 +68,9 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 		return company;
 	}
-
+	@Override
 	public List<Company> findByName(String name) {
+		
 		String request = "SELECT * FROM company WHERE name = ?";
 		List<Company> companyList = new ArrayList<Company>();
 		//Setup Connection and prepared statement into an Automatic Resource Management try
@@ -89,7 +94,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 *            to insert uses only the name of the company(Ignore the id and
 	 *            let the DB apply one)
 	 */
-
+	@Override
 	public void insertCompany(Company company) {
 		String request = "INSERT INTO company (name) VALUES (?)";
 		//Setup Connection and prepared statement into an Automatic Resource Management try

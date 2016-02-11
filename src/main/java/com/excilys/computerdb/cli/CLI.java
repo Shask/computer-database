@@ -1,20 +1,16 @@
 package com.excilys.computerdb.cli;
 
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.excilys.computerdb.dao.CompanyDAO;
-import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
-import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.service.ComputerdbServices;
+import com.excilys.computerdb.utils.InputControl;
 
 public class CLI {
 
@@ -82,10 +78,30 @@ public class CLI {
 	 * Display all computer (only name and id)
 	 */
 	public static void displayAllComputer() {
-		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		List<Computer> listComputer = compDAO.findAll();
-		for (Computer c : listComputer) {
-			System.out.println(c);
+		boolean display=true;
+		while(display)
+		{
+			for (Computer c : ComputerdbServices.findAllComputer()) {
+				System.out.println(c);
+			}
+			System.out.println("Previous page : prev            quit : quit                   Next page : next");
+			String res=scanner.next();
+			switch(res)
+			{
+			case "prev" :
+				ComputerdbServices.decPage();
+				break;
+			case "next" :
+				ComputerdbServices.incPage();
+				break;
+			case "quit" :
+				display=false;
+				ComputerdbServices.resetPage();
+				break;
+			default:
+				System.out.println("Wrong input");
+				
+			}
 		}
 
 	}
@@ -94,12 +110,31 @@ public class CLI {
 	 * Display all companies with ids and names
 	 */
 	public static void displayAllCompanies() {
-		CompanyDAOImpl compDAO = new CompanyDAOImpl();
-		List<Company> listCompany = compDAO.findAll();
-		for (Company c : listCompany) {
-			System.out.println(c);
+		boolean display=true;
+		while(display)
+		{
+			for (Company c : ComputerdbServices.findAllCompany()) {
+				System.out.println(c);
+			}
+			System.out.println("Previous page : prev            quit : quit                   Next page : next");
+			String res=scanner.next();
+			switch(res)
+			{
+			case "prev" :
+				ComputerdbServices.decPage();
+				break;
+			case "next" :
+				ComputerdbServices.incPage();
+				break;
+			case "quit" :
+				display=false;
+				ComputerdbServices.resetPage();
+				break;
+			default:
+				System.out.println("Wrong input");
+				
+			}
 		}
-
 	}
 
 	/**
@@ -124,7 +159,12 @@ public class CLI {
 			case "1":
 				System.out.print("Enter id : ");
 				res = scanner.next();
-				displayById(Integer.parseInt(res));
+				if (InputControl.testInt(res)) {
+					displayById(Integer.parseInt(res));
+				} else {
+					System.out.println("Wrong input");
+					LOGGER.debug("Wrong input");
+				}
 				break;
 			case "2":
 				System.out.print("Enter name (or part of the name) : ");
@@ -135,7 +175,12 @@ public class CLI {
 				displayAllComputer();
 				System.out.print("Enter id : ");
 				res = scanner.next();
-				displayById(Integer.parseInt(res));
+				if (InputControl.testInt(res)) {
+					displayById(Integer.parseInt(res));
+				} else {
+					System.out.println("Wrong input");
+					LOGGER.debug("Wrong input");
+				}
 				break;
 			case "quit":
 				return;
@@ -154,8 +199,8 @@ public class CLI {
 	 *            : Computer id
 	 */
 	public static void displayById(int id) {
-		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		Computer computer = compDAO.findById(id);
+		
+		Computer computer = ComputerdbServices.findComputerById(id);
 		if (computer == null) {
 			LOGGER.debug("No Computer found with this id");
 		} else {
@@ -170,8 +215,7 @@ public class CLI {
 	 *            string
 	 */
 	public static void displayByName(String name) {
-		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		List<Computer> listComputer = compDAO.findByName(name);
+		List<Computer> listComputer = ComputerdbServices.findComputerByName(name);
 		if (listComputer.isEmpty())
 			LOGGER.info("No Computer found with this id");
 		for (Computer c : listComputer) {
@@ -191,10 +235,8 @@ public class CLI {
 			displayAllComputer();
 			System.out.print("Enter id of the computer to delete");
 			res = scanner.next();
-		} else if (Integer.parseInt(res) > 0 && Integer.parseInt(res) < 99999) {
-			ComputerDAOImpl compDAO = new ComputerDAOImpl();
-			LOGGER.trace("Deleting computer ...");
-			compDAO.deleteComputer(Integer.parseInt(res));
+		} else if (InputControl.testInt(res)) {
+			ComputerdbServices.deleteComputer(Integer.parseInt(res));
 		}
 
 	}
@@ -204,7 +246,6 @@ public class CLI {
 	 * possibility to display a list of computer
 	 */
 	public static void updateComputer() {
-		ComputerDAOImpl compDAO = new ComputerDAOImpl();
 		System.out.print("Enter id of the computer to update (or type list to get a list): ");
 		String res = "";
 		res = scanner.next();
@@ -214,7 +255,7 @@ public class CLI {
 			res = scanner.next();
 		}
 
-		Computer computer = compDAO.findById(Integer.parseInt(res));
+		Computer computer = ComputerdbServices.findComputerById(Integer.parseInt(res));
 		if (computer == null) {
 			LOGGER.info("No Computer found with this id");
 			return;
@@ -223,17 +264,16 @@ public class CLI {
 		System.out.println("Computer to modify :");
 		System.out.println(computer);
 
-		Computer c = computerUserInput();
-		compDAO.updateComputer(c);
+		Computer c = computerUserInput(computer.getId());
+		ComputerdbServices.updateComputer(c);
 	}
 
 	/**
 	 * Allow the user to create a computer using CLI and add it in DB
 	 */
 	public static void createComputer() {
-		ComputerDAOImpl compDAO = new ComputerDAOImpl();
-		Computer c = computerUserInput();
-		compDAO.insertComputer(c);
+		Computer c = computerUserInput(0);
+		ComputerdbServices.insertComputer(c);
 		System.out.println(c);
 	}
 
@@ -243,21 +283,21 @@ public class CLI {
 	 * @return computer newly created
 	 * 
 	 */
-	public static Computer computerUserInput() {
+	public static Computer computerUserInput(int id) {
 		String res = "";
 		System.out.print("Enter computer name : ");
 		res = scanner.next();
-		Computer computer = new Computer(res);
+		Computer computer = new Computer(id, res);
 		System.out.println();
-		System.out.println("Discontinued date Y/N: ");
+		System.out.println("Introducing date Y/N: ");
 		res = scanner.next();
-		if (res.equals("Y")) {
+		if (res.equals("Y") || res.equals("y")) {
 			System.out.println("Introducing date : ");
 			computer.setIntroduced(dateUserInput());
 
 			System.out.println("Discontinued date Y/N: ");
 			res = scanner.next();
-			if (res.equals("Y"))
+			if (res.equals("Y") || res.equals("y"))
 				computer.setDiscontinued(dateUserInput());
 			else
 				computer.setDiscontinued(null);
@@ -270,18 +310,20 @@ public class CLI {
 		while (!doesCompanyExist) {
 			System.out.println("Enter Company id (or list if you want a list of companies) :");
 			res = scanner.next();
-			if (res.equals("list")) {
-				displayAllCompanies();
-			} else {
-				CompanyDAO companyDao = new CompanyDAOImpl();
-				Company company = companyDao.findById(Integer.parseInt(res));
-				if (company==null)
-					LOGGER.info("Company");
-				else {
-					doesCompanyExist = true;
-					computer.setCompany(new Company(Integer.parseInt(res), "CompanyTest"));
-				}
+			if (InputControl.testInt(res)) {
+				if (res.equals("list")) {
+					displayAllCompanies();
+				} else {
+					Company company = ComputerdbServices.findCompanyById(Integer.parseInt(res));
+					if (company == null) {
+						System.out.println("Company do not exist in database");
+						LOGGER.info("Company do not exist in database");
+					} else {
+						doesCompanyExist = true;
+						computer.setCompany(new Company(Integer.parseInt(res), "CompanyTest"));
+					}
 
+				}
 			}
 		}
 
@@ -293,37 +335,37 @@ public class CLI {
 	 * 
 	 * @return a date in TimeStamp format
 	 */
-	public static Timestamp dateUserInput() {
+	public static LocalDateTime dateUserInput() {
 		int year = 00;
 		int month = 0;
 		int day = 0;
 
 		while (year < 1970 || year > 2050) {
 			System.out.print("Enter year (after 1970): ");
-			year = Integer.parseInt(scanner.nextLine());
+			String res = scanner.next();
+			if (InputControl.testInt(res)) {
+				year = Integer.parseInt(res);
+			}
+
 		}
 
 		while (month < 1 || month > 12) {
 			System.out.print("Enter month : ");
-			month = Integer.parseInt(scanner.nextLine());
+			String res = scanner.next();
+			if (InputControl.testInt(res)) {
+				month = Integer.parseInt(res);
+			}
 		}
 		while (day < 1 || day > 31) {
 			System.out.print("Enter day : ");
-			day = Integer.parseInt(scanner.nextLine());
+			String res = scanner.next();
+			if (InputControl.testInt(res)) {
+				day = Integer.parseInt(res);
+			}
 		}
-		Timestamp ts = new Timestamp(System.currentTimeMillis());
-		try {
-			String date = year + "-" + month + "-" + day + " 12:00:00.000";
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-			Date parsedDate = dateFormat.parse(date);
-			ts = new Timestamp(parsedDate.getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			LOGGER.warn("Error parsing date");
-			e.printStackTrace();
-		}
+		LocalDateTime date = LocalDateTime.of(year, month, day, 12, 00);
 
-		return ts;
+		return date;
 
 	}
 }

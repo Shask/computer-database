@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import com.excilys.computerdb.dao.ComputerDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
 import com.excilys.computerdb.mapper.ComputerMapper;
 import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.service.Page;
 
 /**
  * Implement Computer DAO This class is used to access the computer in the
@@ -33,8 +35,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 	 * 
 	 * @return a list of all computers from the database
 	 */
-	public List<Computer> findAll() {
-		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id ";
+	@Override
+	public List<Computer> findAll(Page page) {
+		String limitPage = "LIMIT "+((page.getCurrentPage()-1) * page.getPageSize())+", "+page.getCurrentPage() * page.getPageSize();
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id  "+limitPage;
 		List<Computer> computerList = new ArrayList<Computer>();
 		// Setup Connection, statement and resultSet into an Automatic Resource
 		// Management try
@@ -49,7 +53,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		return computerList;
 
 	}
-
+	@Override
 	public Computer findById(int id) {
 		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id WHERE comput.id = ?";
 		Computer computer = null;
@@ -69,11 +73,11 @@ public class ComputerDAOImpl implements ComputerDAO {
 		}
 		return computer;
 	}
-
+	@Override
 	public List<Computer> findByName(String name) {
 		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued,"
 				+ " c.id AS cid, c.name AS cname FROM computer comput "
-				+ "left join company c on comput.company_id=c.id " + "WHERE comput.name LIKE '?%'";
+				+ "left join company c on comput.company_id=c.id " + "WHERE comput.name LIKE ?";
 		List<Computer> computerList = new ArrayList<Computer>();
 		/*
 		 * Setup Connection and prepared statement into an Automatic Resource
@@ -82,7 +86,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		try (Connection connection = JDBCConnection.getConnection();
 				PreparedStatement ps = connection.prepareStatement(request);) {
 
-			ps.setString(1, name);
+			ps.setString(1,"%"+name+"%");
 			try (ResultSet rs = ps.executeQuery();) {
 				computerList = ComputerMapper.mapList(rs);
 			}
@@ -92,7 +96,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		}
 		return computerList;
 	}
-
+	@Override
 	public void insertComputer(Computer computer) {
 
 		String request = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
@@ -102,12 +106,26 @@ public class ComputerDAOImpl implements ComputerDAO {
 		 * Management try
 		 */
 		try (Connection connection = JDBCConnection.getConnection();
-				PreparedStatement ps = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);) {
+				PreparedStatement ps = connection.prepareStatement(request,  Statement.RETURN_GENERATED_KEYS);) {
 
 			ps.setString(1, computer.getName());
-			ps.setTimestamp(2, computer.getIntroduced());
-			ps.setTimestamp(3, computer.getDiscontinued());
-			ps.setInt(4, computer.getCompany().getId());
+			if (computer.getIntroduced() == null) {
+				ps.setTimestamp(2, null);
+			} else {
+				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+			}
+			if (computer.getDiscontinued() == null) {
+				ps.setTimestamp(3, null);
+			} else {
+				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+			}
+			if (computer.getCompany() == null) {
+				ps.setObject(4, null);
+			}else
+			{
+				ps.setInt(4, computer.getCompany().getId());
+			}
+			
 			// Get the number a row affected y the request
 			int affectedRow = ps.executeUpdate();
 
@@ -116,25 +134,47 @@ public class ComputerDAOImpl implements ComputerDAO {
 				throw new SQLException("Creation failed");
 			}
 			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-				computer.setId(generatedKeys.getInt(1));
+				if(generatedKeys.next())
+				{
+					computer.setId((int)generatedKeys.getLong(1));
+				}
+				else
+				{
+					computer.setId(-1);
+					LOGGER.warn("Id didn't return from Inserting request, set to -1");
+				}
 			}
 		} catch (SQLException e) {
-			System.err.println("Error Inserting Company into DB");
+			LOGGER.error("Error Inserting Company into DB");
 			e.printStackTrace();
 		}
 	}
-
+	@Override
 	public void updateComputer(Computer computer) {
-
-		String request = "UPDATE computer SET name = '?', introduced = ?, discontinued = ?, company_id = ?"
-				+ " WHERE id = ?";
+		
+		String request = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id= ? WHERE id = ?";
 		try (Connection connection = JDBCConnection.getConnection();
 				PreparedStatement ps = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);) {
 
 			ps.setString(1, computer.getName());
-			ps.setTimestamp(2, computer.getIntroduced());
-			ps.setTimestamp(3, computer.getDiscontinued());
-			ps.setInt(4, computer.getCompany().getId());
+			if (computer.getIntroduced() == null) {
+				ps.setTimestamp(2, null);
+			} else {
+				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+			}
+			if (computer.getDiscontinued() == null) {
+				ps.setTimestamp(3, null);
+			} else {
+				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+			}
+			if(computer.getCompany()==null)
+			{
+				ps.setObject(4, null);
+			} else
+			{
+				ps.setInt(4, computer.getCompany().getId());
+			}
+			
 			ps.setInt(5, computer.getId());
 			// Get the number a row affected y the request
 			int affectedRow = ps.executeUpdate();
@@ -143,15 +183,12 @@ public class ComputerDAOImpl implements ComputerDAO {
 				LOGGER.error("Error Updating Computer into DB");
 				throw new SQLException("Update failed");
 			}
-			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-				computer.setId(generatedKeys.getInt(1));
-			}
 		} catch (SQLException e) {
 			LOGGER.error("Error Updating Company into DB");
 			e.printStackTrace();
 		}
 	}
-
+	@Override
 	public void deleteComputer(int id) {
 		String request = "DELETE FROM computer WHERE id = ?";
 		try (Connection connection = JDBCConnection.getConnection();

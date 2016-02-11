@@ -3,6 +3,7 @@ package com.excilys.computerdb.dao;
 import java.util.List;
 
 import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.service.Page;
 
 public interface ComputerDAO {
 	/**
@@ -11,7 +12,7 @@ public interface ComputerDAO {
 	 * @return listCompany, a ArrayList containing all the computer in database
 	 *         with every details (id, name, date, date, company)
 	 */
-	List<Computer> findAll();
+	List<Computer> findAll(Page page);
 
 	/**
 	 * Get all the computer with the id in parameter

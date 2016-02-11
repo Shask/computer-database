@@ -18,12 +18,16 @@ public interface CompanyMapper {
 	/**
 	 * Method that map a ResultSet into a List of Company
 	 * 
-	 * @param rs : resultSet from request
+	 * @param rs
+	 *            : resultSet from request
 	 * @return a list of Company
 	 * @throws MappingException
 	 */
 	public static List<Company> mapList(ResultSet rs) throws MappingException {
 		List<Company> listCompany = new ArrayList<>();
+		if (rs == null) {
+			return listCompany;
+		}
 		try {
 			while (rs.next()) {
 				listCompany.add(new Company(rs.getInt("id"), rs.getString("name")));
@@ -40,14 +44,17 @@ public interface CompanyMapper {
 	 * Method that transform a ResultSet into a since company (get you the first
 	 * of the resultatSet, null otherwise)
 	 * 
-	 * @param rs : resultSet from request
-	 * @return a company (with id and name)
+	 * @param rs
+	 *            : resultSet from request
+	 * @return a company (with id and name) or null
 	 * @throws MappingException
 	 */
 	public static Company mapOne(ResultSet rs) throws MappingException {
 		try {
-			rs.next();
-			return new Company(rs.getInt("id"), rs.getString("name"));
+			if (rs!=null && rs.next()) {
+				return new Company(rs.getInt("id"), rs.getString("name"));
+			} else
+				return null;
 		} catch (SQLException e) {
 			LOGGER.error("Error mapping one Company");
 			e.printStackTrace();
@@ -56,7 +63,6 @@ public interface CompanyMapper {
 			LOGGER.error("NullptrException while mapping one Company(ResultSetEmpty ?)");
 			e.printStackTrace();
 			throw new MappingException();
-
 		}
 	}
 

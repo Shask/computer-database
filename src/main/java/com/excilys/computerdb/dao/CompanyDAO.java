@@ -3,6 +3,7 @@ package com.excilys.computerdb.dao;
 import java.util.List;
 
 import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.service.Page;
 
 public interface CompanyDAO {
 
@@ -11,7 +12,7 @@ public interface CompanyDAO {
 	 * 
 	 * @return
 	 */
-	List<Company> findAll();
+	List<Company> findAll(Page page);
 
 	/**
 	 * return the company with the id in params 
