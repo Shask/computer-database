@@ -27,8 +27,23 @@ import java.sql.Statement;
  */
 public class CompanyDAOImpl implements CompanyDAO {
 
+	
+	private static CompanyDAOImpl instance = new CompanyDAOImpl();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDAOImpl.class);
-
+	
+	private CompanyDAOImpl()
+	{
+		
+	}
+	
+	public static CompanyDAOImpl getInstance()
+	{
+		if(instance==null)
+		{
+			instance = new CompanyDAOImpl();
+		}
+		return instance;
+	}
 	/**
 	 * @return a list of all the company names and id from the database
 	 * 
@@ -36,8 +51,10 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 */
 	@Override
 	public List<Company> findAll(Page page) {
-		String limitPage = "LIMIT "+((page.getCurrentPage()-1) * page.getPageSize())+", "+page.getCurrentPage() * page.getPageSize();
-		String request = "SELECT * FROM company "+limitPage;
+		String limitPage = " LIMIT "+page.getPageSize();
+		String offset = " OFFSET "+(page.getCurrentPage()-1)*page.getPageSize();
+		
+		String request = "SELECT * FROM company "+limitPage + offset;
 		List<Company> companyList = new ArrayList<>();
 		//Setup Connection and  statement and resultSet into an Automatic Resource Management try
 		try (Connection connection = JDBCConnection.getConnection();

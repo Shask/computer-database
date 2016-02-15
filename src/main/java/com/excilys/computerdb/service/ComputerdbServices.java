@@ -12,59 +12,79 @@ import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
 
-public interface ComputerdbServices {
+public class ComputerdbServices {
 
-	static final Logger LOGGER = LoggerFactory.getLogger(ComputerdbServices.class);
-	static final ComputerDAO computerDAO = new ComputerDAOImpl();
-	static final CompanyDAO companyDAO = new CompanyDAOImpl();
-	final Page page = new Page();
+	
+	private static ComputerdbServices instance = new ComputerdbServices();
+	private ComputerDAO computerDAO = ComputerDAOImpl.getInstance();
+	private  CompanyDAO companyDAO = CompanyDAOImpl.getInstance();
+	private final Page page = new Page();
+	private static final Logger LOGGER = LoggerFactory.getLogger(ComputerdbServices.class);	
 
-	public static List<Computer> findAllComputer() {
+	private ComputerdbServices()
+	{
+		
+	}
+	public static ComputerdbServices getInstance()
+	{
+		return instance;
+	}
+	
+	public List<Computer> findAllComputer() {
 		LOGGER.trace("Finding all computer ...");
 		return computerDAO.findAll(page);
 	}
 
-	public static List<Company> findAllCompany() {
+	public  List<Company> findAllCompany() {
 		LOGGER.trace("Finding all company ...");
 
 		return companyDAO.findAll(page);
 	}
 
-	public static List<Computer> findComputerByName(String name) {
+	public  List<Computer> findComputerByName(String name) {
 		LOGGER.trace("Finding computer by name...");
 		return computerDAO.findByName(name);
 	}
 
-	public static void deleteComputer(int id) {
+	public  void deleteComputer(int id) {
 		LOGGER.trace("Deleting computer ...");
 		computerDAO.deleteComputer(id);
 	}
+	public int getCountComputer()
+	{
+		LOGGER.trace("Counting number of computer in db");
+		return computerDAO.countComputer();
+	}
 
-	public static Computer findComputerById(int id) {
+	public  Computer findComputerById(int id) {
 		return computerDAO.findById(id);
 	}
 
-	public static void updateComputer(Computer c) {
+	public void updateComputer(Computer c) {
 		computerDAO.updateComputer(c);
 	}
 
-	public static Company findCompanyById(int id) {
+	public Company findCompanyById(int id) {
 		return companyDAO.findById(id);
 	}
 
-	public static void insertComputer(Computer c) {
+	public void insertComputer(Computer c) {
 		computerDAO.insertComputer(c);
 	}
-	public static void incPage()
+	public void incPage()
 	{
 		page.incPage();
 	}
-	public static void decPage()
+	public void decPage()
 	{
 		page.decPage();
 	}
-	public static void resetPage()
+	public void resetPage()
 	{
 		page.resetPage();
+	}
+	public Page getPage()
+	{
+		return page;
 	}
 }

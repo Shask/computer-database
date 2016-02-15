@@ -1,10 +1,11 @@
 package com.excilys.computerdb.dao;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -85,7 +86,10 @@ public class JDBCConnection {
 	private Properties readPropertyFile() throws CriticalDatabaseException {
 		LOGGER.trace("loading config.properties...");
 		Properties prop = new Properties();
-		try (InputStream input = new FileInputStream("config.properties");) {
+		
+		//InputStream input = new FileInputStream("config.properties");
+		//InputStream input = JDBCConnection.class.getClassLoader().getResourceAsStream("config.properties");
+		try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
 			prop.load(input);
 		} catch (FileNotFoundException e) {
 			LOGGER.error("Error reading propertyFile");

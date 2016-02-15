@@ -16,6 +16,7 @@ public class CLI {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
 	private static Scanner scanner = new Scanner(System.in);
+	private static ComputerdbServices Services = ComputerdbServices.getInstance();
 
 	public static void main(String args[]) {
 
@@ -78,29 +79,27 @@ public class CLI {
 	 * Display all computer (only name and id)
 	 */
 	public static void displayAllComputer() {
-		boolean display=true;
-		while(display)
-		{
-			for (Computer c : ComputerdbServices.findAllComputer()) {
+		boolean display = true;
+		while (display) {
+			for (Computer c : Services.findAllComputer()) {
 				System.out.println(c);
 			}
 			System.out.println("Previous page : prev            quit : quit                   Next page : next");
-			String res=scanner.next();
-			switch(res)
-			{
-			case "prev" :
-				ComputerdbServices.decPage();
+			String res = scanner.next();
+			switch (res) {
+			case "prev":
+				Services.decPage();
 				break;
-			case "next" :
-				ComputerdbServices.incPage();
+			case "next":
+				Services.incPage();
 				break;
-			case "quit" :
-				display=false;
-				ComputerdbServices.resetPage();
+			case "quit":
+				display = false;
+				Services.resetPage();
 				break;
 			default:
 				System.out.println("Wrong input");
-				
+
 			}
 		}
 
@@ -110,29 +109,27 @@ public class CLI {
 	 * Display all companies with ids and names
 	 */
 	public static void displayAllCompanies() {
-		boolean display=true;
-		while(display)
-		{
-			for (Company c : ComputerdbServices.findAllCompany()) {
+		boolean display = true;
+		while (display) {
+			for (Company c : Services.findAllCompany()) {
 				System.out.println(c);
 			}
 			System.out.println("Previous page : prev            quit : quit                   Next page : next");
-			String res=scanner.next();
-			switch(res)
-			{
-			case "prev" :
-				ComputerdbServices.decPage();
+			String res = scanner.next();
+			switch (res) {
+			case "prev":
+				Services.decPage();
 				break;
-			case "next" :
-				ComputerdbServices.incPage();
+			case "next":
+				Services.incPage();
 				break;
-			case "quit" :
-				display=false;
-				ComputerdbServices.resetPage();
+			case "quit":
+				display = false;
+				Services.resetPage();
 				break;
 			default:
 				System.out.println("Wrong input");
-				
+
 			}
 		}
 	}
@@ -199,8 +196,8 @@ public class CLI {
 	 *            : Computer id
 	 */
 	public static void displayById(int id) {
-		
-		Computer computer = ComputerdbServices.findComputerById(id);
+
+		Computer computer = Services.findComputerById(id);
 		if (computer == null) {
 			LOGGER.debug("No Computer found with this id");
 		} else {
@@ -215,11 +212,31 @@ public class CLI {
 	 *            string
 	 */
 	public static void displayByName(String name) {
-		List<Computer> listComputer = ComputerdbServices.findComputerByName(name);
-		if (listComputer.isEmpty())
-			LOGGER.info("No Computer found with this id");
-		for (Computer c : listComputer) {
-			System.out.println(c);
+		boolean display = true;
+		while (display) {
+			List<Computer> listComputer = Services.findComputerByName(name);
+			if (listComputer.isEmpty())
+				LOGGER.info("No Computer found with this id");
+			for (Computer c : listComputer) {
+				System.out.println(c);
+			}
+			System.out.println("Previous page : prev            quit : quit                   Next page : next");
+			String res = scanner.next();
+			switch (res) {
+			case "prev":
+				Services.decPage();
+				break;
+			case "next":
+				Services.incPage();
+				break;
+			case "quit":
+				display = false;
+				Services.resetPage();
+				break;
+			default:
+				System.out.println("Wrong input");
+
+			}
 		}
 	}
 
@@ -236,7 +253,7 @@ public class CLI {
 			System.out.print("Enter id of the computer to delete");
 			res = scanner.next();
 		} else if (InputControl.testInt(res)) {
-			ComputerdbServices.deleteComputer(Integer.parseInt(res));
+			Services.deleteComputer(Integer.parseInt(res));
 		}
 
 	}
@@ -255,7 +272,7 @@ public class CLI {
 			res = scanner.next();
 		}
 
-		Computer computer = ComputerdbServices.findComputerById(Integer.parseInt(res));
+		Computer computer = Services.findComputerById(Integer.parseInt(res));
 		if (computer == null) {
 			LOGGER.info("No Computer found with this id");
 			return;
@@ -265,7 +282,7 @@ public class CLI {
 		System.out.println(computer);
 
 		Computer c = computerUserInput(computer.getId());
-		ComputerdbServices.updateComputer(c);
+		Services.updateComputer(c);
 	}
 
 	/**
@@ -273,7 +290,7 @@ public class CLI {
 	 */
 	public static void createComputer() {
 		Computer c = computerUserInput(0);
-		ComputerdbServices.insertComputer(c);
+		Services.insertComputer(c);
 		System.out.println(c);
 	}
 
@@ -314,7 +331,7 @@ public class CLI {
 				if (res.equals("list")) {
 					displayAllCompanies();
 				} else {
-					Company company = ComputerdbServices.findCompanyById(Integer.parseInt(res));
+					Company company = Services.findCompanyById(Integer.parseInt(res));
 					if (company == null) {
 						System.out.println("Company do not exist in database");
 						LOGGER.info("Company do not exist in database");

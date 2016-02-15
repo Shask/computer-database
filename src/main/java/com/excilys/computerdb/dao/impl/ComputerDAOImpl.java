@@ -28,8 +28,21 @@ import com.excilys.computerdb.service.Page;
 public class ComputerDAOImpl implements ComputerDAO {
 
 	// Reference to the database connection
-	private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDAOImpl.class);
 
+	private static ComputerDAOImpl instance = new ComputerDAOImpl();
+	private static final Logger LOGGER = LoggerFactory.getLogger(ComputerDAOImpl.class);
+	
+
+	private ComputerDAOImpl()
+	{
+		
+	}
+	
+	public static ComputerDAOImpl getInstance()
+	{
+		return instance;
+	}
+	
 	/**
 	 * a list of all computers from the database
 	 * 
@@ -37,8 +50,11 @@ public class ComputerDAOImpl implements ComputerDAO {
 	 */
 	@Override
 	public List<Computer> findAll(Page page) {
-		String limitPage = "LIMIT "+((page.getCurrentPage()-1) * page.getPageSize())+", "+page.getCurrentPage() * page.getPageSize();
-		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id  "+limitPage;
+		//int currentLine = (page.getCurrentPage()-1) * page.getPageSize();
+		String limitPage = " LIMIT "+page.getPageSize();
+		String offset = " OFFSET "+(page.getCurrentPage()-1)*page.getPageSize();
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id  "+limitPage + offset;
+		
 		List<Computer> computerList = new ArrayList<Computer>();
 		// Setup Connection, statement and resultSet into an Automatic Resource
 		// Management try
@@ -75,6 +91,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 	@Override
 	public List<Computer> findByName(String name) {
+
 		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued,"
 				+ " c.id AS cid, c.name AS cname FROM computer comput "
 				+ "left join company c on comput.company_id=c.id " + "WHERE comput.name LIKE ?";
@@ -199,6 +216,24 @@ public class ComputerDAOImpl implements ComputerDAO {
 			LOGGER.error("Error Deleting Company into DB");
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int countComputer() {
+				String request = "SELECT COUNT(*) FROM computer";;
+				int result = 0;
+				// Setup Connection, statement and resultSet into an Automatic Resource
+				// Management try
+				try (Connection connection = JDBCConnection.getConnection();
+						Statement statement = connection.createStatement();
+						ResultSet rs = statement.executeQuery(request);) {
+					rs.next();
+					result = rs.getInt(1);
+				} catch (SQLException e) {
+					LOGGER.error("Error executing request : Count Computer ");
+					e.printStackTrace();
+				}
+				return result;
 	}
 
 }

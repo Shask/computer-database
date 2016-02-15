@@ -62,4 +62,10 @@ public interface ComputerDAO {
 	 * 
 	 */
 	void deleteComputer(int id);
+
+/**
+ * Send back the number of computer in db	
+ * @return an int
+ */
+	int countComputer();
 }

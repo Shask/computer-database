@@ -10,7 +10,7 @@ public class ComputerDAOImplTest extends TestCase{
 	public void testInsert()
 	{
 		Computer c =new Computer("SuperPC");
-		ComputerDAO dao = new ComputerDAOImpl();
+		ComputerDAO dao =ComputerDAOImpl.getInstance();
 		dao.insertComputer(c);
 		Computer c2 = dao.findById(c.getId());
 
@@ -20,7 +20,7 @@ public class ComputerDAOImplTest extends TestCase{
 	public void testUpdate()
 	{
 		Computer c =new Computer("SuperPC");
-		ComputerDAO dao = new ComputerDAOImpl();
+		ComputerDAO dao = ComputerDAOImpl.getInstance();
 		dao.insertComputer(c);
 		c.setName("SupaPC");
 		dao.updateComputer(c);
