@@ -2,16 +2,27 @@ package com.excilys.computerdb.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdb.dto.ComputerDTO;
 import com.excilys.computerdb.mapper.exception.MappingException;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
 
+/**
+ * Implemented interface that allow you to map options for Computer ( Resultset
+ * -> Model, DTO -> Model, Model -> DTo, ...)
+ * 
+ * @author excilys
+ *
+ */
 public interface ComputerMapper {
 	static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapper.class);
 
@@ -85,8 +96,133 @@ public interface ComputerMapper {
 			LOGGER.error("NullptrException while mapping one Computer(ResultSetEmpty ?)");
 			e.printStackTrace();
 			throw new MappingException();
-
 		}
 	}
+	/**
+	 * Map a computer to a ComputerDTO throws a MappingException if computer or computer name is null
+	 * @param computer
+	 * @return
+	 */
+	public static ComputerDTO ModelToDTO(Computer computer) {
+		if (computer == null) {
+			LOGGER.debug("Failed to map Computer Model to DTO : computer is null");
+			throw new MappingException();
+		}
+		ComputerDTO dto;
+		if (computer.getName() != null) {
+			dto = new ComputerDTO(computer.getName());
+		} else {
+			LOGGER.debug("Failed to map Computer Model to DTO : name is null");
+			throw new MappingException();
+		}
+		if (computer.getId() > 0) {
+			dto.setId(computer.getId());
+		}
+		if (computer.getIntroduced() != null) {
+			dto.setIntroduced(computer.getIntroduced().toString());
+		}
+		if (computer.getDiscontinued() != null) {
+			dto.setDiscontinued(computer.getDiscontinued().toString());
+		}
+		if (computer.getCompany() != null) {
+			dto.setCompany(CompanyMapper.ModelToDTO(computer.getCompany()));
+		}
 
+		return dto;
+	}
+	/**
+	 * Map a ComputerDTO to a Computer
+	 * @param dto
+	 * @return Computer mapped, or null is something went wrong
+	 */
+	public static Computer DTOToModel(ComputerDTO dto) {
+		Computer computer = null;
+		if (dto == null) {
+			LOGGER.debug("Failed to map Computer DTO to model : DTO is null");
+			throw new MappingException();
+		}
+		if (dto.getName() != null) {
+			computer = new Computer(dto.getName());
+		} else {
+			LOGGER.debug("Failed to map Computer DTO to model : DTO is null");
+			throw new MappingException();
+		}
+		if (dto.getId() > 0) {
+			computer.setId(dto.getId());
+		}
+		if (dto.getIntroduced() != null) {
+			computer.setIntroduced(convertStringToDate(dto.getIntroduced()));
+		}
+		if (dto.getDiscontinued() != null) {
+			computer.setDiscontinued(convertStringToDate(dto.getDiscontinued()));
+		}
+		if (dto.getCompany() != null) {
+			computer.setCompany(CompanyMapper.DTOToModel(dto.getCompany()));
+		}
+		return computer;
+	}
+	/**
+	 * Map an entire list of ComputerDTO in a list a Computer using DTOToModel
+	 * @param dtoList
+	 * @return
+	 */
+	public static List<Computer> DTOToModelList(List<ComputerDTO> dtoList) {
+		List<Computer> computerList = new ArrayList<>();
+		for (ComputerDTO dto : dtoList) {
+			Computer c = DTOToModel(dto);
+			if (c != null) {
+				computerList.add(c);
+			}
+		}
+		return computerList;
+	}
+	/**
+	 * List an entire list of Computer model to a list of DTO using ModelToDTO
+	 * @param computerList
+	 * @return
+	 */
+	public static List<ComputerDTO> ModeltoDTOList(List<Computer> computerList) {
+		List<ComputerDTO> dtoList = new ArrayList<>();
+		for (Computer computer : computerList) {
+			ComputerDTO c = ModelToDTO(computer);
+			if (c != null) {
+				dtoList.add(c);
+			}
+		}
+		return dtoList;
+	}
+
+	/**
+	 * Convert a String to a LocalDateTime is the String is correctly formated,
+	 * return null is not
+	 * 
+	 * @param s String to change to a date
+	 * @return a LocalDateTime
+	 */
+	static LocalDateTime convertStringToDate(String s) {
+
+		String year = "";
+		String month = "";
+		String day = "";
+		LocalDateTime returnDate = LocalDateTime.now();
+		LOGGER.trace("parsing string to date format");
+		if (s == null || "anObject".equals(s)) {
+			LOGGER.debug("Parsing failed : received : " + s);
+			return null;
+		}
+		try {
+			year = s.substring(0, 4);
+			month = s.substring(5, 7);
+			day = s.substring(8, 10);
+			String formated = year + "-" + month + "-" + day + " 00:00";
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			returnDate = LocalDateTime.parse(formated, formatter);
+		} catch (StringIndexOutOfBoundsException | DateTimeParseException e) {
+			// e.printStackTrace();
+			LOGGER.error("Parsing failed : received : " + s + "parsed to : " + year + "-" + month + "-" + day);
+			return null;
+		}
+		return returnDate;
+	}
 }

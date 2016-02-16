@@ -1,14 +1,18 @@
 package com.excilys.computerdb.utils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import com.excilys.computerdb.dto.ComputerDTO;
+import com.excilys.computerdb.mapper.ComputerMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.service.ComputerdbServices;
+import com.excilys.computerdb.utils.exception.ValidationException;
+
 /**
- * Interface with static methode allowing you to test input from user
+ * Interface with static method allowing you to test input from user
  * 
  * @author excilys
  *
@@ -20,8 +24,7 @@ public interface InputControl {
 	/**
 	 * Method you can use to test if the string in parameters is a number
 	 * 
-	 * @param s
-	 *            string to test
+	 * @param s string to test
 	 * @return true if it is a number, false if not
 	 */
 	static boolean testInt(String s) {
@@ -37,27 +40,55 @@ public interface InputControl {
 		return true;
 	}
 
-	static LocalDateTime convertStringToDate(String s) {
-		//System.out.println(s);
-		LocalDateTime returnDate = LocalDateTime.now();
-		LOGGER.trace("parsing string to date format");
-		if (s == null || "anObject".equals(s)) {
-			return null;
+	
+
+	/**
+	 * Validate a ComputerDTO, if every field is properly filled in, convert it
+	 * to Computer, send a ValidationException if conversion not possible
+	 * 
+	 * @param computerdto to validate and convert
+	 * @return a computer
+	 * @throws ValidationException
+	 */
+	static Computer validation(ComputerDTO computerdto) throws ValidationException {
+		if (computerdto == null) {
+			String msg = "InputControl : computerDto is null";
+			LOGGER.debug(msg);
+			throw new ValidationException(msg);
 		}
-		try
-		{
-		String year = s.substring(0, 4);
-		String month = s.substring(6,7);
-		String day = s.substring(9,10);
-		String formated = year +"-"+month+"-"+day+" 00:00";
-		
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-		returnDate = LocalDateTime.parse(formated, formatter);
+		String computerDtoName = computerdto.getName();
+		if (computerDtoName == null || computerDtoName.trim().length() < 3) {
+			String msg = "InputControl : computerDto name is too short";
+			LOGGER.debug(msg);
+			throw new ValidationException(msg);
 		}
-		catch(StringIndexOutOfBoundsException | DateTimeParseException  e)
-		{
-			return null;
+		if (computerDtoName.contains("%") || computerDtoName.contains("/") || computerDtoName.contains("\"")
+				|| computerDtoName.contains("\\")) {
+			String msg = "InputControl : computerDto name contains invalid charactere ( %, /, \", | ) \n computer not added";
+			LOGGER.debug(msg);
+			throw new ValidationException(msg);
 		}
-		return returnDate;
+		Computer computer = new Computer(computerdto.getId(), computerdto.getName());
+
+		// Validate format and Intro<Discontinued using computerSetter
+		computer.setIntroduced(ComputerMapper.convertStringToDate(computerdto.getIntroduced()));
+
+		// Validate format and Intro<Discontinued using computerSetter
+		computer.setDiscontinued(ComputerMapper.convertStringToDate(computerdto.getDiscontinued()));
+
+		// get company full details from DB
+		Company company=null;
+		if (computerdto.getCompany() != null) {
+			company = ComputerdbServices.getInstance().findCompanyById(computerdto.getCompany().getId());
+		}
+		if (computerdto.getCompany().getId() < 0 || company == null) {
+			String msg = "InputControl : Company not found, company set to null ";
+			LOGGER.debug(msg);
+		} else {
+			computer.setCompany(company);
+		}
+
+		return computer;
 	}
+
 }

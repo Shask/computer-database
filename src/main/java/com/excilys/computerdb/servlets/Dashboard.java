@@ -8,7 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.dto.ComputerDTO;
+import com.excilys.computerdb.mapper.ComputerMapper;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.service.Page;
 
@@ -38,7 +39,7 @@ public class Dashboard extends HttpServlet {
 
 		Integer pageNeeded = 1;
 		Page page = Services.getPage();
-		List<Computer> listComp;
+		List<ComputerDTO> listComp;
 		
 		//Get number of the page and check is it is not null and >0
 		String pageParam = request.getParameter("page");
@@ -67,15 +68,17 @@ public class Dashboard extends HttpServlet {
 			}
 		page.setCurrentPage(pageNeeded);
 		String Computername = request.getParameter("search");
+		int nbTotalComputer = 0;
 		if(Computername==null)
 		{
-			listComp = Services.findAllComputer();
+			listComp = ComputerMapper.ModeltoDTOList(Services.findAllComputer());
+			nbTotalComputer = Services.getCountComputer();
 		}
 		else
 		{
-			listComp = Services.findComputerByName(Computername);
+			listComp = ComputerMapper.ModeltoDTOList(Services.findComputerByName(Computername));
+			nbTotalComputer = listComp.size();
 		}
-		int nbTotalComputer = Services.getCountComputer();
 		
 		request.setAttribute("nbComputer", nbTotalComputer);
 		request.setAttribute("currentpage", pageNeeded);

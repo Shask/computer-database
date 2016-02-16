@@ -25,8 +25,4 @@
 		<servlet-name>addcomputer</servlet-name>
 		<url-pattern>/addcomputer</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>bonjour</servlet-name>
-		<servlet-class>com.excilys.computerdb.servlets.TestServlets</servlet-class>
-	</servlet>
 </web-app>
