@@ -1,6 +1,6 @@
 package com.excilys.computerdb.cli;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,7 +11,11 @@ import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.utils.InputControl;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class CLI {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CLI.class);
@@ -352,7 +356,7 @@ public class CLI {
 	 * 
 	 * @return a date in TimeStamp format
 	 */
-	public static LocalDateTime dateUserInput() {
+	public static LocalDate dateUserInput() {
 		int year = 00;
 		int month = 0;
 		int day = 0;
@@ -380,7 +384,7 @@ public class CLI {
 				day = Integer.parseInt(res);
 			}
 		}
-		LocalDateTime date = LocalDateTime.of(year, month, day, 12, 00);
+		LocalDate date = LocalDate.of(year, month, day);
 
 		return date;
 

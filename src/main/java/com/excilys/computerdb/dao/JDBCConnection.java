@@ -18,7 +18,7 @@ import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
  * singleton type. You can get a reference of the connection by using the
  * getInstance() methode
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class JDBCConnection {

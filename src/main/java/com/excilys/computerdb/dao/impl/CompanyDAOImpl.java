@@ -22,28 +22,25 @@ import java.sql.Statement;
  * Implements CompanyDAO This class allow you to access companies in the
  * database use its methods
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class CompanyDAOImpl implements CompanyDAO {
 
-	
 	private static CompanyDAOImpl instance = new CompanyDAOImpl();
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDAOImpl.class);
-	
-	private CompanyDAOImpl()
-	{
-		
+
+	private CompanyDAOImpl() {
+
 	}
-	
-	public static CompanyDAOImpl getInstance()
-	{
-		if(instance==null)
-		{
+
+	public static CompanyDAOImpl getInstance() {
+		if (instance == null) {
 			instance = new CompanyDAOImpl();
 		}
 		return instance;
 	}
+
 	/**
 	 * @return a list of all the company names and id from the database
 	 * 
@@ -51,29 +48,29 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 */
 	@Override
 	public List<Company> findAll(Page page) {
-		String limitPage = " LIMIT "+page.getPageSize();
-		String offset = " OFFSET "+(page.getCurrentPage()-1)*page.getPageSize();
-		
-		String request = "SELECT * FROM company "+limitPage + offset;
-		List<Company> companyList = new ArrayList<>();
-		//Setup Connection and  statement and resultSet into an Automatic Resource Management try
-		try (Connection connection = JDBCConnection.getConnection();
-				Statement statement = connection.createStatement();
-				ResultSet rs = statement.executeQuery(request);) {
-			companyList = CompanyMapper.mapList(rs);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+		String limitPage = " LIMIT " + page.getPageSize();
+		String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
 
+		String request = "SELECT * FROM company " + limitPage + offset;
+		List<Company> companyList = new ArrayList<>();
+		// Setup Connection and statement and resultSet into an Automatic
+		// Resource Management try
+		try (Connection connection = JDBCConnection.getConnection(); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(request);) {
+			companyList = CompanyMapper.mapList(rs);
+		} catch (SQLException e) {
+			LOGGER.error("Error executing request : findAll: CompanyDAOImpl");
+			e.printStackTrace();
+		}
 		return companyList;
 	}
+
 	@Override
 	public Company findById(int id) {
 		String request = "SELECT * FROM company WHERE id = ? ";
 		Company company = null;
-		//Setup Connection and prepared statement into an Automatic Resource Management try
-		try (Connection connection = JDBCConnection.getConnection();
-				PreparedStatement ps = connection.prepareStatement(request);) {
+		// Setup Connection and prepared statement into an Automatic Resource
+		// Management try
+		try (Connection connection = JDBCConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setInt(1, id);
 			try (ResultSet rs = ps.executeQuery();) {
 				company = CompanyMapper.mapOne(rs);
@@ -82,17 +79,17 @@ public class CompanyDAOImpl implements CompanyDAO {
 			LOGGER.error("Error executing request : findById : CompanyDAOImpl");
 			e.printStackTrace();
 		}
-
 		return company;
 	}
+
 	@Override
 	public List<Company> findByName(String name) {
-		
+
 		String request = "SELECT * FROM company WHERE name = ?";
 		List<Company> companyList = new ArrayList<Company>();
-		//Setup Connection and prepared statement into an Automatic Resource Management try
-		try (Connection connection = JDBCConnection.getConnection();
-				PreparedStatement ps = connection.prepareStatement(request);) {
+		// Setup Connection and prepared statement into an Automatic Resource
+		// Management try
+		try (Connection connection = JDBCConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setString(1, name);
 			try (ResultSet rs = ps.executeQuery();) {
 				companyList = CompanyMapper.mapList(rs);
@@ -105,35 +102,28 @@ public class CompanyDAOImpl implements CompanyDAO {
 	}
 
 	/**
-	 * @return Boolean corresponding at the success or not of the INSERT INTO
-	 *         request
-	 * @param Company
-	 *            to insert uses only the name of the company(Ignore the id and
-	 *            let the DB apply one)
+	 * 
+	 * @param Companyto insert uses only the name of the company(Ignore the id and let the DB apply one)
 	 */
 	@Override
 	public void insertCompany(Company company) {
 		String request = "INSERT INTO company (name) VALUES (?)";
-		//Setup Connection and prepared statement into an Automatic Resource Management try
-		try (Connection connection = JDBCConnection.getConnection();
-				PreparedStatement ps = connection.prepareStatement(request,Statement.RETURN_GENERATED_KEYS);) {
+		// Setup Connection and prepared statement into an Automatic Resource
+		// Management try
+		try (Connection connection = JDBCConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS);) {
 			ps.setString(1, company.getName());
 			int affectedRow = ps.executeUpdate();
-			if(affectedRow == 0)
-			{
+			if (affectedRow == 0) {
 				LOGGER.error("Error Inserting Company into DB");
 				throw new SQLException("Creation failed");
 			}
-			try(ResultSet generatedKeys = ps.getGeneratedKeys())
-			{
+			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
 				company.setId(generatedKeys.getInt(1));
 			}
-			
 		} catch (SQLException e) {
 			LOGGER.error("Error Inserting Company into DB");
 			e.printStackTrace();
 		}
 	}
-
 
 }

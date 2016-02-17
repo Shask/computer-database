@@ -1,5 +1,9 @@
 package com.excilys.computerdb.dto;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class CompanyDTO {
 	int id;
 	String name;

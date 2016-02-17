@@ -4,7 +4,11 @@ import com.excilys.computerdb.dao.ComputerDAO;
 import com.excilys.computerdb.model.Computer;
 
 import junit.framework.TestCase;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class ComputerDAOImplTest extends TestCase{
 
 	public void testInsert()

@@ -1,6 +1,6 @@
 package com.excilys.computerdb.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,15 +12,15 @@ import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
  * to create one, It contains some information about the computer like the
  * company that made it, the introduced Date and the discontinued date
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class Computer {
 
 	private int id;
 	private String name;
-	private LocalDateTime introduced;
-	private LocalDateTime discontinued;
+	private LocalDate introduced;
+	private LocalDate discontinued;
 	private Company company;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDAOImpl.class);
@@ -34,11 +34,11 @@ public class Computer {
 		this.name = name;
 	}
 
-	public LocalDateTime getIntroduced() {
+	public LocalDate getIntroduced() {
 		return introduced;
 	}
 
-	public void setIntroduced(LocalDateTime introduced) {
+	public void setIntroduced(LocalDate introduced) {
 		if (checkDate(introduced, discontinued)) {
 			this.introduced = introduced;
 		} else {
@@ -47,11 +47,11 @@ public class Computer {
 
 	}
 
-	public LocalDateTime getDiscontinued() {
+	public LocalDate getDiscontinued() {
 		return discontinued;
 	}
 
-	public void setDiscontinued(LocalDateTime discontinued) {
+	public void setDiscontinued(LocalDate discontinued) {
 		if (checkDate(introduced, discontinued)) {
 			this.discontinued = discontinued;
 		} else {
@@ -76,7 +76,7 @@ public class Computer {
 	}
 
 	// Constructors
-	public Computer(String name, LocalDateTime introduced, LocalDateTime discontinued, Company company) {
+	public Computer(String name, LocalDate introduced, LocalDate discontinued, Company company) {
 		super();
 		this.name = name;
 		if (checkDate(introduced, discontinued)) {
@@ -122,7 +122,7 @@ public class Computer {
 	 *            introduced date
 	 * @return true if introducted < discontinued false otherwise
 	 */
-	private boolean checkDate(LocalDateTime introduced, LocalDateTime discontinued) {
+	private boolean checkDate(LocalDate introduced, LocalDate discontinued) {
 		if (introduced == null) {
 			return false;
 		} else if (discontinued == null) {

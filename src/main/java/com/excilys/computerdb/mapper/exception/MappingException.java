@@ -1,7 +1,7 @@
 package com.excilys.computerdb.mapper.exception;
 /**
  * Exception launched when there is anything wrong with the mapping 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class MappingException extends RuntimeException {

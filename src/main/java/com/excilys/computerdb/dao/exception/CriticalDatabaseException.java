@@ -1,7 +1,7 @@
 package com.excilys.computerdb.dao.exception;
 /**
  * Exception launched when there is a critical error (can't access database, can't read property file, etc...)
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class CriticalDatabaseException extends Exception {

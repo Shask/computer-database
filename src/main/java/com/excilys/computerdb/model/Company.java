@@ -3,7 +3,7 @@ package com.excilys.computerdb.model;
 /**
  * Class that defines a company by an id and its name
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class Company {

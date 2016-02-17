@@ -11,7 +11,11 @@ import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
 import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class ComputerdbServices {
 
 	

@@ -2,7 +2,7 @@ package com.excilys.computerdb.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -19,10 +19,9 @@ import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 /**
- * Implemented interface that allow you to map options for Computer ( Resultset
- * -> Model, DTO -> Model, Model -> DTo, ...)
+ * Implemented interface that allow you to map options for Computer 
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public interface ComputerMapper {
@@ -44,10 +43,10 @@ public interface ComputerMapper {
 			while (rs.next()) {
 				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
 				if (rs.getTimestamp("introduced") != null) {
-					c.setIntroduced(rs.getTimestamp("introduced").toLocalDateTime());
+					c.setIntroduced(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 				}
 				if (rs.getTimestamp("discontinued") != null) {
-					c.setDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime());
+					c.setDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 				}
 				if (rs.getString("cname") != null) {
 					c.setCompany(new Company(rs.getInt("cid"), rs.getString("cname")));
@@ -77,10 +76,10 @@ public interface ComputerMapper {
 
 				Computer c = new Computer(rs.getInt("id"), rs.getString("name"));
 				if (rs.getTimestamp("introduced") != null) {
-					c.setIntroduced(rs.getTimestamp("introduced").toLocalDateTime());
+					c.setIntroduced(rs.getTimestamp("introduced").toLocalDateTime().toLocalDate());
 				}
 				if (rs.getTimestamp("discontinued") != null) {
-					c.setDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime());
+					c.setDiscontinued(rs.getTimestamp("discontinued").toLocalDateTime().toLocalDate());
 				}
 				if (rs.getString("cname") != null) {
 					c.setCompany(new Company(rs.getInt("cid"), rs.getString("cname")));
@@ -102,8 +101,8 @@ public interface ComputerMapper {
 	}
 	/**
 	 * Map a computer to a ComputerDTO throws a MappingException if computer or computer name is null
-	 * @param computer
-	 * @return
+	 * @param computer to map
+	 * @return a dto from the computer in params
 	 */
 	public static ComputerDTO ModelToDTO(Computer computer) {
 		if (computer == null) {
@@ -134,7 +133,7 @@ public interface ComputerMapper {
 	}
 	/**
 	 * Map a ComputerDTO to a Computer
-	 * @param dto
+	 * @param dto to map
 	 * @return Computer mapped, or null is something went wrong
 	 */
 	public static Computer DTOToModel(ComputerDTO dto) {
@@ -148,8 +147,8 @@ public interface ComputerMapper {
 	}
 	/**
 	 * Map an entire list of ComputerDTO in a list a Computer using DTOToModel
-	 * @param dtoList
-	 * @return
+	 * @param dtoList list to map
+	 * @return a list of mapped computer
 	 */
 	public static List<Computer> DTOToModelList(List<ComputerDTO> dtoList) {
 		List<Computer> computerList = new ArrayList<>();
@@ -163,8 +162,8 @@ public interface ComputerMapper {
 	}
 	/**
 	 * List an entire list of Computer model to a list of DTO using ModelToDTO
-	 * @param computerList
-	 * @return
+	 * @param computerList list to map
+	 * @return list of mapped dto
 	 */
 	public static List<ComputerDTO> ModeltoDTOList(List<Computer> computerList) {
 		List<ComputerDTO> dtoList = new ArrayList<>();
@@ -182,14 +181,14 @@ public interface ComputerMapper {
 	 * return null is not
 	 * 
 	 * @param s String to change to a date
-	 * @return a LocalDateTime
+	 * @return a LocalDate 
 	 */
-	static LocalDateTime convertStringToDate(String s) {
+	static LocalDate convertStringToDate(String s) {
 
 		String year = "";
 		String month = "";
 		String day = "";
-		LocalDateTime returnDate = LocalDateTime.now();
+		LocalDate returnDate = LocalDate.now();
 		LOGGER.trace("parsing string to date format");
 		if (s == null || "anObject".equals(s)) {
 			LOGGER.debug("Parsing failed : received : " + s);
@@ -199,10 +198,10 @@ public interface ComputerMapper {
 			year = s.substring(0, 4);
 			month = s.substring(5, 7);
 			day = s.substring(8, 10);
-			String formated = year + "-" + month + "-" + day + " 00:00";
+			String formated = year + "-" + month + "-" + day;
 
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-			returnDate = LocalDateTime.parse(formated, formatter);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			returnDate = LocalDate.parse(formated, formatter);
 		} catch (StringIndexOutOfBoundsException | DateTimeParseException e) {
 			// e.printStackTrace();
 			LOGGER.debug("Parsing failed : received : " + s + "parsed to : " + year + "-" + month + "-" + day);

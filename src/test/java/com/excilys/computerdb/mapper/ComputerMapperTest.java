@@ -11,7 +11,7 @@ import com.excilys.computerdb.model.Computer;
 import junit.framework.TestCase;
 /**
  * Test class for ComputerMapper
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class ComputerMapperTest extends TestCase {

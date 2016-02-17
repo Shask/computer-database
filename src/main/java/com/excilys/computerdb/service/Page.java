@@ -1,5 +1,9 @@
 package com.excilys.computerdb.service;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class Page {
 	private int currentPage = 1;
 	private int pageSize = 25;

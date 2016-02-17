@@ -12,7 +12,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test class for CompanyMapper
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class CompanyMapperTest extends TestCase {

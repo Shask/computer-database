@@ -13,10 +13,9 @@ import com.excilys.computerdb.mapper.exception.MappingException;
 import com.excilys.computerdb.model.Company;
 
 /**
- * Implemented interface that allow you to map options for Company ( Resultset
- * -> Model, DTO -> Model, Model -> DTo, ...)
+ * Implemented interface that allow you to map options for Company 
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public interface CompanyMapper {
@@ -53,7 +52,7 @@ public interface CompanyMapper {
 	 * 
 	 * @param rs : resultSet from request
 	 * @return a company (with id and name) or null
-	 * @throws MappingException
+	 * @throws MappingException 
 	 */
 	public static Company mapOne(ResultSet rs) throws MappingException {
 		try {
@@ -114,8 +113,8 @@ public interface CompanyMapper {
 	}
 	/**
 	 * Map an entire List of Company DTO using DTOToModel
-	 * @param dtoList
-	 * @return
+	 * @param dtoList to map
+	 * @return a list of mapped companies
 	 */
 	public static List<Company> DTOToModelList(List<CompanyDTO> dtoList) {
 		List<Company> companyList = new ArrayList<>();
@@ -129,8 +128,8 @@ public interface CompanyMapper {
 	}
 	/**
 	 * Map an entire list of Computer to DTO using ModelToDTO
-	 * @param companyList
-	 * @return
+	 * @param companyList to map
+	 * @return a list of mapped dto
 	 */
 	public static List<CompanyDTO> ModeltoDTOList(List<Company> companyList) {
 		List<CompanyDTO> dtoList = new ArrayList<>();

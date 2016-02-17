@@ -1,10 +1,12 @@
 package com.excilys.computerdb.utils.exception;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class ValidationException extends Exception {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 5460808502158147043L;
 
 	public ValidationException() {

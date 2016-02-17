@@ -4,7 +4,11 @@ import java.util.List;
 
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.Page;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public interface ComputerDAO {
 	/**
 	 * Get all computer from the database

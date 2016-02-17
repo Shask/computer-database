@@ -1,7 +1,11 @@
 package com.excilys.computerdb.model;
 
 import junit.framework.TestCase;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public class CompanyTest extends TestCase {
 	
 	public void testEqualityCompany()

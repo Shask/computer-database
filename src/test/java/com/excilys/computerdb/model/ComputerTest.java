@@ -1,6 +1,7 @@
 package com.excilys.computerdb.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 import junit.framework.TestCase;
 
@@ -18,9 +19,9 @@ public class ComputerTest extends TestCase{
 		Computer c2 = new Computer(0,"PC");
 		c1.setDiscontinued(null);
 		assertEquals(c1,c2);
-		c1.setDiscontinued(LocalDateTime.now());
+		c1.setDiscontinued(LocalDate.now());
 		assertEquals(c1,c2);
-		c1.setIntroduced(LocalDateTime.now());
+		c1.setIntroduced(LocalDate.now());
 		assertTrue(!c1.equals(c2));
 	}
 }

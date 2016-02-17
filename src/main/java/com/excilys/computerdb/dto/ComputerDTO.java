@@ -1,7 +1,7 @@
 package com.excilys.computerdb.dto;
 /**
  * Transferable object for Computer.
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class ComputerDTO {

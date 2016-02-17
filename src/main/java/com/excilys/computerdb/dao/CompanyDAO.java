@@ -4,13 +4,17 @@ import java.util.List;
 
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.service.Page;
-
+/**
+ * 
+ * @author Steven Fougeron
+ *
+ */
 public interface CompanyDAO {
 
 	/**
 	 * Return all the companies from database (id and names)
 	 * 
-	 * @return
+	 * @return a list a company
 	 */
 	List<Company> findAll(Page page);
 

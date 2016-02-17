@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ import com.excilys.computerdb.service.Page;
  * Implement Computer DAO This class is used to access the computer in the
  * database
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public class ComputerDAOImpl implements ComputerDAO {
@@ -129,12 +130,12 @@ public class ComputerDAOImpl implements ComputerDAO {
 			if (computer.getIntroduced() == null) {
 				ps.setTimestamp(2, null);
 			} else {
-				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0))));
 			}
 			if (computer.getDiscontinued() == null) {
 				ps.setTimestamp(3, null);
 			} else {
-				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued().atTime(LocalTime.of(0, 0))));
 			}
 			if (computer.getCompany() == null) {
 				ps.setObject(4, null);
@@ -177,12 +178,12 @@ public class ComputerDAOImpl implements ComputerDAO {
 			if (computer.getIntroduced() == null) {
 				ps.setTimestamp(2, null);
 			} else {
-				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced()));
+				ps.setTimestamp(2, Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0))));
 			}
 			if (computer.getDiscontinued() == null) {
 				ps.setTimestamp(3, null);
 			} else {
-				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued()));
+				ps.setTimestamp(3, Timestamp.valueOf(computer.getDiscontinued().atTime(LocalTime.of(0, 0))));
 			}
 			if(computer.getCompany()==null)
 			{

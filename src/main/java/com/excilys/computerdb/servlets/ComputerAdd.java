@@ -18,9 +18,12 @@ import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
-
 /**
  * Servlet implementation class ComputerAdd
+ * 
+ * 
+ * @author Steven Fougeron
+ *
  */
 //@WebServlet("/addcomputer")
 public class ComputerAdd extends HttpServlet {
@@ -45,6 +48,16 @@ public class ComputerAdd extends HttpServlet {
 		List<CompanyDTO> listCompanies = CompanyMapper.ModeltoDTOList(Services.findAllCompany());
 		request.setAttribute("companies", listCompanies);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request, response);
+		
+		
+		String pageParam = request.getParameter("page");
+		if(pageParam!=null || !InputControl.testInt(pageParam)){
+		request.setAttribute("currentpage", pageParam);
+		}
+		String nbElemParam = request.getParameter("nbElements");
+		if(nbElemParam!=null || !InputControl.testInt(pageParam)){
+		request.setAttribute("pagesize", nbElemParam);
+		}
 	}
 
 	/**

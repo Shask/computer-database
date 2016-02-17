@@ -12,11 +12,13 @@ import com.excilys.computerdb.dto.ComputerDTO;
 import com.excilys.computerdb.mapper.ComputerMapper;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.service.Page;
+import com.excilys.computerdb.utils.InputControl;
 
 /**
  * Servlet implementation class Dashboard
+ * @author Steven Fougeron
+ *
  */
-// @WebServlet("/dashboard")
 public class Dashboard extends HttpServlet {
 
 	private ComputerdbServices Services = ComputerdbServices.getInstance();
@@ -42,7 +44,7 @@ public class Dashboard extends HttpServlet {
 
 		// Get number of the page and check is it is not null and >0
 		String pageParam = request.getParameter("page");
-		if (pageParam == null) {
+		if (pageParam == null ||  !InputControl.testInt(pageParam)) {
 		} else {
 			pageNeeded = Integer.parseInt(pageParam);
 			if (pageNeeded < 1) {
@@ -51,7 +53,7 @@ public class Dashboard extends HttpServlet {
 		}
 
 		String nbElements = request.getParameter("nbElements");
-		if (nbElements == null) {
+		if (nbElements == null || !InputControl.testInt(pageParam)) {
 
 		} else
 			switch (nbElements) {

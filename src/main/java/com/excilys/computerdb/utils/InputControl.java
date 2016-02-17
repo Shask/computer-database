@@ -14,7 +14,7 @@ import com.excilys.computerdb.utils.exception.ValidationException;
 /**
  * Interface with static method allowing you to test input from user
  * 
- * @author excilys
+ * @author Steven Fougeron
  *
  */
 public interface InputControl {
@@ -34,7 +34,7 @@ public interface InputControl {
 		try {
 			Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			LOGGER.warn("Input not valid : not an integer");
+			LOGGER.warn("Input not valid : not an integer, value = "+s);
 			return false;
 		}
 		return true;

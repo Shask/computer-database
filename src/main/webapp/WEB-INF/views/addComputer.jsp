@@ -1,4 +1,5 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="mylib" tagdir="/WEB-INF/tags"%>
 <!DOCTYPE>
 <html>
 <head>
@@ -15,8 +16,8 @@
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application - Computer
-				Database </a>
+			<mylib:link classe="navbar-brand" target="dashboard" currentpage="${currentpage}" >Application - Computer Database</mylib:link>
+
 		</div>
 	</header>
 
@@ -55,8 +56,8 @@
 						</fieldset>
 						<div class="actions pull-right">
 							<input type="submit" value="Add" class="btn btn-primary"
-								id="submit"> or <a href="dashboard.html"
-								class="btn btn-default">Cancel</a>
+								id="submit"> or <mylib:link target="dashboard"
+								classe="btn btn-default">Cancel</mylib:link>
 						</div>
 					</form>
 
