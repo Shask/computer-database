@@ -15,6 +15,8 @@ import com.excilys.computerdb.dto.ComputerDTO;
 import com.excilys.computerdb.mapper.exception.MappingException;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.utils.InputControl;
+import com.excilys.computerdb.utils.exception.ValidationException;
 
 /**
  * Implemented interface that allow you to map options for Computer ( Resultset
@@ -136,30 +138,13 @@ public interface ComputerMapper {
 	 * @return Computer mapped, or null is something went wrong
 	 */
 	public static Computer DTOToModel(ComputerDTO dto) {
-		Computer computer = null;
-		if (dto == null) {
-			LOGGER.debug("Failed to map Computer DTO to model : DTO is null");
+		try {
+			return InputControl.validation(dto);
+		} catch (ValidationException e) {
+			LOGGER.debug("Failed to map Computer DTO to model : Validation didn't pass");
+			e.printStackTrace();
 			throw new MappingException();
 		}
-		if (dto.getName() != null) {
-			computer = new Computer(dto.getName());
-		} else {
-			LOGGER.debug("Failed to map Computer DTO to model : DTO is null");
-			throw new MappingException();
-		}
-		if (dto.getId() > 0) {
-			computer.setId(dto.getId());
-		}
-		if (dto.getIntroduced() != null) {
-			computer.setIntroduced(convertStringToDate(dto.getIntroduced()));
-		}
-		if (dto.getDiscontinued() != null) {
-			computer.setDiscontinued(convertStringToDate(dto.getDiscontinued()));
-		}
-		if (dto.getCompany() != null) {
-			computer.setCompany(CompanyMapper.DTOToModel(dto.getCompany()));
-		}
-		return computer;
 	}
 	/**
 	 * Map an entire list of ComputerDTO in a list a Computer using DTOToModel
@@ -220,7 +205,7 @@ public interface ComputerMapper {
 			returnDate = LocalDateTime.parse(formated, formatter);
 		} catch (StringIndexOutOfBoundsException | DateTimeParseException e) {
 			// e.printStackTrace();
-			LOGGER.error("Parsing failed : received : " + s + "parsed to : " + year + "-" + month + "-" + day);
+			LOGGER.debug("Parsing failed : received : " + s + "parsed to : " + year + "-" + month + "-" + day);
 			return null;
 		}
 		return returnDate;

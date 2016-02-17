@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="a" uri="/WEB-INF/customTags.tld"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,10 @@
 
 	<section id="main">
 		<div class="container">
-			<h1 id="homeTitle"><c:out value="${ nbComputer }"/> Computers found</h1>
+			<h1 id="homeTitle">
+				<c:out value="${ nbComputer }" />
+				Computers found
+			</h1>
 			<div id="actions" class="form-horizontal">
 				<div class="pull-left">
 					<form id="searchForm" action="#" method="GET" class="form-inline">
@@ -46,7 +50,8 @@
 		</form>
 
 		<div class="container" style="margin-top: 10px;">
-			<table class="table table-?page=1&nbElements=50#striped table-bordered">
+			<table
+				class="table table-?page=1&nbElements=50#striped table-bordered">
 				<thead>
 					<tr>
 						<!-- Variable declarations for passing labels as parameters -->
@@ -89,40 +94,9 @@
 	</section>
 
 	<footer class="navbar-fixed-bottom">
-		<form class="btn-group btn-group-sm pull-right" role="group">
-		
-			<button type="submit" class="btn btn-default" name="nbElements" value="10">10</button>
-			<button type="submit" class="btn btn-default" name="nbElements" value="50">50</button>
-			<button type="submit" class="btn btn-default" name="nbElements"value="100">100</button>
-			
-		</form>
-		<div class="container text-center">
-			<ul class="pagination">
-				<li><a href="?page=${currentpage -1}" aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-				</a></li>
-				<c:choose>
 
-					<c:when test="${currentpage <= 2 }">
-						<c:forEach var="i" begin="1" end="5" step="1">
-							<li><a href="?page=${i}"><c:out value="${i}" /></a></li>
-						</c:forEach>
-					</c:when>
+			<a:page currentPage="${currentpage}"></a:page>
 
-					<c:when test="${currentpage > 2 }">
-						<c:forEach var="i" begin="${currentpage - 2}"
-							end="${currentpage + 2}" step="1">
-							<li><a href="?page=${i}"><c:out value="${i}" /></a></li>
-						</c:forEach>
-					</c:when>
-				</c:choose>
-				<li><a href="?page=${currentpage +1}" aria-label="Next"> <span
-						aria-hidden="true">&raquo;</span>
-				</a></li>
-			</ul>
-		</div>
-
-	
 	</footer>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>

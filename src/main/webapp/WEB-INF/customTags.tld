@@ -1,0 +1,30 @@
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>pg</short-name>
+	<tag>
+		<name>page</name>
+		<tag-class>com.excilys.computerdb.tag.PageTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>pageSize</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>currentPage</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+	<name>link</name>
+		<tag-class>com.excilys.computerdb.tag.LinkTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>target</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>

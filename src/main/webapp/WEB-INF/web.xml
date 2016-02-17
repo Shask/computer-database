@@ -8,6 +8,7 @@
 			<url-pattern>*.jsp</url-pattern>
 			<include-prelude>/WEB-INF/taglibs.jsp</include-prelude>
 		</jsp-property-group>
+		
 	</jsp-config>
 	<servlet>
 		<servlet-name>dashboard</servlet-name>
@@ -25,4 +26,16 @@
 		<servlet-name>addcomputer</servlet-name>
 		<url-pattern>/addcomputer</url-pattern>
 	</servlet-mapping>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/error/404.html</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/WEB-INF/error/403.html</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/error/500.html</location>
+	</error-page>
 </web-app>

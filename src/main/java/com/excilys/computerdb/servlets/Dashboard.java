@@ -27,7 +27,6 @@ public class Dashboard extends HttpServlet {
 	 */
 	public Dashboard() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -40,8 +39,8 @@ public class Dashboard extends HttpServlet {
 		Integer pageNeeded = 1;
 		Page page = Services.getPage();
 		List<ComputerDTO> listComp;
-		
-		//Get number of the page and check is it is not null and >0
+
+		// Get number of the page and check is it is not null and >0
 		String pageParam = request.getParameter("page");
 		if (pageParam == null) {
 		} else {
@@ -67,19 +66,17 @@ public class Dashboard extends HttpServlet {
 				break;
 			}
 		page.setCurrentPage(pageNeeded);
+
 		String Computername = request.getParameter("search");
 		int nbTotalComputer = 0;
-		if(Computername==null)
-		{
+		if (Computername == null) {
 			listComp = ComputerMapper.ModeltoDTOList(Services.findAllComputer());
 			nbTotalComputer = Services.getCountComputer();
-		}
-		else
-		{
+		} else {
 			listComp = ComputerMapper.ModeltoDTOList(Services.findComputerByName(Computername));
 			nbTotalComputer = listComp.size();
 		}
-		
+
 		request.setAttribute("nbComputer", nbTotalComputer);
 		request.setAttribute("currentpage", pageNeeded);
 		request.setAttribute("computers", listComp);
@@ -93,7 +90,6 @@ public class Dashboard extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
 
