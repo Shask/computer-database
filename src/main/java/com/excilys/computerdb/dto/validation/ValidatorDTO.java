@@ -21,7 +21,7 @@ public class ValidatorDTO {
 	 * @return a computer
 	 * @throws ValidationException
 	 */
-	static boolean validate(ComputerDTO computerdto) throws ValidationException {
+	public static boolean validate(ComputerDTO computerdto) throws ValidationException {
 
 		if (computerdto == null) {
 			String msg = "InputControl : computerDto is null";

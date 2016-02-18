@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdb.dto.CompanyDTO;
 import com.excilys.computerdb.dto.ComputerDTO;
+import com.excilys.computerdb.dto.mapper.ComputerMapperDTO;
+import com.excilys.computerdb.dto.validation.ValidatorDTO;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.model.mapper.CompanyMapperModel;
 import com.excilys.computerdb.service.ComputerdbServices;
@@ -74,7 +76,8 @@ public class ComputerAdd extends HttpServlet {
 			}
 			Computer computer;
 			try {
-				computer = InputControl.validation(computerdto);
+				ValidatorDTO.validate(computerdto);
+				computer=ComputerMapperDTO.toModel(computerdto);
 				Services.insertComputer(computer);
 			} catch (ValidationException e) {
 				LOGGER.debug("Error during validation or insertion : Computer was not added");

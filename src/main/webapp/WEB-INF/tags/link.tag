@@ -15,7 +15,7 @@
 		<a class="${classe}" href="${target}?page=${currentpage}&nbElements=${pagesize}" id="${id}" onclick="${onclick}"> <jsp:doBody /></a>
 	</c:when>
 	<c:when test="${target == '#'}">
-	<a class="${classe}" id="${id}" onclick="${onclick}"> <jsp:doBody /></a>
+		<a class="${classe}" id="${id}" onclick="${onclick}"> <jsp:doBody /></a>
 	</c:when>
 </c:choose>
 
