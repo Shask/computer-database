@@ -1,6 +1,7 @@
 package com.excilys.computerdb.dao.impl;
 
 import com.excilys.computerdb.dao.ComputerDAO;
+import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.model.Computer;
 
 import junit.framework.TestCase;
@@ -11,7 +12,7 @@ import junit.framework.TestCase;
  */
 public class ComputerDAOImplTest extends TestCase{
 
-	public void testInsert()
+	public void testInsert() throws CriticalDatabaseException
 	{
 		Computer c =new Computer("SuperPC");
 		ComputerDAO dao =ComputerDAOImpl.getInstance();
@@ -21,7 +22,7 @@ public class ComputerDAOImplTest extends TestCase{
 		assertEquals(c,c2);
 		dao.deleteComputer(c.getId());
 	}
-	public void testUpdate()
+	public void testUpdate() throws CriticalDatabaseException
 	{
 		Computer c =new Computer("SuperPC");
 		ComputerDAO dao = ComputerDAOImpl.getInstance();

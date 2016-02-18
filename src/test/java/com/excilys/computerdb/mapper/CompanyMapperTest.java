@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.excilys.computerdb.dao.mapper.CompanyMapperDAO;
 import com.excilys.computerdb.model.Company;
 
 import junit.framework.TestCase;
@@ -19,23 +20,23 @@ public class CompanyMapperTest extends TestCase {
 
 	public void testListEmptyResultSet() {
 		ResultSet mock = mock(ResultSet.class);
-		List<Company> listComp = CompanyMapper.mapList(mock);
+		List<Company> listComp = CompanyMapperDAO.toModelList(mock);
 		assertEquals(listComp, new ArrayList<>());
 	}
 
 	public void testListnullResultSet() {
-		List<Company> listComp = CompanyMapper.mapList(null);
+		List<Company> listComp = CompanyMapperDAO.toModelList(null);
 		assertEquals(listComp, new ArrayList<>());
 	}
 
 	public void testOneEmptyResultSet() {
 		ResultSet mock = mock(ResultSet.class);
-		Company Comp = CompanyMapper.mapOne(mock);
+		Company Comp = CompanyMapperDAO.toModel(mock);
 		assertEquals(Comp, null);
 	}
 
 	public void testOnenullResultSet() {
-		Company Comp = CompanyMapper.mapOne(null);
+		Company Comp = CompanyMapperDAO.toModel(null);
 		assertEquals(Comp, null);
 	}
 

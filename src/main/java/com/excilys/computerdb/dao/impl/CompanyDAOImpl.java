@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdb.dao.CompanyDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
-import com.excilys.computerdb.mapper.CompanyMapper;
+import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
+import com.excilys.computerdb.dao.mapper.CompanyMapperDAO;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.service.Page;
 
@@ -43,11 +44,12 @@ public class CompanyDAOImpl implements CompanyDAO {
 
 	/**
 	 * @return a list of all the company names and id from the database
+	 * @throws CriticalDatabaseException 
 	 * 
 	 * 
 	 */
 	@Override
-	public List<Company> findAll(Page page) {
+	public List<Company> findAll(Page page) throws CriticalDatabaseException {
 		String limitPage = " LIMIT " + page.getPageSize();
 		String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
 
@@ -56,7 +58,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 		// Setup Connection and statement and resultSet into an Automatic
 		// Resource Management try
 		try (Connection connection = JDBCConnection.getConnection(); Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(request);) {
-			companyList = CompanyMapper.mapList(rs);
+			companyList = CompanyMapperDAO.toModelList(rs);
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : findAll: CompanyDAOImpl");
 			e.printStackTrace();
@@ -65,7 +67,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 	}
 
 	@Override
-	public Company findById(int id) {
+	public Company findById(int id) throws CriticalDatabaseException {
 		String request = "SELECT * FROM company WHERE id = ? ";
 		Company company = null;
 		// Setup Connection and prepared statement into an Automatic Resource
@@ -73,7 +75,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 		try (Connection connection = JDBCConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setInt(1, id);
 			try (ResultSet rs = ps.executeQuery();) {
-				company = CompanyMapper.mapOne(rs);
+				company = CompanyMapperDAO.toModel(rs);
 			}
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : findById : CompanyDAOImpl");
@@ -83,7 +85,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 	}
 
 	@Override
-	public List<Company> findByName(String name) {
+	public List<Company> findByName(String name) throws CriticalDatabaseException {
 
 		String request = "SELECT * FROM company WHERE name = ?";
 		List<Company> companyList = new ArrayList<Company>();
@@ -92,7 +94,7 @@ public class CompanyDAOImpl implements CompanyDAO {
 		try (Connection connection = JDBCConnection.getConnection(); PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setString(1, name);
 			try (ResultSet rs = ps.executeQuery();) {
-				companyList = CompanyMapper.mapList(rs);
+				companyList = CompanyMapperDAO.toModelList(rs);
 			}
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : findByName: CompanyDAOImpl");
@@ -104,9 +106,10 @@ public class CompanyDAOImpl implements CompanyDAO {
 	/**
 	 * 
 	 * @param Companyto insert uses only the name of the company(Ignore the id and let the DB apply one)
+	 * @throws CriticalDatabaseException 
 	 */
 	@Override
-	public void insertCompany(Company company) {
+	public void insertCompany(Company company) throws CriticalDatabaseException {
 		String request = "INSERT INTO company (name) VALUES (?)";
 		// Setup Connection and prepared statement into an Automatic Resource
 		// Management try

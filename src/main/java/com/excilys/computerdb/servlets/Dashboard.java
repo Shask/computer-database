@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.excilys.computerdb.dto.ComputerDTO;
-import com.excilys.computerdb.mapper.ComputerMapper;
+import com.excilys.computerdb.model.mapper.ComputerMapperModel;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.service.Page;
 import com.excilys.computerdb.utils.InputControl;
@@ -72,10 +72,10 @@ public class Dashboard extends HttpServlet {
 		String Computername = request.getParameter("search");
 		int nbTotalComputer = 0;
 		if (Computername == null) {
-			listComp = ComputerMapper.ModeltoDTOList(Services.findAllComputer());
+			listComp = ComputerMapperModel.toDTOList(Services.findAllComputer());
 			nbTotalComputer = Services.getCountComputer();
 		} else {
-			listComp = ComputerMapper.ModeltoDTOList(Services.findComputerByName(Computername));
+			listComp = ComputerMapperModel.toDTOList(Services.findComputerByName(Computername));
 			nbTotalComputer = listComp.size();
 		}
 

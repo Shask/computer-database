@@ -1,6 +1,5 @@
 package com.excilys.computerdb.dao;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -41,30 +40,26 @@ public class JDBCConnection {
 	 * Send back a new Connection to the user
 	 * 
 	 * @return new Connection
+	 * @throws CriticalDatabaseException
 	 */
-	public static Connection getConnection() {
+	public static Connection getConnection() throws CriticalDatabaseException {
 		try {
 			LOGGER.trace("Connecting to database...");
 			return DriverManager.getConnection(DB_URL, LOGIN, PASS);
 		} catch (SQLException e) {
 			LOGGER.error("Error Connecting to the database");
 			e.printStackTrace();
+			throw new CriticalDatabaseException("Error Connecting to the database");
 		}
-		return null;
+
 	}
 
 	private JDBCConnection() {
 		Properties prop;
-		try {
-			prop = readPropertyFile();
-			DB_URL = prop.getProperty("DB_URL");
-			LOGIN = prop.getProperty("LOGIN");
-			PASS = prop.getProperty("PASS");
-		} catch (CriticalDatabaseException e1) {
-			LOGGER.error("Error loading config.properties file");
-			e1.printStackTrace();
-			return;
-		}
+		prop = readPropertyFile();
+		DB_URL = prop.getProperty("DB_URL");
+		LOGIN = prop.getProperty("LOGIN");
+		PASS = prop.getProperty("PASS");
 
 		// Register JDBC driver
 		try {
@@ -83,22 +78,19 @@ public class JDBCConnection {
 	 * @return credentials and url
 	 * @throws CriticalDatabaseException
 	 */
-	private Properties readPropertyFile() throws CriticalDatabaseException {
+	private Properties readPropertyFile() {
 		LOGGER.trace("loading config.properties...");
 		Properties prop = new Properties();
-		
-		//InputStream input = new FileInputStream("config.properties");
-		//InputStream input = JDBCConnection.class.getClassLoader().getResourceAsStream("config.properties");
+
+		// InputStream input = new FileInputStream("config.properties");
+		// InputStream input =
+		// JDBCConnection.class.getClassLoader().getResourceAsStream("config.properties");
 		try (InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties")) {
 			prop.load(input);
-		} catch (FileNotFoundException e) {
-			LOGGER.error("Error reading propertyFile");
-			e.printStackTrace();
-			throw new CriticalDatabaseException();
 		} catch (IOException e) {
 			LOGGER.error("Error reading propertyFile");
 			e.printStackTrace();
-			throw new CriticalDatabaseException();
+
 		}
 		return prop;
 	}

@@ -1,6 +1,6 @@
 package com.excilys.computerdb.mapper.exception;
 /**
- * Exception launched when there is anything wrong with the mapping 
+ * Exception thrown when there is anything wrong with the mapping 
  * @author Steven Fougeron
  *
  */

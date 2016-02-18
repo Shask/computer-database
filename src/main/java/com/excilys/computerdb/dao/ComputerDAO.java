@@ -2,6 +2,7 @@ package com.excilys.computerdb.dao;
 
 import java.util.List;
 
+import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.Page;
 /**
@@ -15,8 +16,9 @@ public interface ComputerDAO {
 	 * 
 	 * @return listCompany, a ArrayList containing all the computer in database
 	 *         with every details (id, name, date, date, company)
+	 * @throws CriticalDatabaseException 
 	 */
-	List<Computer> findAll(Page page);
+	List<Computer> findAll(Page page) throws CriticalDatabaseException;
 
 	/**
 	 * Get all the computer with the id in parameter
@@ -25,8 +27,9 @@ public interface ComputerDAO {
 	 *            to look for
 	 * @return a list of computer (normally only 1 instance of computer if id in
 	 *         unique)
+	 * @throws CriticalDatabaseException 
 	 */
-	Computer findById(int id);
+	Computer findById(int id) throws CriticalDatabaseException;
 
 	/**
 	 * Get all the computer with a name <b>starting</b> with the parameter name,
@@ -35,16 +38,18 @@ public interface ComputerDAO {
 	 * @param name
 	 *            : name of the computer to find
 	 * @return a list of Computer corresponding to the name
+	 * @throws CriticalDatabaseException 
 	 */
-	List<Computer> findByName(String name);
+	List<Computer> findByName(String name) throws CriticalDatabaseException;
 
 	/**
 	 * Insert a computer taken in parameter in database
 	 * 
 	 * @param computer
 	 *            to insert
+	 * @throws CriticalDatabaseException 
 	 */
-	void insertComputer(Computer computer);
+	void insertComputer(Computer computer) throws CriticalDatabaseException;
 
 	/**
 	 * Update a computer taken in parameter in database the computer at the
@@ -54,22 +59,25 @@ public interface ComputerDAO {
 	 *            to update
 	 * @param computer
 	 *            will replace the computer at id = id(Parameters)
+	 * @throws CriticalDatabaseException 
 	 * 
 	 */
-	void updateComputer(Computer computer);
+	void updateComputer(Computer computer) throws CriticalDatabaseException;
 
 	/**
 	 * Delete computer in database at ID
 	 * 
 	 * @param id
 	 *            : id to delete
+	 * @throws CriticalDatabaseException 
 	 * 
 	 */
-	void deleteComputer(int id);
+	void deleteComputer(int id) throws CriticalDatabaseException;
 
 /**
  * Send back the number of computer in db	
  * @return an int
+ * @throws CriticalDatabaseException 
  */
-	int countComputer();
+	int countComputer() throws CriticalDatabaseException;
 }

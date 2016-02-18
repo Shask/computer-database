@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdb.dao.ComputerDAO;
 import com.excilys.computerdb.dao.JDBCConnection;
-import com.excilys.computerdb.mapper.ComputerMapper;
+import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
+import com.excilys.computerdb.dao.exception.FailedRequestException;
+import com.excilys.computerdb.dao.mapper.ComputerMapperDAO;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.Page;
 
@@ -48,9 +50,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 	 * a list of all computers from the database
 	 * 
 	 * @return a list of all computers from the database
+	 * @throws CriticalDatabaseException 
 	 */
 	@Override
-	public List<Computer> findAll(Page page) {
+	public List<Computer> findAll(Page page) throws CriticalDatabaseException {
 		//int currentLine = (page.getCurrentPage()-1) * page.getPageSize();
 		String limitPage = " LIMIT "+page.getPageSize();
 		String offset = " OFFSET "+(page.getCurrentPage()-1)*page.getPageSize();
@@ -62,16 +65,17 @@ public class ComputerDAOImpl implements ComputerDAO {
 		try (Connection connection = JDBCConnection.getConnection();
 				Statement statement = connection.createStatement();
 				ResultSet rs = statement.executeQuery(request);) {
-			computerList = ComputerMapper.mapList(rs);
+			computerList = ComputerMapperDAO.toModelList(rs);
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : find All ");
 			e.printStackTrace();
+			throw new FailedRequestException("Error executing request : find All ");
 		}
 		return computerList;
 
 	}
 	@Override
-	public Computer findById(int id) {
+	public Computer findById(int id) throws CriticalDatabaseException {
 		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id WHERE comput.id = ?";
 		Computer computer = null;
 		/*
@@ -82,16 +86,17 @@ public class ComputerDAOImpl implements ComputerDAO {
 				PreparedStatement ps = connection.prepareStatement(request);) {
 			ps.setInt(1, id);
 			try (ResultSet rs = ps.executeQuery();) {
-				computer = ComputerMapper.mapOne(rs);
+				computer = ComputerMapperDAO.toModel(rs);
 			}
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : Computer : find By Id  ");
 			e.printStackTrace();
+			throw new FailedRequestException("Error executing request : Computer : find By Id  ");
 		}
 		return computer;
 	}
 	@Override
-	public List<Computer> findByName(String name) {
+	public List<Computer> findByName(String name) throws CriticalDatabaseException {
 
 		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued,"
 				+ " c.id AS cid, c.name AS cname FROM computer comput "
@@ -106,16 +111,17 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 			ps.setString(1,"%"+name+"%");
 			try (ResultSet rs = ps.executeQuery();) {
-				computerList = ComputerMapper.mapList(rs);
+				computerList = ComputerMapperDAO.toModelList(rs);
 			}
 		} catch (SQLException e) {
 			LOGGER.error("Error executing request : Computer : find By Name ");
 			e.printStackTrace();
+			throw new FailedRequestException("Error executing request : Computer : find By Name ");
 		}
 		return computerList;
 	}
 	@Override
-	public void insertComputer(Computer computer) {
+	public void insertComputer(Computer computer) throws CriticalDatabaseException {
 
 		String request = "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 
@@ -149,7 +155,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 
 			if (affectedRow == 0) {
 				LOGGER.error("Error Inserting Computer into DB");
-				throw new SQLException("Creation failed");
+				throw new FailedRequestException("Creation failed");
 			}
 			try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
 				if(generatedKeys.next())
@@ -165,10 +171,11 @@ public class ComputerDAOImpl implements ComputerDAO {
 		} catch (SQLException e) {
 			LOGGER.error("Error Inserting Company into DB");
 			e.printStackTrace();
+			throw new FailedRequestException("Error Inserting Company into DB");
 		}
 	}
 	@Override
-	public void updateComputer(Computer computer) {
+	public void updateComputer(Computer computer) throws CriticalDatabaseException {
 		
 		String request = "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id= ? WHERE id = ?";
 		try (Connection connection = JDBCConnection.getConnection();
@@ -207,7 +214,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 		}
 	}
 	@Override
-	public void deleteComputer(int id) {
+	public void deleteComputer(int id) throws CriticalDatabaseException {
 		String request = "DELETE FROM computer WHERE id = ?";
 		try (Connection connection = JDBCConnection.getConnection();
 				PreparedStatement ps = connection.prepareStatement(request);) {
@@ -220,7 +227,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 	}
 
 	@Override
-	public int countComputer() {
+	public int countComputer() throws CriticalDatabaseException {
 				String request = "SELECT COUNT(*) FROM computer";;
 				int result = 0;
 				// Setup Connection, statement and resultSet into an Automatic Resource

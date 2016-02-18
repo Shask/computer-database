@@ -1,8 +1,6 @@
 package com.excilys.computerdb.utils;
 
 import com.excilys.computerdb.dto.ComputerDTO;
-import com.excilys.computerdb.mapper.ComputerMapper;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,10 +69,10 @@ public interface InputControl {
 		Computer computer = new Computer(computerdto.getId(), computerdto.getName());
 
 		// Validate format and Intro<Discontinued using computerSetter
-		computer.setIntroduced(ComputerMapper.convertStringToDate(computerdto.getIntroduced()));
+		computer.setIntroduced(DateUtils.convertStringToDate(computerdto.getIntroduced()));
 
 		// Validate format and Intro<Discontinued using computerSetter
-		computer.setDiscontinued(ComputerMapper.convertStringToDate(computerdto.getDiscontinued()));
+		computer.setDiscontinued(DateUtils.convertStringToDate(computerdto.getDiscontinued()));
 
 		// get company full details from DB
 		Company company=null;
@@ -90,5 +88,6 @@ public interface InputControl {
 
 		return computer;
 	}
+	
 
 }

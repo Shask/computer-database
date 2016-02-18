@@ -13,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import com.excilys.computerdb.dto.CompanyDTO;
 import com.excilys.computerdb.dto.ComputerDTO;
-import com.excilys.computerdb.mapper.CompanyMapper;
 import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.model.mapper.CompanyMapperModel;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
@@ -45,7 +45,7 @@ public class ComputerAdd extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		List<CompanyDTO> listCompanies = CompanyMapper.ModeltoDTOList(Services.findAllCompany());
+		List<CompanyDTO> listCompanies = CompanyMapperModel.toDTOList(Services.findAllCompany());
 		request.setAttribute("companies", listCompanies);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request, response);
 		

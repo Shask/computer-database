@@ -1,6 +1,6 @@
 package com.excilys.computerdb.dto;
 /**
- * 
+ * Transferable object for Company
  * @author Steven Fougeron
  *
  */
