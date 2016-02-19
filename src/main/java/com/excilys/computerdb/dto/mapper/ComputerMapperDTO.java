@@ -36,10 +36,10 @@ public class ComputerMapperDTO {
 
 		// get company full details from DB
 		Company company = null;
-		if (dto.getCompany() != null) {
+		if (dto.getCompany() != null && dto.getCompany().getId() > 0) {
 			company = ComputerdbServices.getInstance().findCompanyById(dto.getCompany().getId());
 		}
-		if (dto.getCompany().getId() < 0 || company == null) {
+		if (company == null) {
 			String msg = "InputControl : Company not found, company set to null ";
 			LOGGER.debug(msg);
 		} else {

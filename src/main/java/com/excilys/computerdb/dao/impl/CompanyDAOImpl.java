@@ -50,8 +50,8 @@ public class CompanyDAOImpl implements CompanyDAO {
 	 */
 	@Override
 	public List<Company> findAll(Page page) throws CriticalDatabaseException {
-		String limitPage = " LIMIT " + page.getPageSize();
-		String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
+		String limitPage = "";//" LIMIT " + page.getPageSize();
+		String offset = "";//" LIMIT " + page.getPageSize();" OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
 
 		String request = "SELECT * FROM company " + limitPage + offset;
 		List<Company> companyList = new ArrayList<>();

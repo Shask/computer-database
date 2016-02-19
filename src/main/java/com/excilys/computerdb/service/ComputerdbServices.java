@@ -99,6 +99,13 @@ public class ComputerdbServices {
 			LOGGER.error(e1.getMessage());
 		}
 	}
+	public void deleteComputer(List<Integer> ids) {
+	
+		for(Integer id : ids)
+		{
+			deleteComputer(id);
+		}
+	}
 
 	public int getCountComputer() {
 		LOGGER.trace("Counting number of computer in db");

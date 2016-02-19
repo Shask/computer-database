@@ -15,8 +15,8 @@ public class ValidatorModel {
 			throw new ValidationException();
 		}
 		String computerName = computer.getName();
-		if (computerName == null || "".equals(computerName) || computerName.contains("%") || computerName.contains("/") || computerName.contains("\"") || computerName.contains("\\") || computerName.contains("<") || computerName.contains(">")) {
-			LOGGER.debug("Validation failed : Name not valid (null | too short or illegal char)");
+		if (computerName == null || "".equals(computerName) || computerName.contains("%") || computerName.contains("\"") || computerName.contains("\\") || computerName.contains("<") || computerName.contains(">")) {
+			LOGGER.debug("Validation failed : Name not valid (null | too short or illegal char) : index ="+computer.getId());
 			throw new ValidationException();
 		}
 

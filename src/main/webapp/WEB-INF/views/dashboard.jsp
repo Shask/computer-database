@@ -69,8 +69,8 @@
 
 					<c:forEach items="${ computers }" var="computer">
 						<tr>
-							<td class="editMode"><input type="checkbox" name="cb" class="cb" value="0"></td>
-							<td><mylib:link target="/WEB-INF/views/editComputer.html" onclick=""><c:out value="${ computer.name }" /></mylib:link></td>
+							<td class="editMode"><input type="checkbox" name="cb" class="cb" value="${ computer.id }"></td>
+							<td><mylib:edit idcomputer="${ computer.id }"><c:out value="${ computer.name }" /></mylib:edit></td>
 							<td><c:out value="${ computer.introduced }" /> <!-- Introd date --></td>
 							<td><c:out value="${ computer.discontinued }" /> <!-- disco date --></td>
 							<td><c:out value="${ computer.company.name }" /> <!-- Company --></td>

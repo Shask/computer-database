@@ -85,7 +85,7 @@
 								discontinued : "Enter a valid date"
 							},
 							error : function(label) {
-								$(this).addClass("error");
+								$(this).addClass("div");
 							}
 						});
 						

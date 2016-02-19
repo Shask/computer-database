@@ -18,6 +18,7 @@ import com.excilys.computerdb.dao.JDBCConnection;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
 import com.excilys.computerdb.dao.mapper.ComputerMapperDAO;
+import com.excilys.computerdb.dao.utils.SqlUtil;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.Page;
 
@@ -57,7 +58,8 @@ public class ComputerDAOImpl implements ComputerDAO {
 		//int currentLine = (page.getCurrentPage()-1) * page.getPageSize();
 		String limitPage = " LIMIT "+page.getPageSize();
 		String offset = " OFFSET "+(page.getCurrentPage()-1)*page.getPageSize();
-		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id  "+limitPage + offset;
+		String orderby = " ORDER BY "+ SqlUtil.OrderToString(page.getOrder())+ " "+page.getASC();
+		String request = "SELECT comput.id, comput.name, comput.introduced,comput.discontinued, c.id  AS cid, c.name AS cname FROM computer comput LEFT join company c on comput.company_id=c.id  "+limitPage + offset + orderby;
 		
 		List<Computer> computerList = new ArrayList<Computer>();
 		// Setup Connection, statement and resultSet into an Automatic Resource
@@ -209,7 +211,7 @@ public class ComputerDAOImpl implements ComputerDAO {
 				throw new SQLException("Update failed");
 			}
 		} catch (SQLException e) {
-			LOGGER.error("Error Updating Company into DB");
+			LOGGER.error("Error Updating Computer into DB");
 			e.printStackTrace();
 		}
 	}

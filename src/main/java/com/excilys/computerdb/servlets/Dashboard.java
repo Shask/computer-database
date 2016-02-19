@@ -13,6 +13,10 @@ import com.excilys.computerdb.model.mapper.ComputerMapperModel;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.service.Page;
 import com.excilys.computerdb.utils.InputControl;
+import com.excilys.computerdb.utils.Parser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servlet implementation class Dashboard
@@ -20,7 +24,7 @@ import com.excilys.computerdb.utils.InputControl;
  *
  */
 public class Dashboard extends HttpServlet {
-
+	private final static Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
 	private ComputerdbServices Services = ComputerdbServices.getInstance();
 	private static final long serialVersionUID = 1L;
 
@@ -38,13 +42,23 @@ public class Dashboard extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		String LocalipAddress = request.getLocalAddr();  
+		String DistantipAddress = getIpAddr(request);
+		LOGGER.info("new Get request from local = "+LocalipAddress);
+		LOGGER.info("distant ip = "+DistantipAddress);
+		if(!LocalipAddress.equals(DistantipAddress))
+		{
+			LOGGER.warn("Intruder redirected ... Bye");
+			response.sendRedirect("/computerdb/dashBoard");
+		}
+		
 		Integer pageNeeded = 1;
 		Page page = Services.getPage();
 		List<ComputerDTO> listComp;
 
 		// Get number of the page and check is it is not null and >0
 		String pageParam = request.getParameter("page");
-		if (pageParam == null ||  !InputControl.testInt(pageParam)) {
+		if (pageParam == null || "".equals(pageParam) || !InputControl.testInt(pageParam)) {
 		} else {
 			pageNeeded = Integer.parseInt(pageParam);
 			if (pageNeeded < 1) {
@@ -53,7 +67,7 @@ public class Dashboard extends HttpServlet {
 		}
 
 		String nbElements = request.getParameter("nbElements");
-		if (nbElements == null || !InputControl.testInt(pageParam)) {
+		if (nbElements == null || "".equals(nbElements) || !InputControl.testInt(pageParam)) {
 
 		} else
 			switch (nbElements) {
@@ -69,13 +83,13 @@ public class Dashboard extends HttpServlet {
 			}
 		page.setCurrentPage(pageNeeded);
 
-		String Computername = request.getParameter("search");
+		String searchName = request.getParameter("search");
 		int nbTotalComputer = 0;
-		if (Computername == null) {
+		if (searchName == null || "".equals(searchName)) {
 			listComp = ComputerMapperModel.toDTOList(Services.findAllComputer());
 			nbTotalComputer = Services.getCountComputer();
 		} else {
-			listComp = ComputerMapperModel.toDTOList(Services.findComputerByName(Computername));
+			listComp = ComputerMapperModel.toDTOList(Services.findComputerByName(searchName));
 			nbTotalComputer = listComp.size();
 		}
 
@@ -92,7 +106,33 @@ public class Dashboard extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		//Get Checked boxes from .jsp view and parse them to an array of Int
+		String selection = request.getParameter("selection");
+		List<Integer> listToDelete = Parser.StringToIntList(selection);
+		LOGGER.debug("deleting "+ listToDelete.toString());
+		Services.deleteComputer(listToDelete);
+		
+		//selection
+
 		doGet(request, response);
+	}
+	
+	public static String getIpAddr(HttpServletRequest request) {
+		String ip = request.getHeader("X-Real-IP");
+		if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
+			return ip;
+		}
+		ip = request.getHeader("X-Forwarded-For");
+		if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
+			// get first ip from proxy ip
+			int index = ip.indexOf(',');
+			if (index != -1) {
+				return ip.substring(0, index);
+			} else {
+				return ip;
+			}
+		}
+		return request.getRemoteAddr();
 	}
 
 }
