@@ -9,13 +9,14 @@
 		</layout>
 	</appender>
 
-	<logger name="com.mkyong.web" level="debug"
+	<logger name="com.mkyong.web" level="trace"
 		additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<root level="DEBUG">
+	<root level="TRACE">
 		<appender-ref ref="STDOUT" />
 	</root>
+	
 
 </configuration>

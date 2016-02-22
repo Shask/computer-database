@@ -12,6 +12,7 @@ import com.excilys.computerdb.dto.ComputerDTO;
 import com.excilys.computerdb.model.mapper.ComputerMapperModel;
 import com.excilys.computerdb.service.ComputerdbServices;
 import com.excilys.computerdb.service.Page;
+import com.excilys.computerdb.service.Page.ORDER_BY;
 import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.Parser;
 
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Servlet implementation class Dashboard
+ * 
  * @author Steven Fougeron
  *
  */
@@ -39,19 +41,8 @@ public class Dashboard extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		String LocalipAddress = request.getLocalAddr();  
-		String DistantipAddress = getIpAddr(request);
-		LOGGER.info("new Get request from local = "+LocalipAddress);
-		LOGGER.info("distant ip = "+DistantipAddress);
-		if(!LocalipAddress.equals(DistantipAddress))
-		{
-			LOGGER.warn("Intruder redirected ... Bye");
-			response.sendRedirect("/computerdb/dashBoard");
-		}
-		
 		Integer pageNeeded = 1;
 		Page page = Services.getPage();
 		List<ComputerDTO> listComp;
@@ -65,7 +56,7 @@ public class Dashboard extends HttpServlet {
 				pageNeeded = 1;
 			}
 		}
-
+		// Get number of elements per pages and set it for the Service
 		String nbElements = request.getParameter("nbElements");
 		if (nbElements == null || "".equals(nbElements) || !InputControl.testInt(pageParam)) {
 
@@ -83,6 +74,9 @@ public class Dashboard extends HttpServlet {
 			}
 		page.setCurrentPage(pageNeeded);
 
+		orderBy(request);
+
+		// Search by name
 		String searchName = request.getParameter("search");
 		int nbTotalComputer = 0;
 		if (searchName == null || "".equals(searchName)) {
@@ -104,35 +98,38 @@ public class Dashboard extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		//Get Checked boxes from .jsp view and parse them to an array of Int
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// Get Checked boxes from .jsp view and parse them to an array of Int
 		String selection = request.getParameter("selection");
 		List<Integer> listToDelete = Parser.StringToIntList(selection);
-		LOGGER.debug("deleting "+ listToDelete.toString());
+		LOGGER.debug("deleting " + listToDelete.toString());
 		Services.deleteComputer(listToDelete);
-		
-		//selection
+
+		// selection
 
 		doGet(request, response);
 	}
-	
-	public static String getIpAddr(HttpServletRequest request) {
-		String ip = request.getHeader("X-Real-IP");
-		if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-			return ip;
-		}
-		ip = request.getHeader("X-Forwarded-For");
-		if (null != ip && !"".equals(ip.trim()) && !"unknown".equalsIgnoreCase(ip)) {
-			// get first ip from proxy ip
-			int index = ip.indexOf(',');
-			if (index != -1) {
-				return ip.substring(0, index);
-			} else {
-				return ip;
+
+	private void orderBy(HttpServletRequest request) {
+		// Order by
+		String order = request.getParameter("order");
+		if (order != null && !"".equals(order)) {
+			switch (order) {
+			case "name":
+				Services.getPage().setOrder(ORDER_BY.NAME);
+				break;
+			case "introduced":
+				Services.getPage().setOrder(ORDER_BY.INTRODUCED);
+				break;
+			case "discontinued":
+				Services.getPage().setOrder(ORDER_BY.DISCONTINUED);
+				break;
+			case "company_name":
+				Services.getPage().setOrder(ORDER_BY.COMPANY_NAME);
+				break;
+			default:
 			}
 		}
-		return request.getRemoteAddr();
 	}
 
 }

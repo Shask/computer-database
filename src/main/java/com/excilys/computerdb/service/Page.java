@@ -21,16 +21,24 @@ public class Page {
 		NAME,
 		INTRODUCED,
 		DISCONTINUED,
-		COMPANY_NAME
-		
+		COMPANY_NAME;
 	}
 	
 	
 	public ORDER_BY getOrder() {
 		return order;
 	}
+	
 	public void setOrder(ORDER_BY order) {
-		this.order = order;
+		if(this.order != order)
+		{
+			this.order = order;
+			this.ASC=DIRECTION.ASC;
+		}
+		else
+		{
+			switchDirection();
+		}
 	}
 	
 
@@ -38,8 +46,15 @@ public class Page {
 	public DIRECTION getASC() {
 		return ASC;
 	}
-	public void setASC(DIRECTION aSC) {
-		ASC = aSC;
+	public void switchDirection(){
+		if(ASC==DIRECTION.ASC)
+		{
+			ASC=DIRECTION.DESC;
+		}
+		else
+		{
+			ASC=DIRECTION.ASC;
+		}
 	}
 	public Page(int currentPage, int pageSize) {
 		super();

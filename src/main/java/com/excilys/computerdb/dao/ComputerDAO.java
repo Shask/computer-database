@@ -1,10 +1,12 @@
 package com.excilys.computerdb.dao;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.service.Page;
+
 /**
  * 
  * @author Steven Fougeron
@@ -16,7 +18,7 @@ public interface ComputerDAO {
 	 * 
 	 * @return listCompany, a ArrayList containing all the computer in database
 	 *         with every details (id, name, date, date, company)
-	 * @throws CriticalDatabaseException 
+	 * @throws CriticalDatabaseException
 	 */
 	List<Computer> findAll(Page page) throws CriticalDatabaseException;
 
@@ -27,7 +29,7 @@ public interface ComputerDAO {
 	 *            to look for
 	 * @return a list of computer (normally only 1 instance of computer if id in
 	 *         unique)
-	 * @throws CriticalDatabaseException 
+	 * @throws CriticalDatabaseException
 	 */
 	Computer findById(int id) throws CriticalDatabaseException;
 
@@ -38,7 +40,7 @@ public interface ComputerDAO {
 	 * @param name
 	 *            : name of the computer to find
 	 * @return a list of Computer corresponding to the name
-	 * @throws CriticalDatabaseException 
+	 * @throws CriticalDatabaseException
 	 */
 	List<Computer> findByName(String name) throws CriticalDatabaseException;
 
@@ -47,7 +49,7 @@ public interface ComputerDAO {
 	 * 
 	 * @param computer
 	 *            to insert
-	 * @throws CriticalDatabaseException 
+	 * @throws CriticalDatabaseException
 	 */
 	void insertComputer(Computer computer) throws CriticalDatabaseException;
 
@@ -59,7 +61,7 @@ public interface ComputerDAO {
 	 *            to update
 	 * @param computer
 	 *            will replace the computer at id = id(Parameters)
-	 * @throws CriticalDatabaseException 
+	 * @throws CriticalDatabaseException
 	 * 
 	 */
 	void updateComputer(Computer computer) throws CriticalDatabaseException;
@@ -69,15 +71,25 @@ public interface ComputerDAO {
 	 * 
 	 * @param id
 	 *            : id to delete
-	 * @throws CriticalDatabaseException 
+	 * @param connection 
+	 * @throws CriticalDatabaseException
 	 * 
 	 */
 	void deleteComputer(int id) throws CriticalDatabaseException;
+	void deleteComputer(List<Integer> listid, Connection connection) throws CriticalDatabaseException;
 
-/**
- * Send back the number of computer in db	
- * @return an int
- * @throws CriticalDatabaseException 
- */
+	/**
+	 * Send back the number of computer in db
+	 * 
+	 * @return an int
+	 * @throws CriticalDatabaseException
+	 */
 	int countComputer() throws CriticalDatabaseException;
+/**
+ * Send back a list of computer from the company id
+ * @param id
+ * @return
+ * @throws CriticalDatabaseException
+ */
+List<Integer> findByCompanyId(int id, Connection connection) throws CriticalDatabaseException;
 }

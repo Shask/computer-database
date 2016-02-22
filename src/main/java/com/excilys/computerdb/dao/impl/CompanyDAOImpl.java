@@ -128,5 +128,20 @@ public class CompanyDAOImpl implements CompanyDAO {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * 
+	 * @param id
+	 * @throws CriticalDatabaseException
+	 */
+	public void deleteCompany(int id,Connection connection) throws CriticalDatabaseException {
+		String request = "DELETE FROM company WHERE id = ?";
+		try (PreparedStatement ps = connection.prepareStatement(request);) {
+			ps.setInt(1, id);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			LOGGER.error("Error Deleting Company into DB");
+			e.printStackTrace();
+		}
+	}
 
 }

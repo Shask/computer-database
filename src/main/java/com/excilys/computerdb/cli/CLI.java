@@ -48,6 +48,9 @@ public class CLI {
 			case "6":
 				deleteComputer();
 				break;
+			case "7":
+				deleteCompany();
+				break;
 			case "quit":
 				LOGGER.trace("Exiting the application");
 				return;
@@ -74,6 +77,7 @@ public class CLI {
 		System.out.println("|        4. Create a computer        |");
 		System.out.println("|        5. Update a computer        |");
 		System.out.println("|        6. Delete a computer        |");
+		System.out.println("|        7. Delete a company         |");
 		System.out.println("|                       quit.To quit |");
 		System.out.println("======================================");
 
@@ -258,6 +262,21 @@ public class CLI {
 			res = scanner.next();
 		} else if (InputControl.testInt(res)) {
 			Services.deleteComputer(Integer.parseInt(res));
+		}
+
+	}
+	
+	public static void deleteCompany() {
+		System.out.print("Enter id of the company to delete (or type list to get a list): ");
+
+		String res = "";
+		res = scanner.next();
+		if (res.equals("list")) {
+			displayAllCompanies();
+			System.out.print("Enter id of the company to delete");
+			res = scanner.next();
+		} else if (InputControl.testInt(res)) {
+			Services.deleteCompany(Integer.parseInt(res));
 		}
 
 	}

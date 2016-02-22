@@ -23,7 +23,7 @@ public class SqlUtil {
 			res = "computer.discontinued";
 			break;
 		case COMPANY_NAME:
-			res = "company.name";
+			res = "cname";
 			break;
 		}
 		return res;

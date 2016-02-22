@@ -92,4 +92,23 @@ public class ComputerMapperDAO {
 		}
 		return listComputer;
 	}
+	
+	public static List<Integer> toListId(ResultSet rs) {
+		List<Integer> listComputer = new ArrayList<>();
+		if (rs == null) {
+			return listComputer;
+		}
+		try {
+			while (rs.next()) {
+				Integer id = rs.getInt("id");
+
+				listComputer.add(id);
+			}
+		} catch (SQLException e) {
+			LOGGER.error("Error mapping list of Computer");
+			e.printStackTrace();
+			throw new MappingException();
+		}
+		return listComputer;
+	}
 }

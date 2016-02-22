@@ -31,16 +31,7 @@
 		<url-pattern>/dashboard</url-pattern>
 	</servlet-mapping>
 	
-	<!-- test mapping -->
-
-	<servlet>
-		<servlet-name>dashBoard</servlet-name>
-		<servlet-class>com.excilys.computerdb.servlets.Trap</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>dashBoard</servlet-name>
-		<url-pattern>/dashBoard</url-pattern>
-	</servlet-mapping>
+	
 	<!-- Add computer mapping -->
 	<servlet>
 		<servlet-name>addcomputer</servlet-name>

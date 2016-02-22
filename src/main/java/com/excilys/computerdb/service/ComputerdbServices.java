@@ -10,12 +10,14 @@ import com.excilys.computerdb.dao.CompanyDAO;
 import com.excilys.computerdb.dao.ComputerDAO;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
+import com.excilys.computerdb.dao.impl.AdvancedDAOImpl;
 import com.excilys.computerdb.dao.impl.CompanyDAOImpl;
 import com.excilys.computerdb.dao.impl.ComputerDAOImpl;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.model.Computer;
 import com.excilys.computerdb.model.validation.ValidatorModel;
 import com.excilys.computerdb.utils.exception.ValidationException;
+
 
 /**
  * 
@@ -27,11 +29,13 @@ public class ComputerdbServices {
 	private static ComputerdbServices instance = new ComputerdbServices();
 	private ComputerDAO computerDAO = ComputerDAOImpl.getInstance();
 	private CompanyDAO companyDAO = CompanyDAOImpl.getInstance();
+	private AdvancedDAOImpl advDAO = AdvancedDAOImpl.getInstance();
 	private final Page page = new Page();
 	private static final Logger LOGGER = LoggerFactory.getLogger(ComputerdbServices.class);
-
+	
+	
 	private ComputerdbServices() {
-
+		
 	}
 
 	public static ComputerdbServices getInstance() {
@@ -99,11 +103,25 @@ public class ComputerdbServices {
 			LOGGER.error(e1.getMessage());
 		}
 	}
+
 	public void deleteComputer(List<Integer> ids) {
 	
 		for(Integer id : ids)
 		{
 			deleteComputer(id);
+		}
+	}
+	
+
+	/**
+	 * 
+	 * @param id
+	 */
+	public void deleteCompany(int id) {
+		try {
+			advDAO.companyDelete(id);
+		} catch (FailedRequestException e) {
+			LOGGER.error("Error deleting the company");
 		}
 	}
 

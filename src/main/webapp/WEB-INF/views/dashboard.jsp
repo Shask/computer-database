@@ -33,7 +33,7 @@
 				</div>
 				<div class="pull-right">
 					<mylib:link classe="btn btn-success" id="addComputer" target="addcomputer">Add</mylib:link>
-					<mylib:link classe="btn btn-default" id="editComputer" target="#" onclick="$.fn.toggleEditMode();" >Edit</mylib:link>
+					<a class="btn btn-default" id="editComputer" onclick="$.fn.toggleEditMode();" >Edit</a>
 
 
 				</div>
@@ -43,6 +43,9 @@
 		<form id="deleteForm" action="#" method="POST">
 			<input type="hidden" name="selection" value="">
 		</form>
+<!--  Order by arrow setting -->
+
+
 
 		<div class="container" style="margin-top: 10px;">
 			<table class="table table-?page=1&nbElements=50#striped table-bordered">
@@ -55,12 +58,12 @@
 						<input type="checkbox" id="selectall" /> <span style="vertical-align: top;"> - <mylib:link target="#" id="deleteSelected" onclick="$.fn.deleteSelected();"> <i class="fa fa-trash-o fa-lg"></i>
 							</mylib:link>
 						</span></th>
-						<th>Computer name</th>
-						<th>Introduced date</th>
+						<th><mylib:link target="#" order="name">Computer name</mylib:link></th>
+						<th><mylib:link target="#" order="introduced">Introduced date </mylib:link></th>
 						<!-- Table header for Discontinued Date -->
-						<th>Discontinued date</th>
+						<th><mylib:link target="#" order="discontinued">Discontinued date</mylib:link></th>
 						<!-- Table header for Company -->
-						<th>Company</th>
+						<th><mylib:link target="#" order="company_name">Company</mylib:link></th>
 
 					</tr>
 				</thead>
