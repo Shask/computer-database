@@ -2,7 +2,6 @@ package com.excilys.computerdb.dao.impl;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +36,7 @@ public class AdvancedDAOImpl {
 			connection = JDBCConnection.getConnection();
 			try {
 				connection.setAutoCommit(false);
-
-				List<Integer> listToDelete = computerDAO.findByCompanyId(id, connection);
-				LOGGER.trace("Computer related to the company : " + listToDelete);
-				computerDAO.deleteComputer(listToDelete, connection);
+				computerDAO.deleteComputerWithCompany(id, connection);
 				LOGGER.trace("Computer deleted  ");
 				companyDAO.deleteCompany(id, connection);
 				LOGGER.trace("Company deleted  ");

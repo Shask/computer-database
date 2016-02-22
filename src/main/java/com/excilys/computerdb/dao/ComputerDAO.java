@@ -76,7 +76,7 @@ public interface ComputerDAO {
 	 * 
 	 */
 	void deleteComputer(int id) throws CriticalDatabaseException;
-	void deleteComputer(List<Integer> listid, Connection connection) throws CriticalDatabaseException;
+	void deleteComputerWithCompany(int idCompany, Connection connection) throws CriticalDatabaseException;
 
 	/**
 	 * Send back the number of computer in db

@@ -1,6 +1,5 @@
 package com.excilys.computerdb.dao.impl;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -238,11 +237,10 @@ public class ComputerDAOImpl implements ComputerDAO {
 		}
 	}
 	
-	public void deleteComputer(List<Integer> listid,Connection connection) throws CriticalDatabaseException {
-		String request = "DELETE FROM computer WHERE id IN (?)";
+	public void deleteComputerWithCompany(int idCompany,Connection connection) throws CriticalDatabaseException {
+		String request = "DELETE FROM computer WHERE company_id = ?";
 		try (PreparedStatement ps = connection.prepareStatement(request);) {
-			Array array = connection.createArrayOf("VARCHAR", listid.toArray());
-			ps.setArray(1, array);
+			ps.setInt(1, idCompany);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			LOGGER.error("Error Deleting list of computer into DB");
