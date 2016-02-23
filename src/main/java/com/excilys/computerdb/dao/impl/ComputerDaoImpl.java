@@ -1,7 +1,7 @@
 package com.excilys.computerdb.dao.impl;
 
 import com.excilys.computerdb.dao.ComputerDao;
-import com.excilys.computerdb.dao.JDBCConnection;
+import com.excilys.computerdb.dao.JdbcConnection;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
 import com.excilys.computerdb.dao.mapper.ComputerMapperDao;
@@ -64,7 +64,7 @@ public class ComputerDaoImpl implements ComputerDao {
     List<Computer> computerList = new ArrayList<Computer>();
     // Setup Connection, statement and resultSet into an Automatic Resource
     // Management try
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       computerList = ComputerMapperDao.toModelList(rs);
@@ -87,7 +87,7 @@ public class ComputerDaoImpl implements ComputerDao {
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       try ( ResultSet rs = ps.executeQuery() ;) {
@@ -133,7 +133,7 @@ public class ComputerDaoImpl implements ComputerDao {
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         PreparedStatement ps = connection.prepareStatement(request) ;) {
 
       ps.setString(1, "%" + name + "%");
@@ -157,7 +157,7 @@ public class ComputerDaoImpl implements ComputerDao {
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JDBCConnection.getConnection() ; PreparedStatement ps =
+    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
 
       ps.setString(1, computer.getName());
@@ -205,7 +205,7 @@ public class ComputerDaoImpl implements ComputerDao {
 
     String request =
         "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id= ? WHERE id = ?";
-    try ( Connection connection = JDBCConnection.getConnection() ; PreparedStatement ps =
+    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
 
       ps.setString(1, computer.getName());
@@ -243,7 +243,7 @@ public class ComputerDaoImpl implements ComputerDao {
   @Override
   public void deleteComputer(int id) throws CriticalDatabaseException {
     String request = "DELETE FROM computer WHERE id = ?";
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       ps.executeUpdate();
@@ -275,7 +275,7 @@ public class ComputerDaoImpl implements ComputerDao {
     int result = 0;
     // Setup Connection, statement and resultSet into an Automatic Resource
     // Management try
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       rs.next();

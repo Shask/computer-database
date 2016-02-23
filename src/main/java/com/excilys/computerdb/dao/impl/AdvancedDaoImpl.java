@@ -2,7 +2,7 @@ package com.excilys.computerdb.dao.impl;
 
 import com.excilys.computerdb.dao.CompanyDao;
 import com.excilys.computerdb.dao.ComputerDao;
-import com.excilys.computerdb.dao.JDBCConnection;
+import com.excilys.computerdb.dao.JdbcConnection;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
 
@@ -37,7 +37,7 @@ public class AdvancedDaoImpl {
   public void companyDelete(int id) {
     Connection connection = null;
     try {
-      connection = JDBCConnection.getConnection();
+      connection = JdbcConnection.getConnection();
       try {
         connection.setAutoCommit(false);
         computerDao.deleteComputerWithCompany(id, connection);

@@ -1,7 +1,7 @@
 package com.excilys.computerdb.dao.impl;
 
 import com.excilys.computerdb.dao.CompanyDao;
-import com.excilys.computerdb.dao.JDBCConnection;
+import com.excilys.computerdb.dao.JdbcConnection;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.mapper.CompanyMapperDao;
 import com.excilys.computerdb.model.Company;
@@ -61,7 +61,7 @@ public class CompanyDaoImpl implements CompanyDao {
     List<Company> companyList = new ArrayList<>();
     // Setup Connection and statement and resultSet into an Automatic
     // Resource Management try
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       companyList = CompanyMapperDao.toModelList(rs);
@@ -78,7 +78,7 @@ public class CompanyDaoImpl implements CompanyDao {
     Company company = null;
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       try ( ResultSet rs = ps.executeQuery() ;) {
@@ -98,7 +98,7 @@ public class CompanyDaoImpl implements CompanyDao {
     List<Company> companyList = new ArrayList<Company>();
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JDBCConnection.getConnection() ;
+    try ( Connection connection = JdbcConnection.getConnection() ;
         PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setString(1, name);
       try ( ResultSet rs = ps.executeQuery() ;) {
@@ -122,7 +122,7 @@ public class CompanyDaoImpl implements CompanyDao {
     String request = "INSERT INTO company (name) VALUES (?)";
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JDBCConnection.getConnection() ; PreparedStatement ps =
+    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
       ps.setString(1, company.getName());
       int affectedRow = ps.executeUpdate();
