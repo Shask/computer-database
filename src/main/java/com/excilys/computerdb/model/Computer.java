@@ -39,7 +39,7 @@ public class Computer {
   }
 
   /**
-   * Set an Introduced date (only if its < to discontinued date).
+   * Set an Introduced date (only if its inferior to discontinued date).
    * 
    * @param introduced
    *          date to set
@@ -58,7 +58,7 @@ public class Computer {
   }
 
   /**
-   * Set an Discontinued date (only if its > to introduced date).
+   * Set an Discontinued date (only if its superior to introduced date).
    * 
    * @param discontinued
    *          date to set
@@ -153,7 +153,7 @@ public class Computer {
    *          introduced date
    * @param discontinued
    *          introduced date
-   * @return true if introducted < discontinued false otherwise
+   * @return true if introducted inferior discontinued false otherwise
    */
   private boolean checkDate(LocalDate introduced, LocalDate discontinued) {
     if ( introduced == null ) {

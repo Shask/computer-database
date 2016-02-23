@@ -54,6 +54,7 @@ public class CompanyDaoImpl implements CompanyDao {
    */
   @Override
   public List<Company> findAll(Page page) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String limitPage = " LIMIT " + page.getPageSize();
     String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
 
@@ -61,25 +62,26 @@ public class CompanyDaoImpl implements CompanyDao {
     List<Company> companyList = new ArrayList<>();
     // Setup Connection and statement and resultSet into an Automatic
     // Resource Management try
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        Statement statement = connection.createStatement() ;
+    try ( Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       companyList = CompanyMapperDao.toModelList(rs);
     } catch ( SQLException e ) {
       LOGGER.error("Error executing request : findAll: CompanyDAOImpl");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return companyList;
   }
 
   @Override
   public Company findById(int id) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "SELECT * FROM company WHERE id = ? ";
     Company company = null;
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        PreparedStatement ps = connection.prepareStatement(request) ;) {
+    try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       try ( ResultSet rs = ps.executeQuery() ;) {
         company = CompanyMapperDao.toModel(rs);
@@ -87,19 +89,20 @@ public class CompanyDaoImpl implements CompanyDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error executing request : findById : CompanyDAOImpl");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return company;
   }
 
   @Override
   public List<Company> findByName(String name) throws CriticalDatabaseException {
-
+    Connection connection = JdbcConnection.getConnection();
     String request = "SELECT * FROM company WHERE name = ?";
     List<Company> companyList = new ArrayList<Company>();
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        PreparedStatement ps = connection.prepareStatement(request) ;) {
+    try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setString(1, name);
       try ( ResultSet rs = ps.executeQuery() ;) {
         companyList = CompanyMapperDao.toModelList(rs);
@@ -107,22 +110,27 @@ public class CompanyDaoImpl implements CompanyDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error executing request : findByName: CompanyDAOImpl");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return companyList;
   }
 
   /**
    * Insert a company in DB.
+   * 
    * @param Companyto
    *          insert uses only the name of the company(Ignore the id and let the DB apply one)
-   * @throws CriticalDatabaseException Throw it when a critical problem is detected with database
+   * @throws CriticalDatabaseException
+   *           Throw it when a critical problem is detected with database
    */
   @Override
   public void insertCompany(Company company) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "INSERT INTO company (name) VALUES (?)";
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
+    try ( PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
       ps.setString(1, company.getName());
       int affectedRow = ps.executeUpdate();
@@ -136,15 +144,21 @@ public class CompanyDaoImpl implements CompanyDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error Inserting Company into DB");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
   }
 
   /**
    * Delete a company in DB.
-   * @param id to find
-   * @throws CriticalDatabaseException Throw it when a critical problem is detected with database
+   * 
+   * @param id
+   *          to find
+   * @throws CriticalDatabaseException
+   *           Throw it when a critical problem is detected with database
    */
-  public void deleteCompany(int id, Connection connection) throws CriticalDatabaseException {
+  public void deleteCompany(int id) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "DELETE FROM company WHERE id = ?";
     try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
@@ -152,6 +166,8 @@ public class CompanyDaoImpl implements CompanyDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error Deleting Company into DB");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
   }
 

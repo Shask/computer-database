@@ -33,16 +33,18 @@ public class AdvancedDaoImpl {
    * 
    * @param id
    *          id of the company to delete
+   * @throws CriticalDatabaseException if fails.
    */
-  public void companyDelete(int id) {
+  public void companyDelete(int id) throws CriticalDatabaseException {
     Connection connection = null;
     try {
+      JdbcConnection.startTransaction();
       connection = JdbcConnection.getConnection();
       try {
         connection.setAutoCommit(false);
-        computerDao.deleteComputerWithCompany(id, connection);
+        computerDao.deleteComputerWithCompany(id);
         LOGGER.trace("Computer deleted  ");
-        companyDao.deleteCompany(id, connection);
+        companyDao.deleteCompany(id);
         LOGGER.trace("Company deleted  ");
 
         connection.commit();
@@ -68,12 +70,7 @@ public class AdvancedDaoImpl {
         throw new FailedRequestException();
       }
     } finally {
-      try {
-        connection.close();
-      } catch (SQLException e) {
-        LOGGER.error("Error giving back to the connection pool !");
-        throw new FailedRequestException();
-      }
+      JdbcConnection.endTransaction();
     }
   }
 }

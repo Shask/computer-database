@@ -52,7 +52,7 @@ public class ComputerDaoImpl implements ComputerDao {
    */
   @Override
   public List<Computer> findAll(Page page) throws CriticalDatabaseException {
-    // int currentLine = (page.getCurrentPage()-1) * page.getPageSize();
+    Connection connection = JdbcConnection.getConnection();
     String limitPage = " LIMIT " + page.getPageSize();
     String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
     String orderby = " ORDER BY " + SqlUtil.orderToString(page.getOrder()) + " " + page.getAsc();
@@ -60,18 +60,18 @@ public class ComputerDaoImpl implements ComputerDao {
         "SELECT computer.id, computer.name, computer.introduced,computer.discontinued, c.id "
             + " AS cid, c.name AS cname FROM computer LEFT join company c on computer.company_id"
             + "=c.id  " + orderby + limitPage + offset;
-    System.out.println(request);
     List<Computer> computerList = new ArrayList<Computer>();
     // Setup Connection, statement and resultSet into an Automatic Resource
     // Management try
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        Statement statement = connection.createStatement() ;
+    try ( Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       computerList = ComputerMapperDao.toModelList(rs);
     } catch ( SQLException e ) {
       LOGGER.error("Error executing request : find All ");
       e.printStackTrace();
       throw new FailedRequestException("Error executing request : find All ");
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return computerList;
 
@@ -79,6 +79,7 @@ public class ComputerDaoImpl implements ComputerDao {
 
   @Override
   public Computer findById(int id) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request =
         "SELECT computer.id, computer.name, computer.introduced,computer.discontinued, c.id  "
             + "AS cid, c.name AS cname FROM computer LEFT join company c ON"
@@ -87,8 +88,7 @@ public class ComputerDaoImpl implements ComputerDao {
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        PreparedStatement ps = connection.prepareStatement(request) ;) {
+    try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       try ( ResultSet rs = ps.executeQuery() ;) {
         computer = ComputerMapperDao.toModel(rs);
@@ -97,13 +97,15 @@ public class ComputerDaoImpl implements ComputerDao {
       LOGGER.error("Error executing request : Computer : find By Id  ");
       e.printStackTrace();
       throw new FailedRequestException("Error executing request : Computer : find By Id  ");
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return computer;
   }
 
   @Override
-  public List<Integer> findByCompanyId(int id, Connection connection)
-      throws CriticalDatabaseException {
+  public List<Integer> findByCompanyId(int id) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "SELECT computer.id FROM computer LEFT join company c on"
         + " computer.company_id=c.id WHERE c.id = ?";
     List<Integer> listComputer = null;
@@ -119,13 +121,15 @@ public class ComputerDaoImpl implements ComputerDao {
       LOGGER.error("Error executing request : Computer : find By Company Id  ");
       e.printStackTrace();
       throw new FailedRequestException("Error executing request : Computer : find By Company Id  ");
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return listComputer;
   }
 
   @Override
   public List<Computer> findByName(String name) throws CriticalDatabaseException {
-
+    Connection connection = JdbcConnection.getConnection();
     String request = "SELECT computer.id, computer.name, computer.introduced,computer.discontinued,"
         + " c.id AS cid, c.name AS cname FROM computer "
         + "left join company c on computer.company_id=c.id " + "WHERE computer.name LIKE ?";
@@ -133,8 +137,7 @@ public class ComputerDaoImpl implements ComputerDao {
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        PreparedStatement ps = connection.prepareStatement(request) ;) {
+    try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
 
       ps.setString(1, "%" + name + "%");
       try ( ResultSet rs = ps.executeQuery() ;) {
@@ -144,20 +147,22 @@ public class ComputerDaoImpl implements ComputerDao {
       LOGGER.error("Error executing request : Computer : find By Name ");
       e.printStackTrace();
       throw new FailedRequestException("Error executing request : Computer : find By Name ");
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return computerList;
   }
 
   @Override
   public void insertComputer(Computer computer) throws CriticalDatabaseException {
-
+    Connection connection = JdbcConnection.getConnection();
     String request =
         "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
 
     /*
      * Setup Connection and prepared statement into an Automatic Resource Management try
      */
-    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
+    try ( PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
 
       ps.setString(1, computer.getName());
@@ -197,15 +202,17 @@ public class ComputerDaoImpl implements ComputerDao {
       LOGGER.error("Error Inserting Company into DB");
       e.printStackTrace();
       throw new FailedRequestException("Error Inserting Company into DB");
+    } finally {
+      JdbcConnection.endTransaction();
     }
   }
 
   @Override
   public void updateComputer(Computer computer) throws CriticalDatabaseException {
-
+    Connection connection = JdbcConnection.getConnection();
     String request =
         "UPDATE computer SET name=?, introduced=?, discontinued=?, company_id= ? WHERE id = ?";
-    try ( Connection connection = JdbcConnection.getConnection() ; PreparedStatement ps =
+    try ( PreparedStatement ps =
         connection.prepareStatement(request, Statement.RETURN_GENERATED_KEYS) ;) {
 
       ps.setString(1, computer.getName());
@@ -237,27 +244,32 @@ public class ComputerDaoImpl implements ComputerDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error Updating Computer into DB");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
   }
 
   @Override
   public void deleteComputer(int id) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "DELETE FROM computer WHERE id = ?";
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        PreparedStatement ps = connection.prepareStatement(request) ;) {
+    try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, id);
       ps.executeUpdate();
     } catch ( SQLException e ) {
       LOGGER.error("Error Deleting computer into DB");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
   }
 
   /**
    * delete a list of computer from a company id.
    */
-  public void deleteComputerWithCompany(int idCompany, Connection connection)
-      throws CriticalDatabaseException {
+  @Override
+  public void deleteComputerWithCompany(int idCompany) throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "DELETE FROM computer WHERE company_id = ?";
     try ( PreparedStatement ps = connection.prepareStatement(request) ;) {
       ps.setInt(1, idCompany);
@@ -265,24 +277,29 @@ public class ComputerDaoImpl implements ComputerDao {
     } catch ( SQLException e ) {
       LOGGER.error("Error Deleting list of computer into DB");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
+
   }
 
   @Override
   public int countComputer() throws CriticalDatabaseException {
+    Connection connection = JdbcConnection.getConnection();
     String request = "SELECT COUNT(*) FROM computer";
-    ;
+
     int result = 0;
     // Setup Connection, statement and resultSet into an Automatic Resource
     // Management try
-    try ( Connection connection = JdbcConnection.getConnection() ;
-        Statement statement = connection.createStatement() ;
+    try ( Statement statement = connection.createStatement() ;
         ResultSet rs = statement.executeQuery(request) ;) {
       rs.next();
       result = rs.getInt(1);
     } catch ( SQLException e ) {
       LOGGER.error("Error executing request : Count Computer ");
       e.printStackTrace();
+    } finally {
+      JdbcConnection.endTransaction();
     }
     return result;
   }

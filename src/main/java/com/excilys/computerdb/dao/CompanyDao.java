@@ -5,7 +5,6 @@ import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.model.Company;
 import com.excilys.computerdb.service.Page;
 
-import java.sql.Connection;
 import java.util.List;
 
 
@@ -49,6 +48,6 @@ public interface CompanyDao {
    */
   void insertCompany(Company company) throws CriticalDatabaseException;
 
-  void deleteCompany(int id, Connection connection) throws CriticalDatabaseException;
+  void deleteCompany(int id) throws CriticalDatabaseException;
 
 }
