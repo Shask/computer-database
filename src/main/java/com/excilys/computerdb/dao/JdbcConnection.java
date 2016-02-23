@@ -16,7 +16,7 @@ import java.util.Properties;
 
 /**
  * This class is used to access the connection to the database. This is a singleton type. You can
- * get a reference of the connection by using the getInstance() methode.
+ * get a reference of the connection by using the getInstance() method.
  * 
  * @author Steven Fougeron
  *
@@ -32,11 +32,48 @@ public class JdbcConnection {
   private static String PASS;
 
   private static BoneCP connectionPool = null;
+  private static final ThreadLocal<Connection> context = new ThreadLocal<Connection>();
 
   private static JdbcConnection instance = new JdbcConnection();
 
   public static JdbcConnection getInstance() {
     return instance;
+  }
+
+  public static void startTransaction() throws CriticalDatabaseException {
+    context.set(getConnectionFromPoll());
+  }
+
+  /**
+   * Get a connection from LocalThread if there is none, get one in the Connection pool.
+   * @return a connection
+   * @throws CriticalDatabaseException if fails.
+   */
+  public static Connection getConnection() throws CriticalDatabaseException {
+    Connection conn = context.get();
+    if ( conn == null ) {
+      startTransaction();
+    }
+    return context.get();
+  }
+
+  /**
+   * End the transaction.
+   * 
+   * @throws CriticalDatabaseException
+   *           when fails
+   */
+  public static void endTransaction() throws CriticalDatabaseException {
+    Connection conn = context.get();
+    if ( conn != null ) {
+      try {
+        conn.close();
+      } catch ( SQLException e ) {
+        LOGGER.error("end Transaction didn't close connection properly");
+        throw new CriticalDatabaseException();
+      }
+    }
+    context.remove();
   }
 
   /**
@@ -46,7 +83,7 @@ public class JdbcConnection {
    * @throws CriticalDatabaseException
    *           When something is wrong with the DB
    */
-  public static Connection getConnection() throws CriticalDatabaseException {
+  private static Connection getConnectionFromPoll() throws CriticalDatabaseException {
     try {
       LOGGER.trace("Retriving a connection from the spawning pool...");
       return connectionPool.getConnection();

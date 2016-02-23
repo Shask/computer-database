@@ -147,7 +147,12 @@ public class ComputerdbServices {
    */
   public void deleteCompany(int id) {
     try {
-      advDao.companyDelete(id);
+      try {
+        advDao.companyDelete(id);
+      } catch ( CriticalDatabaseException e ) {
+        LOGGER.error("Error in DB ...");
+        throw new FailedRequestException();
+      }
     } catch ( FailedRequestException e ) {
       LOGGER.error("Error deleting the company");
     }
@@ -237,8 +242,10 @@ public class ComputerdbServices {
   }
 
   /**
-   *Insert a computer in Db. 
-   * @param computer to put in DB, modify it's ID to match with the one in database
+   * Insert a computer in Db.
+   * 
+   * @param computer
+   *          to put in DB, modify it's ID to match with the one in database
    */
   public void insertComputer(Computer computer) {
     try {
