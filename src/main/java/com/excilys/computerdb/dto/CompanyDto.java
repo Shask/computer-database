@@ -1,21 +1,34 @@
-package com.excilys.computerdb.model;
+package com.excilys.computerdb.dto;
 
 /**
- * Class that defines a company by an id and its name.
+ * Transferable object for Company.
  * 
  * @author Steven Fougeron
  *
  */
-public class Company {
-  private int id;
-  private String name;
+public class CompanyDto {
+  int id;
+  String name;
 
-  public Company(int id, String name) {
-    this.name = name;
+  public CompanyDto(int id) {
+    super();
     this.id = id;
   }
 
-  // Getters and Setters
+  /**
+   * Constructor.
+   * 
+   * @param id
+   *          id
+   * @param name
+   *          name
+   */
+  public CompanyDto(int id, String name) {
+    super();
+    this.id = id;
+    this.name = name;
+  }
+
   public int getId() {
     return id;
   }
@@ -52,7 +65,7 @@ public class Company {
     if ( getClass() != obj.getClass() ) {
       return false;
     }
-    Company other = (Company) obj;
+    CompanyDto other = (CompanyDto) obj;
     if ( id != other.id ) {
       return false;
     }
@@ -64,11 +77,6 @@ public class Company {
       return false;
     }
     return true;
-  }
-
-  @Override
-  public String toString() {
-    return "Company [id=" + id + ", name=" + name + "]";
   }
 
 }

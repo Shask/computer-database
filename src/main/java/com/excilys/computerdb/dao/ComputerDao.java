@@ -12,7 +12,7 @@ import com.excilys.computerdb.service.Page;
  * @author Steven Fougeron
  *
  */
-public interface ComputerDAO {
+public interface ComputerDao {
 	/**
 	 * Get all computer from the database
 	 * 

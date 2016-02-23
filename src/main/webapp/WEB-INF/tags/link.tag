@@ -8,7 +8,6 @@
 <%@ attribute name="currentpage" required="false" type="java.lang.String" description="Current page we're at"%>
 <%@ attribute name="onclick" required="false" type="java.lang.String" description="onclic for html"%>
 <%@ attribute name="order" required="false" type="java.lang.String" description="sort field"%>
-<%@ attribute name ="by" required="false" type="java.lang.String" description ="Ascendant or descendant orderby  "%>
 
 <c:if test="${empty currentpage}" var="1" />
 <c:if test="${empty pagesize}" var="50" />
@@ -18,7 +17,7 @@
 		<a class="${classe}" href="${target}?page=${currentpage}&nbElements=${pagesize}&order=${order}&by=${by}" id="${id}" onclick="${onclick}"> <jsp:doBody /></a>
 	</c:when>
 	<c:when test="${target == '#'}">
-		<a class="${classe}" id="${id}" href="?page=${currentpage}&nbElements=${pagesize}&order=${order}&by=${by}" onclick="${onclick}"  > <jsp:doBody /></a>
+		<a class="${classe}" id="${id}" href="?page=${currentpage}&nbElements=${pagesize}&order=${order}" onclick="${onclick}"  > <jsp:doBody /></a>
 	</c:when>
 </c:choose>
 

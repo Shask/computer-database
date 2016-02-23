@@ -74,9 +74,9 @@ public class JDBCConnection {
 			config.setPassword(PASS);
 			
 			config.setMinConnectionsPerPartition(1);
-			config.setMaxConnectionsPerPartition(5);
+			config.setMaxConnectionsPerPartition(3);
 			
-			config.setPartitionCount(100);
+			config.setPartitionCount(33);
 			
 			connectionPool = new BoneCP(config);
 			
