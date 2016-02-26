@@ -27,3 +27,14 @@ docker run --name="mysql" -e MYSQL_ROOT_PASSWORD="root" -d shask/mysql
 docker create --name="jdk_mvn" shask/jdk_mvn --link mysql:3306 mvn test -t computerdb/pom.xml
 docker cp . jdk_mvn:/computerdb
 docker start jdk_mvn 
+
+------------------------------
+
+docker rm -f $(docker ps -a -q)
+#docker rmi --force $(docker images -q)
+
+docker run --name="mysql" -e MYSQL_ROOT_PASSWORD="root" -d shask/mysql
+docker create --name="jdk_mvn" --link="mysql:3306" shask/jdk_mvn mvn test -t ./computerdb/pom.xml 
+docker cp . jdk_mvn:/computerdb
+docker start -a jdk_mvn 
+
