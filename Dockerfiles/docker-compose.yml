@@ -1,0 +1,16 @@
+jenkins:
+  image: shask/jenkinsdocker
+  links:
+    - dind
+  ports:
+    - 8080:8080
+
+dind:
+  build: ./dind
+  expose:
+    - 2375
+  environment:
+    PORT: 2375
+  privileged: true
+
+

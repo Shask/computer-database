@@ -1,0 +1,29 @@
+docker create shask/jdk_mvn --name jdk_mvn
+docker cp /var/jenkins_home/jobs/computerdb/workspace/ jdk_mvn
+
+
+
+docker create shask/jdk_mvn --name jdk_mvn
+docker cp . jdk_mvn/computerdb
+
+
+docker run --name shask/mysql -e MYSQL_ROOT_PASSWORD=root -d mysql/mysql-server
+
+
+
+
+docker rm -f $(docker ps -a -q)
+#docker rmi --force $(docker images -q)
+
+docker run --name="mysql" -e MYSQL_ROOT_PASSWORD="root" -d shask/mysql
+docker create --name="jdk_mvn" shask/jdk_mvn 
+docker cp . jdk_mvn:/computerdb
+
+
+docker rm -f $(docker ps -a -q)
+#docker rmi --force $(docker images -q)
+
+docker run --name="mysql" -e MYSQL_ROOT_PASSWORD="root" -d shask/mysql
+docker create --name="jdk_mvn" shask/jdk_mvn --link mysql:3306 mvn test -t computerdb/pom.xml
+docker cp . jdk_mvn:/computerdb
+docker start jdk_mvn 
