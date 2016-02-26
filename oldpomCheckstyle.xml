@@ -123,9 +123,39 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+			<!-- Checkstyle -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.17</version>
+				<executions>
+					<execution>
+						<id>validate</id>
+						<phase>validate</phase>
+						<configuration>
+							<configLocation>google_checks.xml</configLocation>
+							<encoding>UTF-8</encoding>
+							<consoleOutput>false</consoleOutput>
+							<failsOnError>false</failsOnError>
+							<linkXRef>false</linkXRef>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<!-- CheckStyle -->
-	
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.17</version>
+				<configuration>
+					<configLocation>google_checks.xml</configLocation>
+					<failOnViolation>false</failOnViolation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
