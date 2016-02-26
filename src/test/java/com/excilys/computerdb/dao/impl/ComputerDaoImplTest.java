@@ -4,7 +4,7 @@ import com.excilys.computerdb.dao.ComputerDao;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.model.Computer;
 
-import junit.framework.TestCase;
+import junit.framework.TestCase ;
 
 /**
  * Test of DAOs.
