@@ -2,7 +2,7 @@ package com.excilys.computerdb.dao.utils;
 
 import com.excilys.computerdb.service.Page;
 
-public class SqlUtil {
+public interface SqlUtil {
   /**
    * Convert a enum OrderBy to a String(usable in DB).
    * 

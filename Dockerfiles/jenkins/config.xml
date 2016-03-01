@@ -29,15 +29,62 @@
   <builders>
     <hudson.tasks.Shell>
       <command>
-docker rm -f $(docker ps -a -q)
+
+
+if [ -e $(docker ps -aq -f "name=mysql") ]
+then 
+	echo No mysl docker running ...
+else 
+	docker rm -f mysql
+fi  
+    
+if [ -e $(docker ps -aq -f "name=jdk_mvn") ]
+then 
+	echo No jdk_mvn docker running ...
+else 
+	docker rm -f jdk_mvn
+fi
+
+if [ -e $(docker ps -aq -f "name=tomcat") ]
+then 
+	echo No jdk_mvn tomcat running ...
+else 
+	docker rm -f tomcat
+fi
+if [ -e $(docker ps -aq -f "name=computerdb-webapp") ]
+then 
+	echo No jdk_mvn tomcat running ...
+else 
+	docker rm -f computerdb-webapp
+fi
+
 #docker rmi --force $(docker images -q)
 #docker rmi --force shask/mysql:2.0
 
-docker run --name=&quot;mysql&quot; -d shask/mysql:2.0
+docker run --name="mysql" -d shask/mysql:2.0
 sleep 5
-docker create --name=&quot;jdk_mvn&quot; --link=&quot;mysql:localhost&quot; shask/jdk_mvn mvn clean install 
+docker create --name="jdk_mvn" --link="mysql:localhost" shask/jdk_mvn mvn clean install
 docker cp . jdk_mvn:/.
-docker start -a jdk_mvn </command>
+docker start -a jdk_mvn 
+#Copy of .war from docker jdk-mvn to jenkins
+docker cp jdk_mvn:/root/.m2/repository/com/excilys/computerdb/computerdb/0.4.2/computerdb-0.4.2.war computerdb.war
+
+#Create tomcat docker and cp the webapp in it 
+docker create --name="computerdb-webapp"  --restart=no tomcat:8.0
+docker cp computerdb.war computerdb-webapp:usr/local/tomcat/webapps/computerdb.war
+docker commit computerdb-webapp shask/computerdb-webapp
+#stop testDB
+docker stop mysql
+
+#push the webapp on my hub
+docker push shask/computerdb-webapp
+
+
+bash /var/glazer-deploy.sh --host 192.168.10.225 --port 65000 --env MYSQL_ROOT_PASSWORD=root mysql_deploy shask/mysql:2.0
+bash /var/glazer-deploy.sh --host 192.168.10.225 --port 65000 --link mysql:localhost --publish 65312:8080 shask-computerdb-webapp shask/computerdb-webapp
+
+ 
+ </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
