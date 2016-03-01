@@ -76,6 +76,10 @@
 
 	</dependencies>
 	<build>
+
+
+
+
 		<plugins>
 
 			<!-- Specify which JDK Maven should use -->
@@ -113,6 +117,8 @@
 							<goal>test</goal> <!-- integration-test will launch tests -->
 						</goals>
 						<configuration>
+						<!-- Skipping integration tests -->
+						<skip>true</skip>
 							<excludes>
 								<exclude>none</exclude>
 							</excludes>
@@ -144,6 +150,15 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- Fail safe to skip some IT test on dockers -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>2.19.1</version>
+				<configuration>
+					<skipITs>true</skipITs>					
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

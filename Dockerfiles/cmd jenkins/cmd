@@ -38,3 +38,16 @@ docker create --name="jdk_mvn" --link="mysql:3306" shask/jdk_mvn mvn test -t ./c
 docker cp . jdk_mvn:/computerdb
 docker start -a jdk_mvn 
 
+
+---------------
+
+
+docker rm -f $(docker ps -a -q)
+#docker rmi --force $(docker images -q)
+#docker rmi --force shask/mysql:2.0
+
+docker run --name="mysql" -d shask/mysql:2.0
+sleep 5
+docker create --name="jdk_mvn" --link="mysql:localhost" shask/jdk_mvn mvn test 
+docker cp . jdk_mvn:/.
+docker start -a jdk_mvn 

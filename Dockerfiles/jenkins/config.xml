@@ -35,10 +35,11 @@ docker rm -f $(docker ps -a -q)
 
 docker run --name=&quot;mysql&quot; -d shask/mysql:2.0
 sleep 5
-docker create --name=&quot;jdk_mvn&quot; --link=&quot;mysql:localhost&quot; shask/jdk_mvn mvn test 
+docker create --name=&quot;jdk_mvn&quot; --link=&quot;mysql:localhost&quot; shask/jdk_mvn mvn clean install 
 docker cp . jdk_mvn:/.
 docker start -a jdk_mvn </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
   <buildWrappers/>
+</project>

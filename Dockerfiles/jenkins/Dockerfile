@@ -7,4 +7,9 @@ USER root
 RUN curl -sSL https://get.docker.com/ | sh \
     && rm -rf /var/lib/apt/lists/*
 
+COPY plugins.txt /usr/share/jenkins/plugins.txt
+COPY config.xml /var/jenkins_home/jobs/computerdb/config.xml
+
+RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
+
 ENV DOCKER_HOST tcp://dind:2375
