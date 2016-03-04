@@ -1,0 +1,29 @@
+2016-03-04 14:48:47,821 INFO [main] o.s.c.s.ClassPathXmlApplicationContext [AbstractApplicationContext.java:578] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@13fee20c: startup date [Fri Mar 04 14:48:47 CET 2016]; root of context hierarchy
+2016-03-04 14:48:47,855 INFO [main] o.s.b.f.x.XmlBeanDefinitionReader [XmlBeanDefinitionReader.java:317] Loading XML bean definitions from class path resource [applicationContext.xml]
+2016-03-04 14:48:48,057 INFO [main] o.s.b.f.c.PropertyPlaceholderConfigurer [PropertiesLoaderSupport.java:172] Loading properties file from class path resource [config.properties]
+2016-03-04 17:55:11,329 INFO [main] o.s.c.s.ClassPathXmlApplicationContext [AbstractApplicationContext.java:578] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@783e6358: startup date [Fri Mar 04 17:55:11 CET 2016]; root of context hierarchy
+2016-03-04 17:55:11,358 INFO [main] o.s.b.f.x.XmlBeanDefinitionReader [XmlBeanDefinitionReader.java:317] Loading XML bean definitions from class path resource [applicationContext.xml]
+2016-03-04 17:55:11,560 INFO [main] o.s.b.f.c.PropertyPlaceholderConfigurer [PropertiesLoaderSupport.java:172] Loading properties file from class path resource [config.properties]
+2016-03-04 17:55:20,157 TRACE [main] c.e.c.s.ComputerServices [ComputerServices.java:32] Finding all computer ...
+2016-03-04 17:55:20,174 DEBUG [main] c.j.b.BoneCPDataSource [BoneCPDataSource.java:119] JDBC URL = jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull, Username = admincdb, partitions = 10, max (per partition) = 10, min (per partition) = 5, idle max age = 60 min, idle test period = 240 min, strategy = DEFAULT
+2016-03-04 17:55:20,608 DEBUG [main] c.e.c.m.v.ValidatorModel [ValidatorModel.java:23] Validation failed : Computer null
+2016-03-04 17:55:20,609 ERROR [main] c.e.c.s.ComputerServices [ComputerServices.java:44] null
+2016-03-04 17:55:56,316 INFO [main] o.s.c.s.ClassPathXmlApplicationContext [AbstractApplicationContext.java:578] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@783e6358: startup date [Fri Mar 04 17:55:56 CET 2016]; root of context hierarchy
+2016-03-04 17:55:56,350 INFO [main] o.s.b.f.x.XmlBeanDefinitionReader [XmlBeanDefinitionReader.java:317] Loading XML bean definitions from class path resource [applicationContext.xml]
+2016-03-04 17:55:56,549 INFO [main] o.s.b.f.c.PropertyPlaceholderConfigurer [PropertiesLoaderSupport.java:172] Loading properties file from class path resource [config.properties]
+2016-03-04 17:55:59,576 TRACE [main] c.e.c.s.ComputerServices [ComputerServices.java:32] Finding all computer ...
+2016-03-04 17:55:59,593 DEBUG [main] c.j.b.BoneCPDataSource [BoneCPDataSource.java:119] JDBC URL = jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull, Username = admincdb, partitions = 10, max (per partition) = 10, min (per partition) = 5, idle max age = 60 min, idle test period = 240 min, strategy = DEFAULT
+2016-03-04 17:57:33,703 TRACE [main] c.e.c.s.CompanyServices [CompanyServices.java:37] Finding all company ...
+2016-03-04 17:57:33,704 TRACE [main] c.e.c.d.i.CompanyDaoImpl [CompanyDaoImpl.java:39] findAll company..
+2016-03-04 17:57:48,096 DEBUG [main] c.e.c.m.v.ValidatorModel [ValidatorModel.java:23] Validation failed : Computer null
+2016-03-04 17:57:48,096 ERROR [main] c.e.c.s.ComputerServices [ComputerServices.java:142] null
+2016-03-04 17:57:48,096 DEBUG [main] c.e.c.c.Cli [Cli.java:231] No Computer found with this id
+2016-03-04 17:57:53,513 DEBUG [main] c.e.c.m.v.ValidatorModel [ValidatorModel.java:23] Validation failed : Computer null
+2016-03-04 17:57:53,514 ERROR [main] c.e.c.s.ComputerServices [ComputerServices.java:142] null
+2016-03-04 17:57:53,516 DEBUG [main] c.e.c.c.Cli [Cli.java:231] No Computer found with this id
+2016-03-04 17:58:07,369 DEBUG [main] c.e.c.m.v.ValidatorModel [ValidatorModel.java:23] Validation failed : Computer null
+2016-03-04 17:58:07,370 ERROR [main] c.e.c.s.ComputerServices [ComputerServices.java:142] null
+2016-03-04 17:58:07,370 DEBUG [main] c.e.c.c.Cli [Cli.java:231] No Computer found with this id
+2016-03-04 17:58:23,057 DEBUG [main] c.e.c.m.v.ValidatorModel [ValidatorModel.java:23] Validation failed : Computer null
+2016-03-04 17:58:23,057 ERROR [main] c.e.c.s.ComputerServices [ComputerServices.java:142] null
+2016-03-04 17:58:23,058 DEBUG [main] c.e.c.c.Cli [Cli.java:231] No Computer found with this id

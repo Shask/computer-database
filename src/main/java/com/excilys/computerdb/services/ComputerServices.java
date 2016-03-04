@@ -1,45 +1,27 @@
-package com.excilys.computerdb.service;
+package com.excilys.computerdb.services;
 
-import com.excilys.computerdb.dao.CompanyDao;
 import com.excilys.computerdb.dao.ComputerDao;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
-import com.excilys.computerdb.dao.impl.AdvancedDaoImpl;
-import com.excilys.computerdb.dao.impl.CompanyDaoImpl;
-import com.excilys.computerdb.dao.impl.ComputerDaoImpl;
-import com.excilys.computerdb.model.Company;
-import com.excilys.computerdb.model.Computer;
-import com.excilys.computerdb.model.validation.ValidatorModel;
+import com.excilys.computerdb.models.Computer;
+import com.excilys.computerdb.models.validation.ValidatorModel;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service allowing to user to do operations (using lower layers like DAOs).
- * 
- * @author Steven Fougeron
- *
- */
-public class ComputerdbServices {
+@Service
+public class ComputerServices {
 
-  private static ComputerdbServices instance = new ComputerdbServices();
-  private ComputerDao computerDao = ComputerDaoImpl.getInstance();
-  private CompanyDao companyDao = CompanyDaoImpl.getInstance();
-  private AdvancedDaoImpl advDao = AdvancedDaoImpl.getInstance();
+  @Autowired
+  private ComputerDao computerDao;
   private final Page page = new Page();
-  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerdbServices.class);
-
-  private ComputerdbServices() {
-
-  }
-
-  public static ComputerdbServices getInstance() {
-    return instance;
-  }
+  private static final Logger LOGGER = LoggerFactory.getLogger(ComputerServices.class);
 
   /**
    * Find and return all computers.
@@ -55,30 +37,11 @@ public class ComputerdbServices {
         ValidatorModel.validate(c);
       }
     } catch ( CriticalDatabaseException e ) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error("CriticalDatabaseException" + e.getMessage());
     } catch ( FailedRequestException e ) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error("FailedRequestException" + e.getMessage());
     } catch ( ValidationException e ) {
-      LOGGER.error(e.getMessage());
-    }
-    return listComp;
-  }
-
-  /**
-   * Find and return all companies.
-   * 
-   * @return the list of companies
-   */
-  public List<Company> findAllCompany() {
-    LOGGER.trace("Finding all company ...");
-    List<Company> listComp = new ArrayList<>();
-    try {
-      listComp = companyDao.findAll(page);
-    } catch ( CriticalDatabaseException e ) {
-      e.printStackTrace();
-      LOGGER.error(e.getMessage());
-    } catch ( FailedRequestException e1 ) {
-      LOGGER.error(e1.getMessage());
+      LOGGER.error("ValidationException" + e.getMessage());
     }
     return listComp;
   }
@@ -99,11 +62,11 @@ public class ComputerdbServices {
         ValidatorModel.validate(c);
       }
     } catch ( CriticalDatabaseException e ) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error("CriticalDatabaseException" + e.getMessage());
     } catch ( FailedRequestException e ) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error("FailedRequestException" + e.getMessage());
     } catch ( ValidationException e ) {
-      LOGGER.error(e.getMessage());
+      LOGGER.error("ValidationException" + e.getMessage());
     }
     return listComp;
   }
@@ -114,7 +77,7 @@ public class ComputerdbServices {
    * @param id
    *          id to delete
    */
-  public void deleteComputer(int id) {
+  public void deleteComputer(long id) {
     LOGGER.trace("Deleting computer ...");
     try {
       computerDao.deleteComputer(id);
@@ -136,25 +99,6 @@ public class ComputerdbServices {
 
     for ( Integer id : ids ) {
       deleteComputer(id);
-    }
-  }
-
-  /**
-   * Delete a company.
-   * 
-   * @param id
-   *          to delete
-   */
-  public void deleteCompany(int id) {
-    try {
-      try {
-        advDao.companyDelete(id);
-      } catch ( CriticalDatabaseException e ) {
-        LOGGER.error("Error in DB ...");
-        throw new FailedRequestException();
-      }
-    } catch ( FailedRequestException e ) {
-      LOGGER.error("Error deleting the company");
     }
   }
 
@@ -184,7 +128,7 @@ public class ComputerdbServices {
    *          id to find
    * @return computer found
    */
-  public Computer findComputerById(int id) {
+  public Computer findComputerById(long id) {
     Computer computer = null;
     try {
       computer = computerDao.findById(id);
@@ -219,26 +163,6 @@ public class ComputerdbServices {
       e.printStackTrace();
       LOGGER.error(e.getMessage());
     }
-  }
-
-  /**
-   * find company using its id.
-   * 
-   * @param id
-   *          to find
-   * @return company found
-   */
-  public Company findCompanyById(int id) {
-    Company company = null;
-    try {
-      company = companyDao.findById(id);
-    } catch ( CriticalDatabaseException e ) {
-      e.printStackTrace();
-      LOGGER.error(e.getMessage());
-    } catch ( FailedRequestException e1 ) {
-      LOGGER.error(e1.getMessage());
-    }
-    return company;
   }
 
   /**
@@ -277,4 +201,5 @@ public class ComputerdbServices {
   public Page getPage() {
     return page;
   }
+
 }

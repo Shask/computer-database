@@ -1,12 +1,15 @@
 package com.excilys.computerdb.cli;
 
-import com.excilys.computerdb.model.Company;
-import com.excilys.computerdb.model.Computer;
-import com.excilys.computerdb.service.ComputerdbServices;
+import com.excilys.computerdb.models.Company;
+import com.excilys.computerdb.models.Computer;
+import com.excilys.computerdb.services.CompanyServices;
+import com.excilys.computerdb.services.ComputerServices;
 import com.excilys.computerdb.utils.InputControl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,7 +25,8 @@ public class Cli {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Cli.class);
   private static Scanner scanner = new Scanner(System.in);
-  private static ComputerdbServices Services = ComputerdbServices.getInstance();
+  private static ComputerServices computerServices;
+  private static CompanyServices companyServices;
 
   /**
    * main.
@@ -31,6 +35,12 @@ public class Cli {
    *          args
    */
   public static void main(String[] args) {
+    // Load Spring context
+    ConfigurableApplicationContext ctx =
+        new ClassPathXmlApplicationContext(new String[] { "applicationContext.xml" });
+    // Manually get Service bean
+    computerServices = (ComputerServices) ctx.getBean(ComputerServices.class);
+    companyServices = (CompanyServices) ctx.getBean(CompanyServices.class);
     String res = "";
 
     while (!"quit".equals(res)) {
@@ -65,9 +75,12 @@ public class Cli {
           LOGGER.trace("Wrong input");
       }
     }
+
     if ( scanner != null ) {
       scanner.close();
     }
+    ctx.registerShutdownHook();
+    ctx.close();
   }
 
   /**
@@ -96,7 +109,7 @@ public class Cli {
   public static void displayAllComputer() {
     boolean display = true;
     while (display) {
-      for ( Computer c : Services.findAllComputer() ) {
+      for ( Computer c : computerServices.findAllComputer() ) {
         System.out.println(c);
       }
       System.out.println(
@@ -104,14 +117,14 @@ public class Cli {
       String res = scanner.next();
       switch ( res ) {
         case "prev" :
-          Services.decPage();
+          computerServices.decPage();
           break;
         case "next" :
-          Services.incPage();
+          computerServices.incPage();
           break;
         case "quit" :
           display = false;
-          Services.resetPage();
+          computerServices.resetPage();
           break;
         default :
           System.out.println("Wrong input");
@@ -127,7 +140,7 @@ public class Cli {
   public static void displayAllCompanies() {
     boolean display = true;
     while (display) {
-      for ( Company c : Services.findAllCompany() ) {
+      for ( Company c : companyServices.findAllCompany() ) {
         System.out.println(c);
       }
       System.out.println(
@@ -135,14 +148,14 @@ public class Cli {
       String res = scanner.next();
       switch ( res ) {
         case "prev" :
-          Services.decPage();
+          computerServices.decPage();
           break;
         case "next" :
-          Services.incPage();
+          computerServices.incPage();
           break;
         case "quit" :
           display = false;
-          Services.resetPage();
+          computerServices.resetPage();
           break;
         default :
           System.out.println("Wrong input");
@@ -211,9 +224,9 @@ public class Cli {
    * @param id
    *          : Computer id
    */
-  public static void displayById(int id) {
+  public static void displayById(long id) {
 
-    Computer computer = Services.findComputerById(id);
+    Computer computer = computerServices.findComputerById(id);
     if ( computer == null ) {
       LOGGER.debug("No Computer found with this id");
     } else {
@@ -230,7 +243,7 @@ public class Cli {
   public static void displayByName(String name) {
     boolean display = true;
     while (display) {
-      List<Computer> listComputer = Services.findComputerByName(name);
+      List<Computer> listComputer = computerServices.findComputerByName(name);
       if ( listComputer.isEmpty() ) {
         LOGGER.info("No Computer found with this id");
       }
@@ -242,14 +255,14 @@ public class Cli {
       String res = scanner.next();
       switch ( res ) {
         case "prev" :
-          Services.decPage();
+          computerServices.decPage();
           break;
         case "next" :
-          Services.incPage();
+          computerServices.incPage();
           break;
         case "quit" :
           display = false;
-          Services.resetPage();
+          computerServices.resetPage();
           break;
         default :
           System.out.println("Wrong input");
@@ -271,7 +284,7 @@ public class Cli {
       System.out.print("Enter id of the computer to delete");
       res = scanner.next();
     } else if ( InputControl.testInt(res) ) {
-      Services.deleteComputer(Integer.parseInt(res));
+      computerServices.deleteComputer(Integer.parseInt(res));
     }
 
   }
@@ -289,7 +302,7 @@ public class Cli {
       System.out.print("Enter id of the company to delete");
       res = scanner.next();
     } else if ( InputControl.testInt(res) ) {
-      Services.deleteCompany(Integer.parseInt(res));
+      companyServices.deleteCompany(Integer.parseInt(res));
     }
 
   }
@@ -308,7 +321,7 @@ public class Cli {
       res = scanner.next();
     }
 
-    Computer computer = Services.findComputerById(Integer.parseInt(res));
+    Computer computer = computerServices.findComputerById(Integer.parseInt(res));
     if ( computer == null ) {
       LOGGER.info("No Computer found with this id");
       return;
@@ -318,7 +331,7 @@ public class Cli {
     System.out.println(computer);
 
     Computer comp = computerUserInput(computer.getId());
-    Services.updateComputer(comp);
+    computerServices.updateComputer(comp);
   }
 
   /**
@@ -326,7 +339,7 @@ public class Cli {
    */
   public static void createComputer() {
     Computer computer = computerUserInput(0);
-    Services.insertComputer(computer);
+    computerServices.insertComputer(computer);
     System.out.println(computer);
   }
 
@@ -336,7 +349,7 @@ public class Cli {
    * @return computer newly created
    * 
    */
-  public static Computer computerUserInput(int id) {
+  public static Computer computerUserInput(long id) {
     String res = "";
     System.out.print("Enter computer name : ");
     res = scanner.next();
@@ -368,7 +381,7 @@ public class Cli {
         if ( res.equals("list") ) {
           displayAllCompanies();
         } else {
-          Company company = Services.findCompanyById(Integer.parseInt(res));
+          Company company = companyServices.findCompanyById(Integer.parseInt(res));
           if ( company == null ) {
             System.out.println("Company do not exist in database");
             LOGGER.info("Company do not exist in database");

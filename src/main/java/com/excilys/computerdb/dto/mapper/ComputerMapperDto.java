@@ -1,17 +1,18 @@
 package com.excilys.computerdb.dto.mapper;
 
 import com.excilys.computerdb.dto.ComputerDto;
-import com.excilys.computerdb.model.Company;
-import com.excilys.computerdb.model.Computer;
-import com.excilys.computerdb.service.ComputerdbServices;
+import com.excilys.computerdb.models.Company ;
+import com.excilys.computerdb.models.Computer ;
+import com.excilys.computerdb.services.CompanyServices;
 import com.excilys.computerdb.utils.DateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component ;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Maps a ComputerDTO into any other objects.
@@ -19,8 +20,12 @@ import java.util.List;
  * @author Steven Fougeron
  *
  */
+@Component
 public class ComputerMapperDto {
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerMapperDto.class);
+
+  @Autowired
+  private CompanyServices companyServices;
 
   /**
    * Map a ComputerDTO to a Computer.
@@ -29,7 +34,7 @@ public class ComputerMapperDto {
    *          to map
    * @return Computer mapped, or null is something went wrong
    */
-  public static Computer toModel(ComputerDto dto) {
+  public Computer toModel(ComputerDto dto) {
     Computer computer = new Computer(dto.getId(), dto.getName());
 
     // Validate format and Intro<Discontinued using computerSetter
@@ -41,7 +46,7 @@ public class ComputerMapperDto {
     // get company full details from DB
     Company company = null;
     if ( dto.getCompany() != null && dto.getCompany().getId() > 0 ) {
-      company = ComputerdbServices.getInstance().findCompanyById(dto.getCompany().getId());
+      company = companyServices.findCompanyById(dto.getCompany().getId());
     }
     if ( company == null ) {
       String msg = "InputControl : Company not found, company set to null ";
@@ -60,7 +65,7 @@ public class ComputerMapperDto {
    *          list to map
    * @return a list of mapped computer
    */
-  public static List<Computer> toModelList(List<ComputerDto> dtoList) {
+  public List<Computer> toModelList(List<ComputerDto> dtoList) {
     List<Computer> computerList = new ArrayList<>();
     for ( ComputerDto dto : dtoList ) {
       Computer computer = toModel(dto);

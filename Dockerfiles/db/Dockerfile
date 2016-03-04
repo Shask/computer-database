@@ -1,5 +1,4 @@
-FROM mysql/mysql-server
-
+FROM mysql/mysql-server:5.5
 
 COPY 1-SCHEMA.sql /docker-entrypoint-initdb.d/
 COPY 2-PRIVILEGES.sql /docker-entrypoint-initdb.d/

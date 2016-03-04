@@ -2,6 +2,7 @@ package com.excilys.computerdb.model;
 
 import java.time.LocalDate;
 
+import com.excilys.computerdb.models.Computer ;
 
 import junit.framework.TestCase;
 

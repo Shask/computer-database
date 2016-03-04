@@ -1,5 +1,7 @@
 package com.excilys.computerdb.model;
 
+import com.excilys.computerdb.models.Company ;
+
 import junit.framework.TestCase;
 
 /**

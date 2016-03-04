@@ -7,7 +7,7 @@ package com.excilys.computerdb.dao.exception;
  * @author Steven Fougeron
  *
  */
-public class CriticalDatabaseException extends Exception {
+public class CriticalDatabaseException extends RuntimeException {
 
   private static final long serialVersionUID = -5402298354293473679L;
 

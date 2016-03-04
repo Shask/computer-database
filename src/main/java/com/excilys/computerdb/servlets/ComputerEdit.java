@@ -5,33 +5,56 @@ import com.excilys.computerdb.dto.ComputerDto;
 import com.excilys.computerdb.dto.mapper.ComputerMapperDto;
 import com.excilys.computerdb.dto.validation.ValidatorDto;
 import com.excilys.computerdb.mapper.exception.MappingException;
-import com.excilys.computerdb.model.Computer;
-import com.excilys.computerdb.model.mapper.CompanyMapperModel;
-import com.excilys.computerdb.model.mapper.ComputerMapperModel;
-import com.excilys.computerdb.service.ComputerdbServices;
+import com.excilys.computerdb.models.Computer;
+import com.excilys.computerdb.models.mappers.CompanyMapperModel;
+import com.excilys.computerdb.models.mappers.ComputerMapperModel;
+import com.excilys.computerdb.services.CompanyServices;
+import com.excilys.computerdb.services.ComputerServices;
 import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Controller
 public class ComputerEdit extends HttpServlet {
   private static final long serialVersionUID = -961736017555718259L;
-  private static ComputerdbServices Services = ComputerdbServices.getInstance();
+  @Autowired
+  private ComputerServices computerServices;
+  @Autowired
+  private CompanyServices companyServices;
+  @Autowired
+  private ComputerMapperDto computerMapperDto;
+
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerAdd.class);
 
   private int currentId = 0;
 
   public ComputerEdit() {
     super();
+  }
+
+  /**
+   * Methode to load Spring context in servlet.
+   * 
+   * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+   */
+  public void init(ServletConfig config) throws ServletException {
+    super.init(config);
+    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
+        config.getServletContext());
   }
 
   @Override
@@ -41,8 +64,9 @@ public class ComputerEdit extends HttpServlet {
     ComputerDto dto = null;
     if ( computerId != null && InputControl.testInt(computerId) ) {
       try {
-        dto = ComputerMapperModel.toDto(Services.findComputerById(Integer.parseInt(computerId)));
-        List<CompanyDto> companies = CompanyMapperModel.toDtoList(Services.findAllCompany());
+        dto = ComputerMapperModel
+            .toDto(computerServices.findComputerById(Integer.parseInt(computerId)));
+        List<CompanyDto> companies = CompanyMapperModel.toDtoList(companyServices.findAllCompany());
         request.setAttribute("computer", dto);
         request.setAttribute("companies", companies);
         currentId = Integer.parseInt(computerId);
@@ -76,8 +100,8 @@ public class ComputerEdit extends HttpServlet {
     Computer computer;
     try {
       ValidatorDto.validate(computerdto);
-      computer = ComputerMapperDto.toModel(computerdto);
-      Services.updateComputer(computer);
+      computer = computerMapperDto.toModel(computerdto);
+      computerServices.updateComputer(computer);
     } catch ( ValidationException | NullPointerException e ) {
       LOGGER.debug("Error during update : Computer was not added");
       e.printStackTrace();

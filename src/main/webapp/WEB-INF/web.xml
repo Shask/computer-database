@@ -10,7 +10,7 @@
 		</jsp-property-group>
 
 	</jsp-config>
-	
+
 	<!-- Edit computer mapping -->
 	<servlet>
 		<servlet-name>editcomputer</servlet-name>
@@ -20,7 +20,7 @@
 		<servlet-name>editcomputer</servlet-name>
 		<url-pattern>/editcomputer</url-pattern>
 	</servlet-mapping>
-	
+
 	<!-- Dashboard mapping -->
 	<servlet>
 		<servlet-name>dashboard</servlet-name>
@@ -30,8 +30,8 @@
 		<servlet-name>dashboard</servlet-name>
 		<url-pattern>/dashboard</url-pattern>
 	</servlet-mapping>
-	
-	
+
+
 	<!-- Add computer mapping -->
 	<servlet>
 		<servlet-name>addcomputer</servlet-name>
@@ -41,7 +41,7 @@
 		<servlet-name>addcomputer</servlet-name>
 		<url-pattern>/addcomputer</url-pattern>
 	</servlet-mapping>
-	
+
 	<!-- Error pages -->
 	<error-page>
 		<error-code>404</error-code>
@@ -59,4 +59,13 @@
 		<error-code>405</error-code>
 		<location>/WEB-INF/error/500.html</location>
 	</error-page>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
 </web-app>

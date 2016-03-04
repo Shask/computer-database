@@ -7,10 +7,10 @@ package com.excilys.computerdb.dto;
  *
  */
 public class CompanyDto {
-  int id;
+  long id;
   String name;
 
-  public CompanyDto(int id) {
+  public CompanyDto(long id) {
     super();
     this.id = id;
   }
@@ -23,17 +23,17 @@ public class CompanyDto {
    * @param name
    *          name
    */
-  public CompanyDto(int id, String name) {
+  public CompanyDto(long id, String name) {
     super();
     this.id = id;
     this.name = name;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -49,7 +49,7 @@ public class CompanyDto {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + id;
+    result = prime * result + (int) (id ^ (id >>> 32));
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }

@@ -1,10 +1,11 @@
 package com.excilys.computerdb.dto.mapper;
 
 import com.excilys.computerdb.dto.CompanyDto;
-import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.models.Company ;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  * @author Steven Fougeron
  *
  */
+@Component
 public class CompanyMapperDto {
   private static final Logger LOGGER = LoggerFactory.getLogger(CompanyMapperDto.class);
 
@@ -26,7 +28,7 @@ public class CompanyMapperDto {
    *          to map
    * @return a company, or null if the dto is null
    */
-  public static Company toModel(CompanyDto dto) {
+  public Company toModel(CompanyDto dto) {
     if ( dto == null ) {
       LOGGER.debug("Failed to map Company DTO to Model : DTO to map is null");
       return null;
@@ -46,7 +48,7 @@ public class CompanyMapperDto {
    *          to map
    * @return a list of mapped companies
    */
-  public static List<Company> toModelList(List<CompanyDto> dtoList) {
+  public List<Company> toModelList(List<CompanyDto> dtoList) {
     List<Company> companyList = new ArrayList<>();
     for ( CompanyDto dto : dtoList ) {
       Company company = toModel(dto);

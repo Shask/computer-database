@@ -11,6 +11,7 @@ COPY plugins.txt /usr/share/jenkins/plugins.txt
 COPY config.xml /var/jenkins_home/jobs/computerdb/config.xml
 COPY glazer-deploy.sh /var/glazer-deploy.sh
 
+RUN sleep 10
 RUN /usr/local/bin/plugins.sh /usr/share/jenkins/plugins.txt
 
 ENV DOCKER_HOST tcp://dind:2375

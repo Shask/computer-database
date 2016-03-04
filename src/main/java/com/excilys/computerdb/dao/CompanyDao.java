@@ -2,8 +2,8 @@ package com.excilys.computerdb.dao;
 
 
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
-import com.excilys.computerdb.model.Company;
-import com.excilys.computerdb.service.Page;
+import com.excilys.computerdb.models.Company ;
+import com.excilys.computerdb.services.Page ;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public interface CompanyDao {
    * @return a company found
    * @throws CriticalDatabaseException throw it when there is a critical problem with DB
    */
-  Company findById(int id) throws CriticalDatabaseException;
+  Company findById(long id) throws CriticalDatabaseException;
 
   /**
    * return all companies starting with the string in params.
@@ -48,6 +48,6 @@ public interface CompanyDao {
    */
   void insertCompany(Company company) throws CriticalDatabaseException;
 
-  void deleteCompany(int id) throws CriticalDatabaseException;
+  void deleteCompany(long id) throws CriticalDatabaseException;
 
 }

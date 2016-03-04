@@ -1,0 +1,38 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	<context:annotation-config />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>classpath:config.properties</value>
+		</property>
+	</bean>
+
+	<bean id="jdbcConnection" class="com.excilys.computerdb.dao.JdbcConnection">
+		<property name="dataSource" ref="boneCP" />
+	</bean>
+
+	<!-- BoneCP configuration -->
+	<bean id="boneCP" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="${DB_URL}" />
+		<property name="username" value="${LOGIN}" />
+		<property name="password" value="${PASS}" />
+		<property name="maxConnectionsPerPartition" value="10" />
+		<property name="minConnectionsPerPartition" value="5" />
+		<property name="partitionCount" value="10" />
+		<property name="deregisterDriverOnClose" value="true" />
+	</bean>
+
+	
+	<context:component-scan base-package="com.excilys.computerdb.dto" />
+	<context:component-scan base-package="com.excilys.computerdb.dao.impl" />
+	<context:component-scan base-package="com.excilys.computerdb.services" />
+	<context:component-scan base-package="com.excilys.computerdb.servlets" />
+	<context:component-scan base-package="com.excilys.computerdb.cli" />
+</beans>

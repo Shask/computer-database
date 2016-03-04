@@ -1,6 +1,6 @@
-package com.excilys.computerdb.model.validation;
+package com.excilys.computerdb.models.validation;
 
-import com.excilys.computerdb.model.Computer;
+import com.excilys.computerdb.models.Computer ;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 import org.slf4j.Logger;

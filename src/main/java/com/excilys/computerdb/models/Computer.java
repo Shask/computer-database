@@ -1,4 +1,4 @@
-package com.excilys.computerdb.model;
+package com.excilys.computerdb.models;
 
 import com.excilys.computerdb.dao.impl.CompanyDaoImpl;
 
@@ -17,7 +17,7 @@ import java.time.LocalDate;
  */
 public class Computer {
 
-  private int id;
+  private long id;
   private String name;
   private LocalDate introduced;
   private LocalDate discontinued;
@@ -71,7 +71,7 @@ public class Computer {
     }
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -83,7 +83,7 @@ public class Computer {
     this.company = company;
   }
 
-  public int getId() {
+  public long getId() {
     return id;
   }
 
@@ -139,7 +139,7 @@ public class Computer {
    * @param name
    *          name
    */
-  public Computer(int id, String name) {
+  public Computer(long id, String name) {
     super();
     this.id = id;
     this.name = name;
@@ -173,7 +173,7 @@ public class Computer {
     int result = 1;
     result = prime * result + ((company == null) ? 0 : company.hashCode());
     result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
-    result = prime * result + id;
+    result = prime * result + (int) (id ^ (id >>> 32));
     result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;

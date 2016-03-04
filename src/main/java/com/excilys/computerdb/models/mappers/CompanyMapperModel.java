@@ -1,8 +1,8 @@
-package com.excilys.computerdb.model.mapper;
+package com.excilys.computerdb.models.mappers;
 
 import com.excilys.computerdb.dto.CompanyDto;
 import com.excilys.computerdb.mapper.exception.MappingException;
-import com.excilys.computerdb.model.Company;
+import com.excilys.computerdb.models.Company ;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

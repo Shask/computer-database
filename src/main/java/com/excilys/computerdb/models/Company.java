@@ -1,4 +1,4 @@
-package com.excilys.computerdb.model;
+package com.excilys.computerdb.models;
 
 /**
  * Class that defines a company by an id and its name.
@@ -7,20 +7,20 @@ package com.excilys.computerdb.model;
  *
  */
 public class Company {
-  private int id;
+  private long id;
   private String name;
 
-  public Company(int id, String name) {
+  public Company(long id, String name) {
     this.name = name;
     this.id = id;
   }
 
   // Getters and Setters
-  public int getId() {
+  public long getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(long id) {
     this.id = id;
   }
 
@@ -36,7 +36,7 @@ public class Company {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + id;
+    result = prime * result + (int) (id ^ (id >>> 32));
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }

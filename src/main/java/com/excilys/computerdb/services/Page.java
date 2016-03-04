@@ -1,4 +1,4 @@
-package com.excilys.computerdb.service;
+package com.excilys.computerdb.services;
 
 /**
  * Class used in DAO and services allowing you to control parameters such as the page Size, the
@@ -9,7 +9,7 @@ package com.excilys.computerdb.service;
  */
 public class Page {
   private int currentPage = 1;
-  private int pageSize = 25;
+  private int pageSize = 50;
   private Direction asc = Direction.ASC;
   private OrderBy order = OrderBy.ID;
 

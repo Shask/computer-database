@@ -1,8 +1,8 @@
 package com.excilys.computerdb.dao;
 
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
-import com.excilys.computerdb.model.Computer;
-import com.excilys.computerdb.service.Page;
+import com.excilys.computerdb.models.Computer ;
+import com.excilys.computerdb.services.Page ;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public interface ComputerDao {
    * @throws CriticalDatabaseException
    *           thrown when somehting is wrong with the DB
    */
-  Computer findById(int id) throws CriticalDatabaseException;
+  Computer findById(long id) throws CriticalDatabaseException;
 
   /**
    * Get all the computer with a name <b>starting</b> with the parameter name, an empty array
@@ -80,9 +80,9 @@ public interface ComputerDao {
    *           thrown when somehting is wrong with the DB
    * 
    */
-  void deleteComputer(int id) throws CriticalDatabaseException;
+  void deleteComputer(long id) throws CriticalDatabaseException;
 
-  void deleteComputerWithCompany(int idCompany) throws CriticalDatabaseException;
+  void deleteComputerWithCompany(long idCompany) throws CriticalDatabaseException;
 
   /**
    * Send back the number of computer in db.
@@ -93,14 +93,5 @@ public interface ComputerDao {
    */
   int countComputer() throws CriticalDatabaseException;
 
-  /**
-   * Send back a list of computer from the company id.
-   * 
-   * @param id
-   *          company id
-   * @return list of computer id
-   * @throws CriticalDatabaseException
-   *           thrown when somehting is wrong with the DB
-   */
-  List<Integer> findByCompanyId(int id) throws CriticalDatabaseException;
+ 
 }
