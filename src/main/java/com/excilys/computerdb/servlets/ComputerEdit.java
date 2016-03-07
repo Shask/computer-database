@@ -10,27 +10,21 @@ import com.excilys.computerdb.models.mappers.CompanyMapperModel;
 import com.excilys.computerdb.models.mappers.ComputerMapperModel;
 import com.excilys.computerdb.services.CompanyServices;
 import com.excilys.computerdb.services.ComputerServices;
-import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import java.io.IOException;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @Controller
-public class ComputerEdit extends HttpServlet {
-  private static final long serialVersionUID = -961736017555718259L;
+@RequestMapping("/editcomputer")
+public class ComputerEdit {
   @Autowired
   private ComputerServices computerServices;
   @Autowired
@@ -42,58 +36,44 @@ public class ComputerEdit extends HttpServlet {
 
   private int currentId = 0;
 
-  public ComputerEdit() {
-    super();
-  }
-
-  /**
-   * Methode to load Spring context in servlet.
-   * 
-   * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
-   */
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-        config.getServletContext());
-  }
-
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    String computerId = request.getParameter("id");
+  @RequestMapping(method = RequestMethod.GET)
+  public String getMethod(@RequestParam Integer id, ModelMap model) {
     ComputerDto dto = null;
-    if ( computerId != null && InputControl.testInt(computerId) ) {
+    if ( id != null ) {
       try {
-        dto = ComputerMapperModel
-            .toDto(computerServices.findComputerById(Integer.parseInt(computerId)));
+        LOGGER.info("Retreiving computer with id : " + id);
+        currentId = id;
+        dto = ComputerMapperModel.toDto(computerServices.findComputerById(id));
         List<CompanyDto> companies = CompanyMapperModel.toDtoList(companyServices.findAllCompany());
-        request.setAttribute("computer", dto);
-        request.setAttribute("companies", companies);
-        currentId = Integer.parseInt(computerId);
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/editComputer.jsp")
-            .forward(request, response);
+        model.addAttribute("computer", dto);
+        model.addAttribute("companies", companies);
 
       } catch ( MappingException e ) {
-        response.sendRedirect("/computerdb/dashboard");
+        LOGGER.error("Error during mapping, redirection to dashboard...");
+        return "dashboard";
       }
     } else {
       // If there is something wrong with the id in parameters
-      response.sendRedirect("/computerdb/dashboard");
+      LOGGER.error(
+          "there is something wrong with the id in parameters, redirection to dashboard...");
+      return "dashboard";
     }
+    model.addAttribute("id",id);
+    return "editcomputer";
   }
 
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @RequestMapping(method = RequestMethod.POST)
+  public String postMethod(@RequestParam String computerName,
+      @RequestParam(required = false) String introduced,
+      @RequestParam(required = false) String discontinued, @RequestParam Integer company,
+      ModelMap model) {
 
-    String name = request.getParameter("computerName");
-    ComputerDto computerdto = new ComputerDto(name);
+    ComputerDto computerdto = new ComputerDto(computerName);
     computerdto.setId(currentId);
-    computerdto.setIntroduced(request.getParameter("introduced"));
-    computerdto.setDiscontinued(request.getParameter("discontinued"));
-    if ( request.getParameter("company") != null
-        && !"null".equals(request.getParameter("company")) ) {
-      computerdto.setCompany(new CompanyDto(Integer.parseInt(request.getParameter("company"))));
+    computerdto.setIntroduced(introduced);
+    computerdto.setDiscontinued(discontinued);
+    if ( company != null && !"null".equals(company) && company > 0 ) {
+      computerdto.setCompany(new CompanyDto(company));
     } else {
       computerdto.setCompany(null);
     }
@@ -105,11 +85,11 @@ public class ComputerEdit extends HttpServlet {
     } catch ( ValidationException | NullPointerException e ) {
       LOGGER.debug("Error during update : Computer was not added");
       e.printStackTrace();
-      request.setAttribute("id", currentId);
-      doGet(request, response);
+      model.addAttribute("id", currentId);
+      return "editcomputer";
     }
     currentId = -1;
-    response.sendRedirect("/computerdb/dashboard");
+    return "dashboard";
   }
 
 }

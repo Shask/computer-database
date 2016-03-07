@@ -57,7 +57,7 @@ public class ComputerDaoImpl implements ComputerDao {
         "SELECT computer.id, computer.name, computer.introduced,computer.discontinued, c.id  "
             + "AS cid, c.name AS cname FROM computer LEFT join company c ON"
             + " computer.company_id=c.id WHERE computer.id = ?";
-    return jdbcTemplate.queryForObject(request, new ComputerMapperDao(), id);
+    return (Computer) jdbcTemplate.queryForObject(request, new ComputerMapperDao(), id);
   }
 
   @Override
@@ -67,7 +67,7 @@ public class ComputerDaoImpl implements ComputerDao {
         + " c.id AS cid, c.name AS cname FROM computer "
         + "left join company c on computer.company_id=c.id " + "WHERE computer.name LIKE ?";
 
-    return jdbcTemplate.query(request, new ComputerMapperDao(), name);
+    return jdbcTemplate.query(request, new ComputerMapperDao(), "%" + name + "%");
   }
 
   @Override
@@ -108,10 +108,11 @@ public class ComputerDaoImpl implements ComputerDao {
       disc = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
     }
 
-    Object[] params =
-        new Object[] { computer.getName(), intro, disc, computer.getCompany().getId() };
+    Object[] params = new Object[] { computer.getName(), intro, disc, computer.getCompany().getId(),
+        computer.getId() };
     // Define type list of the array of objects
-    int[] types = new int[] { Types.VARCHAR, Types.TIMESTAMP, Types.TIMESTAMP, Types.BIGINT };
+    int[] types =
+        new int[] { Types.VARCHAR, Types.TIMESTAMP, Types.TIMESTAMP, Types.BIGINT, Types.BIGINT };
     jdbcTemplate.update(request, params, types);
 
   }

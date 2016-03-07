@@ -54,7 +54,7 @@ public class CompanyDaoImpl implements CompanyDao {
     String request = "SELECT * FROM company WHERE id = ? ";
     // Setup Connection and prepared statement into an Automatic Resource
     // Management try
-    return jdbcTemplate.queryForObject(request,new CompanyMapperDao(),id);
+    return (Company) jdbcTemplate.queryForObject(request,new CompanyMapperDao(),id);
   }
 
   @Override

@@ -5,23 +5,17 @@ import com.excilys.computerdb.models.mappers.ComputerMapperModel;
 import com.excilys.computerdb.services.ComputerServices;
 import com.excilys.computerdb.services.Page;
 import com.excilys.computerdb.services.Page.OrderBy;
-import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.Parser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import java.io.IOException;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class Dashboard.
@@ -30,107 +24,90 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 @Controller
-public class Dashboard extends HttpServlet {
+@RequestMapping("/dashboard")
+public class Dashboard {
   private static final Logger LOGGER = LoggerFactory.getLogger(Dashboard.class);
   @Autowired
   private ComputerServices computerServices;
-  private static final long serialVersionUID = 1L;
 
   /**
-   * @see HttpServlet#HttpServlet().
-   */
-  public Dashboard() {
-    super();
-  }
-
-  /**
-   *Methode to load Spring context in servlet.
+   * Called when GET method is called on the dashboard.
    * 
-   * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+   * @param page
+   *          number of pages
+   * @param nbElements
+   *          number of elements per page
+   * @param search
+   *          element to search
+   * @param order
+   *          orderby ...
+   * @param model
+   *          .
+   * @return .
    */
-  @Override
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-        config.getServletContext());
-  }
+  @RequestMapping(method = RequestMethod.GET)
+  public String getMethod(@RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer nbElements,
+      @RequestParam(required = false) String search, @RequestParam(required = false) String order,
+      ModelMap model) {
 
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response).
-   */
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+    Page pageObject = computerServices.getPage();
 
-    Integer pageNeeded = 1;
-    Page page = computerServices.getPage();
     List<ComputerDto> listComp;
 
-    // Get number of the page and check is it is not null and >0
-    String pageParam = request.getParameter("page");
-    if ( pageParam != null && !"".equals(pageParam) && InputControl.testInt(pageParam) ) {
-      pageNeeded = Integer.parseInt(pageParam);
-      if ( pageNeeded < 1 ) {
-        pageNeeded = 1;
-      }
+    // Get number of the page and check is it is not null and <1
+    if ( page == null || page < 1 ) {
+      page = 1;
     }
     // Get number of elements per pages and set it for the Service
-    String nbElements = request.getParameter("nbElements");
-    if ( nbElements != null && !"".equals(nbElements) && InputControl.testInt(pageParam) ) {
+    if ( nbElements != null ) {
       switch ( nbElements ) {
-        case "10" :
-          page.setPageSize(10);
+        case 10 :
+          pageObject.setPageSize(10);
           break;
-        case "50" :
-          page.setPageSize(50);
+        case 50 :
+          pageObject.setPageSize(50);
           break;
-        case "100" :
-          page.setPageSize(100);
+        case 100 :
+          pageObject.setPageSize(100);
           break;
         default :
       }
-    }
-    page.setCurrentPage(pageNeeded);
 
-    orderBy(request);
+    }
+    pageObject.setCurrentPage(page);
+
+    orderBy(order);
 
     // Search by name
-    String searchName = request.getParameter("search");
     int nbTotalComputer = 0;
-    if ( searchName == null || "".equals(searchName) ) {
+    if ( search == null || "".equals(search) ) {
       listComp = ComputerMapperModel.toDtoList(computerServices.findAllComputer());
       nbTotalComputer = computerServices.getCountComputer();
     } else {
-      listComp = ComputerMapperModel.toDtoList(computerServices.findComputerByName(searchName));
+      listComp = ComputerMapperModel.toDtoList(computerServices.findComputerByName(search));
       nbTotalComputer = listComp.size();
     }
 
-    request.setAttribute("nbComputer", nbTotalComputer);
-    request.setAttribute("currentpage", pageNeeded);
-    request.setAttribute("computers", listComp);
-
-    this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request,
-        response);
+    model.addAttribute("nbComputer", nbTotalComputer);
+    model.addAttribute("currentpage", page);
+    model.addAttribute("computers", listComp);
+    return "dashboard";
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response).
-   */
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @RequestMapping(method = RequestMethod.POST)
+  protected String postMethod(@RequestParam(required = false) String selection) {
     // Get Checked boxes from .jsp view and parse them to an array of Int
-    String selection = request.getParameter("selection");
-    List<Integer> listToDelete = Parser.stringToIntList(selection);
-    LOGGER.debug("deleting " + listToDelete.toString());
-    computerServices.deleteComputer(listToDelete);
-
-    // selection
-
-    doGet(request, response);
+    if ( selection != null ) {
+      List<Integer> listToDelete = Parser.stringToIntList(selection);
+      LOGGER.debug("deleting " + listToDelete.toString());
+      computerServices.deleteComputer(listToDelete);
+    }
+    return "dashboard";
   }
 
-  private void orderBy(HttpServletRequest request) {
+  private void orderBy(String order) {
     // Order by
-    String order = request.getParameter("order");
     if ( order != null && !"".equals(order) ) {
       switch ( order ) {
         case "name" :

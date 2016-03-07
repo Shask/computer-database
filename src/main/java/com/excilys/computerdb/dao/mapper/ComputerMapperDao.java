@@ -87,7 +87,7 @@ public class ComputerMapperDao implements RowMapper<Computer> {
 
   /**
    * Method that transform a ResultSet into a since Computer (get you the first of the resultatSet,
-   * null otherwise).
+   * null otheRowMapperrwise).
    * 
    * @param rs
    *          : resultSet from request
@@ -98,7 +98,7 @@ public class ComputerMapperDao implements RowMapper<Computer> {
   @Override
   public Computer mapRow(ResultSet rs, int rowNum) throws SQLException {
     try {
-      if ( rs != null && rs.next() ) { // if there is a computer returning
+      if ( rs != null ) { // if there is a computer returning
         // from database, map it
 
         Computer computer = new Computer(rs.getInt("id"), rs.getString("name"));
@@ -113,7 +113,7 @@ public class ComputerMapperDao implements RowMapper<Computer> {
         }
         return computer;
       } else { // if there is no computer returning from the request, send
-        // null
+        LOGGER.error("No computer found in ResultSet");
         return null;
       }
     } catch ( SQLException e ) {

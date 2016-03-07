@@ -48,7 +48,7 @@ public class CompanyMapperDao implements RowMapper<Company> {
   @Override
   public Company mapRow(ResultSet rs, int rowNum) throws SQLException {
     try {
-      if ( rs != null && rs.next() ) {
+      if ( rs != null ) {
         return new Company(rs.getLong("id"), rs.getString("name"));
       } else {
         return null;

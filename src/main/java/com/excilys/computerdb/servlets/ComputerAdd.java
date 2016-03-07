@@ -8,23 +8,17 @@ import com.excilys.computerdb.models.Computer;
 import com.excilys.computerdb.models.mappers.CompanyMapperModel;
 import com.excilys.computerdb.services.CompanyServices;
 import com.excilys.computerdb.services.ComputerServices;
-import com.excilys.computerdb.utils.InputControl;
 import com.excilys.computerdb.utils.exception.ValidationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-
-import java.io.IOException;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class ComputerAdd.
@@ -34,7 +28,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  */
 @Controller
-public class ComputerAdd extends HttpServlet {
+@RequestMapping("/addcomputer")
+public class ComputerAdd {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ComputerAdd.class);
   @Autowired
@@ -44,72 +39,46 @@ public class ComputerAdd extends HttpServlet {
   @Autowired
   private ComputerMapperDto computerMapperDto;
 
-  private static final long serialVersionUID = 1L;
-
-  /**
-   * @see HttpServlet#HttpServlet().
-   */
-  public ComputerAdd() {
-    super();
-  }
-
-  /**
-   *Methode to load Spring context in servlet.
-   * 
-   * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
-   */
-  @Override
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this,
-        config.getServletContext());
-  }
-
-  /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response).
-   */
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  @RequestMapping(method = RequestMethod.GET)
+  public String getMethod(ModelMap model) {
 
     List<CompanyDto> listCompanies = CompanyMapperModel.toDtoList(companyServices.findAllCompany());
-    request.setAttribute("companies", listCompanies);
-    this.getServletContext().getRequestDispatcher("/WEB-INF/views/addComputer.jsp").forward(request,
-        response);
+    model.addAttribute("companies", listCompanies);
 
-    String pageParam = request.getParameter("page");
-    if ( pageParam != null || "".equals(pageParam) || !InputControl.testInt(pageParam) ) {
-      request.setAttribute("currentpage", pageParam);
-    }
-    String nbElemParam = request.getParameter("nbElements");
-    if ( nbElemParam != null || "".equals(nbElemParam) || !InputControl.testInt(pageParam) ) {
-      request.setAttribute("pagesize", nbElemParam);
-    }
+    /*
+     * String pageParam = request.getParameter("page"); if ( pageParam != null ||
+     * "".equals(pageParam) || !InputControl.testInt(pageParam) ) {
+     * request.setAttribute("currentpage", pageParam); } String nbElemParam =
+     * request.getParameter("nbElements"); if ( nbElemParam != null || "".equals(nbElemParam) ||
+     * !InputControl.testInt(pageParam) ) { request.setAttribute("pagesize", nbElemParam); }
+     */
+    return "addcomputer";
   }
 
-  /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response).
-   */
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    String name = request.getParameter("computerName");
-    if ( name != null ) {
-      ComputerDto computerdto = new ComputerDto(name);
-      computerdto.setIntroduced(request.getParameter("introduced"));
-      computerdto.setDiscontinued(request.getParameter("discontinued"));
-      if ( request.getParameter("company") != null ) {
-        computerdto.setCompany(new CompanyDto(Integer.parseInt(request.getParameter("company"))));
-      }
-      Computer computer;
-      try {
-        ValidatorDto.validate(computerdto);
-        computer = computerMapperDto.toModel(computerdto);
-        computerServices.insertComputer(computer);
-      } catch ( ValidationException e ) {
-        LOGGER.debug("Error during validation or insertion : Computer was not added");
-        e.printStackTrace();
-      }
+  @RequestMapping(method = RequestMethod.POST)
+  public String doPost(@RequestParam String computerName,
+      @RequestParam(required = false) String introduced,
+      @RequestParam(required = false) String discontinued,
+      @RequestParam Integer company,
+      ModelMap model) {
+    ComputerDto computerdto = new ComputerDto(computerName);
+    computerdto.setIntroduced(introduced);
+    computerdto.setDiscontinued(discontinued);
+    if ( company != null ) {
+      computerdto.setCompany(new CompanyDto(company));
     }
-    doGet(request, response);
+    Computer computer;
+    try {
+      ValidatorDto.validate(computerdto);
+      computer = computerMapperDto.toModel(computerdto);
+      computerServices.insertComputer(computer);
+    } catch ( ValidationException e ) {
+      LOGGER.debug("Error during validation or insertion : Computer was not added");
+      e.printStackTrace();
+      return "addcomputer";
+    }
+
+    return "redirect:/dashboard";
   }
 
 }

@@ -132,13 +132,17 @@ public class ComputerServices {
     Computer computer = null;
     try {
       computer = computerDao.findById(id);
+      System.out.println(computer);
       ValidatorModel.validate(computer);
     } catch ( CriticalDatabaseException e ) {
+      LOGGER.error("CriticalDatabaseException");
       e.printStackTrace();
       LOGGER.error(e.getMessage());
     } catch ( FailedRequestException e1 ) {
+      LOGGER.error("FailedRequestException");
       LOGGER.error(e1.getMessage());
     } catch ( ValidationException e ) {
+      LOGGER.error("ValidationException");
       LOGGER.error(e.getMessage());
     }
     return computer;
