@@ -563,3 +563,5 @@ Caused by: org.springframework.beans.factory.NoUniqueBeanDefinitionException: No
 2016-03-07 15:24:02,742 DEBUG [main] c.e.c.d.i.CompanyDaoImpl [Computer.java:70] Invalid date -> discontinued date didn't change
 2016-03-07 15:24:43,712 DEBUG [main] c.e.c.d.i.CompanyDaoImpl [Computer.java:70] Invalid date -> discontinued date didn't change
 2016-03-07 15:24:43,784 DEBUG [main] c.e.c.d.i.CompanyDaoImpl [Computer.java:70] Invalid date -> discontinued date didn't change
+2016-03-11 15:28:15,288 DEBUG [main] c.e.c.m.Computer [Computer.java:68] Invalid date -> discontinued date didn't change
+2016-03-11 15:28:15,362 DEBUG [main] c.e.c.m.Computer [Computer.java:68] Invalid date -> discontinued date didn't change

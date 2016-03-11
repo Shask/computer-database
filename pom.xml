@@ -193,6 +193,7 @@
 
 	</dependencies>
 	<build>
+	<finalName>computerdb</finalName>
 		<resources>
 			<resource>
 				<filtering>true</filtering>

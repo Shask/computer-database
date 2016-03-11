@@ -24,7 +24,7 @@ public class ComputerDtoValidator implements Validator {
 
     ComputerDto dto = (ComputerDto) obj;
     if ( dto.getName().length() < 3 ) {
-      e.rejectValue("name", "name.too.short", "Name is too short ( at least 2 characteres )");
+      e.rejectValue("name", "name.too.short");
     }
     LocalDate intro = null;
     LocalDate disco = null;
@@ -33,7 +33,7 @@ public class ComputerDtoValidator implements Validator {
       intro = dateUtils.convertStringToDate(dto.getIntroduced()); // Try to parse the String to a
                                                                   // Localdate
       if ( intro == null ) {
-        e.rejectValue("introduced", "wrong.date.format", "Wrong date format (yyyy-MM-dd expected)");
+        e.rejectValue("introduced", "wrong.date.format");
       } else {
 
         if ( dto.getDiscontinued().length() > 0 ) {// if there is a discontinued date

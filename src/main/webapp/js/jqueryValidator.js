@@ -10,7 +10,7 @@ $.validator.addMethod(
 
 						$.validator.addMethod("alphanumeric", function(value,
 								element) {
-							return this.optional(element) || /^[a-zA-Z0-9-_']+$/.test(value);
+							return this.optional(element) || /^[a-zA-Z0-9-_' ]+$/.test(value);
 						}, "Letters, numbers or underscores only please");
 						$('#editcomputer')
 								.validate(
