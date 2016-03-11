@@ -82,7 +82,7 @@ public class ComputerDaoImpl implements ComputerDao {
       intro = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
     }
     if ( computer.getDiscontinued() != null ) {
-      disc = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
+      disc = Timestamp.valueOf(computer.getDiscontinued().atTime(LocalTime.of(0, 0)));
     }
 
     Object[] params =
@@ -105,7 +105,7 @@ public class ComputerDaoImpl implements ComputerDao {
       intro = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
     }
     if ( computer.getDiscontinued() != null ) {
-      disc = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
+      disc = Timestamp.valueOf(computer.getDiscontinued().atTime(LocalTime.of(0, 0)));
     }
 
     Object[] params = new Object[] { computer.getName(), intro, disc, computer.getCompany().getId(),

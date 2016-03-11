@@ -1,5 +1,7 @@
 package com.excilys.computerdb.dto;
 
+import javax.validation.constraints.NotNull ;
+
 /**
  * Transferable object for Company.
  * 
@@ -8,6 +10,7 @@ package com.excilys.computerdb.dto;
  */
 public class CompanyDto {
   long id;
+  @NotNull
   String name;
 
   public CompanyDto(long id) {

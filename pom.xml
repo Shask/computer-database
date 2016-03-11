@@ -4,11 +4,12 @@
 	<groupId>com.excilys.computerdb</groupId>
 	<artifactId>computerdb</artifactId>
 	<packaging>war</packaging>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 	<name>computerdb</name>
 	<!-- Version of used depedencies -->
 	<properties>
 		<boneCP.version>0.8.0.RELEASE</boneCP.version>
+		<hibernate.version>5.1.3.Final</hibernate.version>
 		<java.version>1.8</java.version>
 		<javax.validation.version>1.1.0.Final</javax.validation.version>
 		<javax.servlet.version>2.5</javax.servlet.version>
@@ -45,12 +46,13 @@
 		</dependencies>
 	</dependencyManagement>
 
-
-
-
-
-
 	<dependencies>
+		<!-- Hibernate Validation -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
 		<!-- Database -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -75,57 +77,57 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${spring.version}</version>
-			
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 			<version>${spring.version}</version>
-			
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
-		
+
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
-		
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${spring.version}</version>
-			
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
-		
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
 			<version>${spring.version}</version>
-			
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
-	
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${spring.version}</version>
-		
+
 		</dependency>
 
 

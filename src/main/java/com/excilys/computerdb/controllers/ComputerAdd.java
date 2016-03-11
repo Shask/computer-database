@@ -1,8 +1,9 @@
-package com.excilys.computerdb.servlets;
+package com.excilys.computerdb.controllers;
 
 import com.excilys.computerdb.dto.CompanyDto;
 import com.excilys.computerdb.dto.ComputerDto;
 import com.excilys.computerdb.dto.mapper.ComputerMapperDto;
+import com.excilys.computerdb.dto.validation.ComputerDtoValidator;
 import com.excilys.computerdb.dto.validation.ValidatorDto;
 import com.excilys.computerdb.models.Computer;
 import com.excilys.computerdb.models.mappers.CompanyMapperModel;
@@ -15,9 +16,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 /**
@@ -38,35 +40,30 @@ public class ComputerAdd {
   private CompanyServices companyServices;
   @Autowired
   private ComputerMapperDto computerMapperDto;
+  @Autowired
+  private ComputerDtoValidator dtoValidator;
 
   @RequestMapping(method = RequestMethod.GET)
   public String getMethod(ModelMap model) {
 
     List<CompanyDto> listCompanies = CompanyMapperModel.toDtoList(companyServices.findAllCompany());
     model.addAttribute("companies", listCompanies);
-
-    /*
-     * String pageParam = request.getParameter("page"); if ( pageParam != null ||
-     * "".equals(pageParam) || !InputControl.testInt(pageParam) ) {
-     * request.setAttribute("currentpage", pageParam); } String nbElemParam =
-     * request.getParameter("nbElements"); if ( nbElemParam != null || "".equals(nbElemParam) ||
-     * !InputControl.testInt(pageParam) ) { request.setAttribute("pagesize", nbElemParam); }
-     */
+    model.addAttribute("computerdto", new ComputerDto());
     return "addcomputer";
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public String doPost(@RequestParam String computerName,
-      @RequestParam(required = false) String introduced,
-      @RequestParam(required = false) String discontinued,
-      @RequestParam Integer company,
-      ModelMap model) {
-    ComputerDto computerdto = new ComputerDto(computerName);
-    computerdto.setIntroduced(introduced);
-    computerdto.setDiscontinued(discontinued);
-    if ( company != null ) {
-      computerdto.setCompany(new CompanyDto(company));
+  public String postMethod(@ModelAttribute("computerdto") ComputerDto computerdto, ModelMap model,
+      BindingResult result ) {
+
+    dtoValidator.validate(computerdto, result);
+
+    if ( result.hasErrors() ) {
+      List<CompanyDto> companies = CompanyMapperModel.toDtoList(companyServices.findAllCompany());
+      model.addAttribute("companies", companies);
+      return "addcomputer";
     }
+
     Computer computer;
     try {
       ValidatorDto.validate(computerdto);

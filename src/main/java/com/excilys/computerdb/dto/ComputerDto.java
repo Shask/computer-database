@@ -1,5 +1,8 @@
 package com.excilys.computerdb.dto;
 
+import javax.validation.constraints.NotNull ;
+import javax.validation.constraints.Size ;
+
 /**
  * Transferable object for Computer.
  * 
@@ -7,11 +10,22 @@ package com.excilys.computerdb.dto;
  *
  */
 public class ComputerDto {
+  
   long id;
+  
+  @Size(min = 3, max = 30)
+  @NotNull
   String name;
+
   String introduced;
+
   String discontinued;
-  CompanyDto company;
+
+  long companyId;
+  
+  String companyName;
+
+  
 
   public long getId() {
     return id;
@@ -36,17 +50,35 @@ public class ComputerDto {
    *          date as String
    * @param discontinued
    *          date as String
-   * @param company
-   *          companyDto
+   * @param companyid
+   *          companyid
    */
-  public ComputerDto(long id, String name, String introduced, String discontinued,
-      CompanyDto company) {
+  public ComputerDto(long id, String name, String introduced, String discontinued, long companyId) {
     super();
     this.id = id;
     this.name = name;
     this.introduced = introduced;
     this.discontinued = discontinued;
-    this.company = company;
+    this.companyId = companyId;
+
+  }
+
+  /**
+   * 
+   */
+  public ComputerDto() {
+    super();
+  }
+
+  public ComputerDto(long id, String name, String introduced, String discontinued, long companyId,
+      String companyName) {
+    super();
+    this.id = id;
+    this.name = name;
+    this.introduced = introduced;
+    this.discontinued = discontinued;
+    this.companyId = companyId;
+    this.companyName = companyName;
   }
 
   /**
@@ -62,6 +94,8 @@ public class ComputerDto {
     this.id = id;
     this.name = name;
   }
+
+  
 
   public String getName() {
     return name;
@@ -88,19 +122,27 @@ public class ComputerDto {
     this.discontinued = discontinued;
   }
 
-  public CompanyDto getCompany() {
-    return company;
+  public long getCompanyId() {
+    return companyId;
   }
 
-  public void setCompany(CompanyDto computerDto) {
-    this.company = computerDto;
+  public void setCompanyId(long companyId) {
+    this.companyId = companyId;
+  }
+  public String getCompanyName() {
+    return companyName;
+  }
+
+  public void setCompanyName(String companyName) {
+    this.companyName = companyName;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((company == null) ? 0 : company.hashCode());
+    result = prime * result + (int) (companyId ^ (companyId >>> 32));
+    result = prime * result + ((companyName == null) ? 0 : companyName.hashCode());
     result = prime * result + ((discontinued == null) ? 0 : discontinued.hashCode());
     result = prime * result + (int) (id ^ (id >>> 32));
     result = prime * result + ((introduced == null) ? 0 : introduced.hashCode());
@@ -120,11 +162,14 @@ public class ComputerDto {
       return false;
     }
     ComputerDto other = (ComputerDto) obj;
-    if ( company == null ) {
-      if ( other.company != null ) {
+    if ( companyId != other.companyId ) {
+      return false;
+    }
+    if ( companyName == null ) {
+      if ( other.companyName != null ) {
         return false;
       }
-    } else if ( !company.equals(other.company) ) {
+    } else if ( !companyName.equals(other.companyName) ) {
       return false;
     }
     if ( discontinued == null ) {
@@ -152,6 +197,13 @@ public class ComputerDto {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "ComputerDto [id=" + id + ", name=" + name + ", introduced=" + introduced
+        + ", discontinued=" + discontinued + ", companyId=" + companyId + ", companyName="
+        + companyName + "]";
   }
 
 }

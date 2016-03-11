@@ -1,4 +1,5 @@
 //On load
+
 $(function() {
 	// Default: hide edit mode
 	$(".editMode").hide();
@@ -46,10 +47,10 @@ $(function() {
 	$.fn.toggleEditMode = function() {
 		if ($(".editMode").is(":visible")) {
 			$(".editMode").hide();
-			$("#editComputer").text("Edit");
+			$("#editComputer").text(strings['edit']);
 		} else {
 			$(".editMode").show();
-			$("#editComputer").text("View");
+			$("#editComputer").text(strings['view']);
 		}
 		return this;
 	};
@@ -62,7 +63,7 @@ $(function() {
 	$.fn.deleteSelected = function() {
 		
 
-		if (confirm("Are you sure you want to delete the selected computers?")) {
+		if (confirm(strings['deleteMessage'])) {
 			$('#deleteForm input[name=selection]').setCheckboxValues('selection', 'cb');
 			$('#deleteForm').submit();
 		}

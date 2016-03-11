@@ -1,10 +1,10 @@
 package com.excilys.computerdb.dto.mapper;
 
 import com.excilys.computerdb.dto.ComputerDto;
+import com.excilys.computerdb.dto.utils.DateUtils ;
 import com.excilys.computerdb.models.Company ;
 import com.excilys.computerdb.models.Computer ;
 import com.excilys.computerdb.services.CompanyServices;
-import com.excilys.computerdb.utils.DateUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,9 @@ public class ComputerMapperDto {
   @Autowired
   private CompanyServices companyServices;
 
+  @Autowired
+  private DateUtils dateUtils;
+
   /**
    * Map a ComputerDTO to a Computer.
    * 
@@ -38,15 +41,17 @@ public class ComputerMapperDto {
     Computer computer = new Computer(dto.getId(), dto.getName());
 
     // Validate format and Intro<Discontinued using computerSetter
-    computer.setIntroduced(DateUtils.convertStringToDate(dto.getIntroduced()));
+    computer.setIntroduced(dateUtils.convertStringToDate(dto.getIntroduced()));
+    LOGGER.trace("parsing from date : "+dto.getIntroduced()+" to "+computer.getIntroduced());
 
     // Validate format and Intro<Discontinued using computerSetter
-    computer.setDiscontinued(DateUtils.convertStringToDate(dto.getDiscontinued()));
+    computer.setDiscontinued(dateUtils.convertStringToDate(dto.getDiscontinued()));
+    LOGGER.trace("parsing from date : "+dto.getDiscontinued()+" to "+computer.getDiscontinued());
 
     // get company full details from DB
     Company company = null;
-    if ( dto.getCompany() != null && dto.getCompany().getId() > 0 ) {
-      company = companyServices.findCompanyById(dto.getCompany().getId());
+    if ( dto.getCompanyId() > 0 ) {
+      company = companyServices.findCompanyById(dto.getCompanyId());
     }
     if ( company == null ) {
       String msg = "InputControl : Company not found, company set to null ";

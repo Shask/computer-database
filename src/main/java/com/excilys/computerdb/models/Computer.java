@@ -1,7 +1,5 @@
 package com.excilys.computerdb.models;
 
-import com.excilys.computerdb.dao.impl.CompanyDaoImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +21,7 @@ public class Computer {
   private LocalDate discontinued;
   private Company company;
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CompanyDaoImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Computer.class);
 
   // Getters and Setters
   public String getName() {
@@ -161,8 +159,11 @@ public class Computer {
     } else if ( discontinued == null ) {
       return true;
     }
-    if ( introduced.isBefore(discontinued) ) {
+    if ( introduced.isBefore(discontinued) || introduced.isEqual(discontinued)) {
       return true;
+    } else {
+      LOGGER.trace(introduced+ " "+ discontinued);
+      LOGGER.info("discontinued date of " + this + " is not before introduced date");
     }
     return false;
   }

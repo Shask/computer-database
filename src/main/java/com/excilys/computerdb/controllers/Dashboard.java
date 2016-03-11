@@ -1,4 +1,4 @@
-package com.excilys.computerdb.servlets;
+package com.excilys.computerdb.controllers;
 
 import com.excilys.computerdb.dto.ComputerDto;
 import com.excilys.computerdb.models.mappers.ComputerMapperModel;
@@ -42,7 +42,7 @@ public class Dashboard {
    * @param order
    *          orderby ...
    * @param model
-   *          .
+   * 
    * @return .
    */
   @RequestMapping(method = RequestMethod.GET)
@@ -95,6 +95,13 @@ public class Dashboard {
     return "dashboard";
   }
 
+  /**
+   * Method Post of Dashboard Servlet, allowing you to delete computersS
+   * 
+   * @param selection
+   *          of computer id to delete
+   * @return to dashboard
+   */
   @RequestMapping(method = RequestMethod.POST)
   protected String postMethod(@RequestParam(required = false) String selection) {
     // Get Checked boxes from .jsp view and parse them to an array of Int
