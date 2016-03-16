@@ -5,7 +5,7 @@ import org.hibernate.criterion.Order;
 import com.excilys.computerdb.services.Page;
 import com.excilys.computerdb.services.Page.Direction;
 
-public class SqlUtil {
+public interface SqlUtil {
   /**
    * Convert a enum OrderBy to a String(usable in DB).
    * 

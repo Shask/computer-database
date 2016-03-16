@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne ;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -66,7 +66,12 @@ public class Computer implements Serializable {
    *          date to set
    */
   public void setIntroduced(LocalDate introduced) {
-    this.introduced = introduced;
+    if ( checkDate(introduced, discontinued) ) {
+      this.introduced = introduced;
+    } else {
+      LOGGER.debug("Invalid date -> introduced date didn't change");
+    }
+
   }
 
   public LocalDate getDiscontinued() {
@@ -80,7 +85,11 @@ public class Computer implements Serializable {
    *          date to set
    */
   public void setDiscontinued(LocalDate discontinued) {
-    this.discontinued = discontinued;
+    if ( checkDate(introduced, discontinued) ) {
+      this.discontinued = discontinued;
+    } else {
+      LOGGER.debug("Invalid date -> discontinued date didn't change");
+    }
   }
 
   public void setId(long id) {
