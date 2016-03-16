@@ -2,10 +2,10 @@ package com.excilys.computerdb.services;
 
 import com.excilys.computerdb.dao.CompanyDao;
 import com.excilys.computerdb.dao.ComputerDao;
-import com.excilys.computerdb.dao.JdbcConnection;
 import com.excilys.computerdb.dao.exception.CriticalDatabaseException;
 import com.excilys.computerdb.dao.exception.FailedRequestException;
 import com.excilys.computerdb.models.Company;
+import com.excilys.computerdb.models.Computer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 public class CompanyServices {
-  @Autowired
-  JdbcConnection jdbcConnection;
+ 
   @Autowired
   private ComputerDao computerDao;
   @Autowired
@@ -34,6 +33,7 @@ public class CompanyServices {
    * 
    * @return the list of companies
    */
+  @Transactional(readOnly=true)
   public List<Company> findAllCompany() {
     LOGGER.trace("Finding all company ...");
     List<Company> listComp = new ArrayList<>();
@@ -56,7 +56,10 @@ public class CompanyServices {
    */
   @Transactional
   public void deleteCompany(long id) {
-    computerDao.deleteComputerWithCompany(id);
+    List<Computer> listComp = computerDao.getByCompanyId(id);
+    for ( Computer c : listComp ) {
+      computerDao.deleteComputer(c.getId());
+    }
     LOGGER.trace("Computer deleted  ");
     companyDao.deleteCompany(id);
     LOGGER.trace("Company deleted  ");
@@ -69,6 +72,7 @@ public class CompanyServices {
    *          to find
    * @return company found
    */
+  @Transactional(readOnly=true)
   public Company findCompanyById(long id) {
     Company company = null;
     try {

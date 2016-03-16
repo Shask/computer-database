@@ -82,8 +82,6 @@ public interface ComputerDao {
    */
   void deleteComputer(long id) throws CriticalDatabaseException;
 
-  void deleteComputerWithCompany(long idCompany) throws CriticalDatabaseException;
-
   /**
    * Send back the number of computer in db.
    * 
@@ -91,7 +89,7 @@ public interface ComputerDao {
    * @throws CriticalDatabaseException
    *           thrown when somehting is wrong with the DB
    */
-  int countComputer() throws CriticalDatabaseException;
+  Long countComputer() throws CriticalDatabaseException;
 
- 
+  public List<Computer> getByCompanyId(Long id) ;
 }

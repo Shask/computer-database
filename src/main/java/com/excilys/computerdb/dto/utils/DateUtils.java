@@ -33,7 +33,7 @@ public class DateUtils {
     LocalDate returnDate = null;
 
     LOGGER.trace("parsing string to date format");
-    if ( string == null || "anObject".equals(string) ) {
+    if ( string == null || "anObject".equals(string) || "".equals(string)) {
       LOGGER.debug("Parsing failed : date null");
       return null;
     }

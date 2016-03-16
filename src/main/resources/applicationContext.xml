@@ -18,38 +18,38 @@
 		</property>
 	</bean>
 
-	<bean id="jdbcConnection" class="com.excilys.computerdb.dao.JdbcConnection">
-		<property name="dataSource" ref="dataSource" />
-	</bean>
+	
 
-	<!-- BoneCP configuration <bean id="boneCP" class="com.jolbox.bonecp.BoneCPDataSource" 
+	<!-- BoneCP configuration -->
+	<bean id="boneCP" class="com.jolbox.bonecp.BoneCPDataSource" 
 		destroy-method="close"> <property name="driverClass" value="com.mysql.jdbc.Driver" 
 		/> <property name="jdbcUrl" value="${DB_URL}" /> <property name="username" 
 		value="${LOGIN}" /> <property name="password" value="${PASS}" /> <property 
 		name="maxConnectionsPerPartition" value="10" /> <property name="minConnectionsPerPartition" 
 		value="5" /> <property name="partitionCount" value="10" /> <property name="deregisterDriverOnClose" 
-		value="true" /> </bean> -->
+		value="true" /> </bean> 
 
-	<bean id="dataSource"
+	<!-- Default Datasource in case BoneCP shit the bed 
+	 <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="${DB_URL}" />
 		<property name="username" value="${LOGIN}" />
 		<property name="password" value="${PASS}" />
-	</bean>
+	</bean> -->
 
 
 
 	<bean id="mySessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="boneCP" />
 		<property name="packagesToScan" value="com.excilys.computerdb" />
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.id.new_generator_mappings">true</prop>
+				<prop key="hibernate.id.new_generator_mappings">false</prop> 
 			</props>
 		</property>
 	</bean>

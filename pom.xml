@@ -4,7 +4,7 @@
 	<groupId>com.excilys.computerdb</groupId>
 	<artifactId>computerdb</artifactId>
 	<packaging>war</packaging>
-	<version>0.6.0</version>
+	<version>0.6.2</version>
 	<name>computerdb</name>
 	<!-- Version of used depedencies -->
 	<properties>

@@ -115,9 +115,9 @@ public class ComputerServices {
    * @return the number of computer
    */
   @Transactional(readOnly=true)
-  public int getCountComputer() {
+  public Long getCountComputer() {
     LOGGER.trace("Counting number of computer in db");
-    int count = -1;
+    Long count = new Long(-1);
     try {
       count = computerDao.countComputer();
     } catch ( CriticalDatabaseException e ) {

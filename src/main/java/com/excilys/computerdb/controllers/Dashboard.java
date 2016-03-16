@@ -80,13 +80,13 @@ public class Dashboard {
     orderBy(order);
 
     // Search by name
-    int nbTotalComputer = 0;
+    long nbTotalComputer ;
     if ( search == null || "".equals(search) ) {
       listComp = ComputerMapperModel.toDtoList(computerServices.findAllComputer());
       nbTotalComputer = computerServices.getCountComputer();
     } else {
       listComp = ComputerMapperModel.toDtoList(computerServices.findComputerByName(search));
-      nbTotalComputer = listComp.size();
+      nbTotalComputer =  listComp.size();
     }
 
     model.addAttribute("nbComputer", nbTotalComputer);

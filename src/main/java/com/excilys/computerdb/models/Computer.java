@@ -1,16 +1,15 @@
 package com.excilys.computerdb.models;
 
-import org.hibernate.annotations.Type ;
+import org.hibernate.annotations.Type;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType ;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne ;
-import java.io.Serializable ;
+import javax.persistence.ManyToOne ;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -22,17 +21,14 @@ import java.time.LocalDate;
  *
  */
 @Entity(name = "computer")
-public class Computer implements Serializable{
+public class Computer implements Serializable {
 
-  
   private static final long serialVersionUID = 5779547528998777494L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-
-  @Column(name = "name")
   private String name;
 
   @Type(type = "com.excilys.computerdb.dao.mapper.LocalDateUserType")
@@ -41,7 +37,7 @@ public class Computer implements Serializable{
   @Type(type = "com.excilys.computerdb.dao.mapper.LocalDateUserType")
   private LocalDate discontinued;
 
- @OneToOne
+  @ManyToOne
   private Company company;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Computer.class);
@@ -70,7 +66,7 @@ public class Computer implements Serializable{
    *          date to set
    */
   public void setIntroduced(LocalDate introduced) {
-      this.introduced = introduced;
+    this.introduced = introduced;
   }
 
   public LocalDate getDiscontinued() {
@@ -84,7 +80,7 @@ public class Computer implements Serializable{
    *          date to set
    */
   public void setDiscontinued(LocalDate discontinued) {
-      this.discontinued = discontinued;
+    this.discontinued = discontinued;
   }
 
   public void setId(long id) {
