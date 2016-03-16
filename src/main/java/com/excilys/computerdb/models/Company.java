@@ -1,18 +1,36 @@
 package com.excilys.computerdb.models;
 
+import java.io.Serializable ;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType ;
+import javax.persistence.Id;
+
 /**
  * Class that defines a company by an id and its name.
  * 
  * @author Steven Fougeron
  *
  */
-public class Company {
+@Entity(name = "company")
+public class Company implements Serializable{
+  
+  private static final long serialVersionUID = -7107213213665131762L;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
+
   private String name;
 
   public Company(long id, String name) {
     this.name = name;
     this.id = id;
+  }
+
+  public Company() {
+
   }
 
   // Getters and Setters

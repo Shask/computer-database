@@ -12,4 +12,4 @@ else
 fi 
 
 docker run --name="mysql" -d shask/mysql:2.0
-docker run --name="webapp" --link="mysql:localhost" -p 8888:8080 shask/computerdb-webapp 
+docker run --name="webapp" --link="mysql:localhost" -p 9999:8080 shask/computerdb-webapp 

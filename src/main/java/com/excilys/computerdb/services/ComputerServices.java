@@ -11,9 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional ;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 @Service
 public class ComputerServices {
@@ -28,6 +31,7 @@ public class ComputerServices {
    * 
    * @return a list of computer
    */
+  @Transactional(readOnly=true)
   public List<Computer> findAllComputer() {
     LOGGER.trace("Finding all computer ...");
     List<Computer> listComp = new ArrayList<>();
@@ -53,6 +57,7 @@ public class ComputerServices {
    *          string to find
    * @return list of computer containing the string
    */
+  @Transactional(readOnly=true)
   public List<Computer> findComputerByName(String name) {
     LOGGER.trace("Finding computer by name...");
     List<Computer> listComp = new ArrayList<>();
@@ -77,6 +82,7 @@ public class ComputerServices {
    * @param id
    *          id to delete
    */
+  @Transactional(readOnly=true)
   public void deleteComputer(long id) {
     LOGGER.trace("Deleting computer ...");
     try {
@@ -95,6 +101,7 @@ public class ComputerServices {
    * @param ids
    *          list of ids to delete
    */
+  @Transactional
   public void deleteComputer(List<Integer> ids) {
 
     for ( Integer id : ids ) {
@@ -107,6 +114,7 @@ public class ComputerServices {
    * 
    * @return the number of computer
    */
+  @Transactional(readOnly=true)
   public int getCountComputer() {
     LOGGER.trace("Counting number of computer in db");
     int count = -1;
@@ -128,6 +136,7 @@ public class ComputerServices {
    *          id to find
    * @return computer found
    */
+  @Transactional(readOnly=true)
   public Computer findComputerById(long id) {
     Computer computer = null;
     try {
@@ -154,6 +163,7 @@ public class ComputerServices {
    * @param computer
    *          computer to update in DB
    */
+  @Transactional
   public void updateComputer(Computer computer) {
     try {
       computerDao.updateComputer(computer);
@@ -175,6 +185,7 @@ public class ComputerServices {
    * @param computer
    *          to put in DB, modify it's ID to match with the one in database
    */
+  @Transactional
   public void insertComputer(Computer computer) {
     try {
       computerDao.insertComputer(computer);

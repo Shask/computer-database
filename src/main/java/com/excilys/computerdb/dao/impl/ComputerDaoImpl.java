@@ -8,10 +8,14 @@ import com.excilys.computerdb.dao.utils.SqlUtil;
 import com.excilys.computerdb.models.Computer;
 import com.excilys.computerdb.services.Page;
 
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.LocalTime;
@@ -23,8 +27,13 @@ import java.util.List;
  * @author Steven Fougeron
  *
  */
+
 @Repository("computerDaoImpl")
+@SuppressWarnings("unchecked")
 public class ComputerDaoImpl implements ComputerDao {
+
+  @Autowired
+  private SessionFactory sess;
 
   @Autowired
   JdbcConnection jdbcConnection;
@@ -37,61 +46,38 @@ public class ComputerDaoImpl implements ComputerDao {
    *           thrown when something is wrong with DB
    */
   @Override
-  public List<Computer> findAll(Page page) throws CriticalDatabaseException {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(jdbcConnection.getDataSource());
-    String limitPage = " LIMIT " + page.getPageSize();
-    String offset = " OFFSET " + (page.getCurrentPage() - 1) * page.getPageSize();
-    String orderby = " ORDER BY " + SqlUtil.orderToString(page.getOrder()) + " " + page.getAsc();
-    String request =
-        "SELECT computer.id, computer.name, computer.introduced,computer.discontinued, c.id "
-            + " AS cid, c.name AS cname FROM computer LEFT join company c on computer.company_id"
-            + "=c.id  " + orderby + limitPage + offset;
+  public List<Computer> findAll(Page page) {
+    Session session = sess.getCurrentSession();
+    Criteria crit = session.createCriteria(Computer.class)
+    .createAlias("company","c")
+    .addOrder(SqlUtil.pageOrderToOrder(page))
+    .setFirstResult((page.getCurrentPage()-1)*page.getPageSize())
+    .setMaxResults(page.getPageSize());
+    return crit.list();
 
-    return jdbcTemplate.query(request, new ComputerMapperDao());
   }
 
   @Override
   public Computer findById(long id) throws CriticalDatabaseException {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(jdbcConnection.getDataSource());
-    String request =
-        "SELECT computer.id, computer.name, computer.introduced,computer.discontinued, c.id  "
-            + "AS cid, c.name AS cname FROM computer LEFT join company c ON"
-            + " computer.company_id=c.id WHERE computer.id = ?";
-    return (Computer) jdbcTemplate.queryForObject(request, new ComputerMapperDao(), id);
+    Session session = sess.getCurrentSession();
+    Criteria crit = session.createCriteria(Computer.class)
+        .add(Restrictions.eq("id", id));
+    return (Computer) crit.list().get(0);
   }
 
   @Override
   public List<Computer> findByName(String name) throws CriticalDatabaseException {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(jdbcConnection.getDataSource());
-    String request = "SELECT computer.id, computer.name, computer.introduced,computer.discontinued,"
-        + " c.id AS cid, c.name AS cname FROM computer "
-        + "left join company c on computer.company_id=c.id " + "WHERE computer.name LIKE ?";
-
-    return jdbcTemplate.query(request, new ComputerMapperDao(), "%" + name + "%");
+    Session session = sess.getCurrentSession();
+    Criteria crit = session.createCriteria(Computer.class)
+        .add(Restrictions.like("name", name));
+    return  crit.list();
   }
 
   @Override
   public void insertComputer(Computer computer) throws CriticalDatabaseException {
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(jdbcConnection.getDataSource());
-    String request =
-        "INSERT INTO computer (name,introduced,discontinued,company_id) VALUES (?,?,?,?)";
-
-    Timestamp intro = null;
-    Timestamp disc = null;
-    if ( computer.getIntroduced() != null ) {
-      intro = Timestamp.valueOf(computer.getIntroduced().atTime(LocalTime.of(0, 0)));
-    }
-    if ( computer.getDiscontinued() != null ) {
-      disc = Timestamp.valueOf(computer.getDiscontinued().atTime(LocalTime.of(0, 0)));
-    }
-
-    Object[] params =
-        new Object[] { computer.getName(), intro, disc, computer.getCompany().getId() };
-    // Define type list of the array of objects
-    int[] types = new int[] { Types.VARCHAR, Types.TIMESTAMP, Types.TIMESTAMP, Types.BIGINT };
-    // get the id where the computer was inserted
-    int row = jdbcTemplate.update(request, params, types);
-    computer.setId(row);
+    Session session = sess.getCurrentSession();
+    long id = (long) session.save(computer);
+    computer.setId(id);
   }
 
   @Override

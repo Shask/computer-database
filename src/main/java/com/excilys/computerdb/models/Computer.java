@@ -1,8 +1,16 @@
 package com.excilys.computerdb.models;
 
+import org.hibernate.annotations.Type ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType ;
+import javax.persistence.Id;
+import javax.persistence.OneToOne ;
+import java.io.Serializable ;
 import java.time.LocalDate;
 
 /**
@@ -13,17 +21,36 @@ import java.time.LocalDate;
  * @author Steven Fougeron
  *
  */
-public class Computer {
+@Entity(name = "computer")
+public class Computer implements Serializable{
 
+  
+  private static final long serialVersionUID = 5779547528998777494L;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
+
+
+  @Column(name = "name")
   private String name;
+
+  @Type(type = "com.excilys.computerdb.dao.mapper.LocalDateUserType")
   private LocalDate introduced;
+
+  @Type(type = "com.excilys.computerdb.dao.mapper.LocalDateUserType")
   private LocalDate discontinued;
+
+ @OneToOne
   private Company company;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Computer.class);
 
   // Getters and Setters
+  public Computer() {
+
+  }
+
   public String getName() {
     return name;
   }
@@ -43,12 +70,7 @@ public class Computer {
    *          date to set
    */
   public void setIntroduced(LocalDate introduced) {
-    if ( checkDate(introduced, discontinued) ) {
       this.introduced = introduced;
-    } else {
-      LOGGER.debug("Invalid date -> introduced date didn't change");
-    }
-
   }
 
   public LocalDate getDiscontinued() {
@@ -62,11 +84,7 @@ public class Computer {
    *          date to set
    */
   public void setDiscontinued(LocalDate discontinued) {
-    if ( checkDate(introduced, discontinued) ) {
       this.discontinued = discontinued;
-    } else {
-      LOGGER.debug("Invalid date -> discontinued date didn't change");
-    }
   }
 
   public void setId(long id) {
@@ -159,10 +177,10 @@ public class Computer {
     } else if ( discontinued == null ) {
       return true;
     }
-    if ( introduced.isBefore(discontinued) || introduced.isEqual(discontinued)) {
+    if ( introduced.isBefore(discontinued) || introduced.isEqual(discontinued) ) {
       return true;
     } else {
-      LOGGER.trace(introduced+ " "+ discontinued);
+      LOGGER.trace(introduced + " " + discontinued);
       LOGGER.info("discontinued date of " + this + " is not before introduced date");
     }
     return false;

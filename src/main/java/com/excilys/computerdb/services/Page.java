@@ -24,7 +24,7 @@ public class Page {
   public OrderBy getOrder() {
     return order;
   }
-
+  
   /**
    * Change order, if order is the same, change the direction.
    * 

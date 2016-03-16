@@ -29,6 +29,9 @@
   <builders>
     <hudson.tasks.Shell>
       <command>
+#docker rmi --force shask/mysql:2.0
+
+
 
 if [ -e $(docker ps -aq -f &quot;name=mysql&quot;) ]
 then 
@@ -37,8 +40,6 @@ fi
 
 
 
-#docker rmi --force $(docker images -q)
-#docker rmi --force shask/mysql:2.0
 
 
 
@@ -58,7 +59,7 @@ fi
  docker start -a jdk_mvn 
 
 #Copy of .war from docker jdk-mvn to jenkins
-docker cp jdk_mvn:/root/.m2/repository/com/excilys/computerdb/computerdb/0.4.2/computerdb-0.4.2.war computerdb.war
+docker cp jdk_mvn:/root/.m2/repository/com/excilys/computerdb/computerdb/0.6.0/computerdb-0.6.0.war computerdb.war
 
 #Create tomcat docker and cp the webapp in it 
 if [ -e $(docker ps -aq -f &quot;name=computerdb-webapp&quot;) ]

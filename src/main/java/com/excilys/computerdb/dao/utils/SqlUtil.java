@@ -1,8 +1,11 @@
 package com.excilys.computerdb.dao.utils;
 
-import com.excilys.computerdb.services.Page ;
+import org.hibernate.criterion.Order;
 
-public interface SqlUtil {
+import com.excilys.computerdb.services.Page;
+import com.excilys.computerdb.services.Page.Direction;
+
+public class SqlUtil {
   /**
    * Convert a enum OrderBy to a String(usable in DB).
    * 
@@ -10,28 +13,32 @@ public interface SqlUtil {
    *          to convert
    * @return String converted
    */
-  public static String orderToString(Page.OrderBy orderby) {
+  public static Order pageOrderToOrder(Page p) {
     String res = " ";
-    switch ( orderby ) {
+    switch ( p.getOrder() ) {
       case ID :
-        res = "computer.id";
+        res = "id";
         break;
 
       case NAME :
-        res = "computer.name";
+        res = "name";
         break;
       case INTRODUCED :
-        res = "computer.introduced";
+        res = "introduced";
         break;
       case DISCONTINUED :
-        res = "computer.discontinued";
+        res = "discontinued";
         break;
       case COMPANY_NAME :
-        res = "cname";
+        res = "c.name";
         break;
       default :
     }
-    return res;
+    if ( p.getAsc() == Direction.ASC ) {
+      return Order.asc(res);
+    } else {
+      return Order.desc(res);
+    }
   }
 
 }
