@@ -10,7 +10,7 @@
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
 
-	<import resource="classpath:persistence-context.xml" />
+	<import resource="classpath*:persistence-context.xml" />
 
 	<context:component-scan base-package="com.excilys.computerdb.services" />
 </beans>
