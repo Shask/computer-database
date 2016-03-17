@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.excilys.computerdb</groupId>
+		<artifactId>computerdb-parent</artifactId>
+		<version>${project.version}</version>
+	</parent>
+	<!-- Version of used depedencies -->
+
+	<artifactId>computerdb-webapp</artifactId>
+	<packaging>war</packaging>
+
+	<name>Computer Database Webapp</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.excilys.computerdb</groupId>
+			<artifactId>computerdb-binding</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Web -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>${javax.servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- Selenium plugin -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>selenium-maven-plugin</artifactId>
+				<version>${selenium.maven.plugin.version}</version>
+			</plugin>
+
+			<!-- SureFire Plugin for integration tests -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${selenium.maven.plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>**/selenium/*.java</exclude> <!-- selenium test will be excluded of test phase ... -->
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>surefire-integration-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal> <!-- integration-test will launch tests -->
+						</goals>
+						<configuration>
+							<!-- Skipping integration tests -->
+							<skip>true</skip>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>**/selenium/*Test.java</include> <!-- ...including selenium test -->
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Fail safe to skip some IT test on dockers -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven.failsafe.plugin.version}</version>
+				<configuration>
+					<skipITs>true</skipITs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

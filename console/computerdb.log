@@ -1,0 +1,11 @@
+2016-03-17 14:28:29,751 INFO [main] o.s.c.s.ClassPathXmlApplicationContext [AbstractApplicationContext.java:578] Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5afa04c: startup date [Thu Mar 17 14:28:29 CET 2016]; root of context hierarchy
+2016-03-17 14:28:29,797 INFO [main] o.s.b.f.x.XmlBeanDefinitionReader [XmlBeanDefinitionReader.java:317] Loading XML bean definitions from class path resource [applicationContext.xml]
+2016-03-17 14:28:30,209 INFO [main] o.s.b.f.c.PropertyPlaceholderConfigurer [PropertiesLoaderSupport.java:172] Loading properties file from class path resource [config.properties]
+2016-03-17 14:28:30,513 INFO [main] o.h.Version [Version.java:37] HHH000412: Hibernate Core {5.1.0.Final}
+2016-03-17 14:28:30,516 INFO [main] o.h.c.Environment [Environment.java:213] HHH000206: hibernate.properties not found
+2016-03-17 14:28:30,518 INFO [main] o.h.c.Environment [Environment.java:317] HHH000021: Bytecode provider name : javassist
+2016-03-17 14:28:30,581 INFO [main] o.h.a.c.Version [JavaReflectionManager.java:66] HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+2016-03-17 14:28:31,448 INFO [main] o.h.d.Dialect [Dialect.java:156] HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2016-03-17 14:28:31,578 INFO [main] o.h.e.j.e.i.LobCreatorBuilderImpl [LobCreatorBuilderImpl.java:98] HHH000423: Disabling contextual LOB creation as JDBC driver reported JDBC version [3] less than 4
+2016-03-17 14:28:31,853 INFO [main] o.h.v.i.u.Version [Version.java:30] HV000001: Hibernate Validator 5.2.4.Final
+2016-03-17 14:28:32,292 INFO [main] o.s.o.h.HibernateTransactionManager [HibernateTransactionManager.java:357] Using DataSource [JDBC URL = jdbc:mysql://localhost:3306/computer-database-db?zeroDateTimeBehavior=convertToNull, Username = admincdb, partitions = 10, max (per partition) = 10, min (per partition) = 5, idle max age = 60 min, idle test period = 240 min, strategy = DEFAULT] of Hibernate SessionFactory for HibernateTransactionManager
