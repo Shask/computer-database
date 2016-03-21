@@ -18,26 +18,26 @@
 		</property>
 	</bean>
 
-	
+
 
 	<!-- BoneCP configuration -->
-	<bean id="boneCP" class="com.jolbox.bonecp.BoneCPDataSource" 
-		destroy-method="close"> <property name="driverClass" value="com.mysql.jdbc.Driver" 
-		/> <property name="jdbcUrl" value="${DB_URL}" /> <property name="username" 
-		value="${LOGIN}" /> <property name="password" value="${PASS}" /> <property 
-		name="maxConnectionsPerPartition" value="10" /> <property name="minConnectionsPerPartition" 
-		value="5" /> <property name="partitionCount" value="10" /> <property name="deregisterDriverOnClose" 
-		value="true" /> </bean> 
-
-	<!-- Default Datasource in case BoneCP shit the bed 
-	 <bean id="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="${DB_URL}" />
+	<bean id="boneCP" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="${DB_URL}" />
 		<property name="username" value="${LOGIN}" />
 		<property name="password" value="${PASS}" />
-	</bean> -->
+		<property name="maxConnectionsPerPartition" value="10" />
+		<property name="minConnectionsPerPartition" value="5" />
+		<property name="partitionCount" value="10" />
+		<property name="deregisterDriverOnClose" value="true" />
+	</bean>
+
+	<!-- Default Datasource in case BoneCP shit the bed <bean id="dataSource" 
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> <property 
+		name="driverClassName" value="com.mysql.jdbc.Driver" /> <property name="url" 
+		value="${DB_URL}" /> <property name="username" value="${LOGIN}" /> <property 
+		name="password" value="${PASS}" /> </bean> -->
 
 
 
@@ -49,14 +49,13 @@
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
 				<prop key="hibernate.show_sql">true</prop>
-				<prop key="hibernate.id.new_generator_mappings">false</prop> 
+				<prop key="hibernate.id.new_generator_mappings">false</prop>
 			</props>
 		</property>
 	</bean>
 
 
 	<bean id="transactionManager"
-
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory">
 			<ref local="mySessionFactory" />

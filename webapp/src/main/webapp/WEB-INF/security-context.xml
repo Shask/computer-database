@@ -1,0 +1,34 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+
+	<!-- enable use-expressions -->
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/dashboard**"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_NEW', 'ROLE_TRUSTED')" />
+		<intercept-url pattern="/edit**"
+			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
+		<intercept-url pattern="/add**"
+			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
+				<intercept-url pattern="/**"
+			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
+		<!-- access denied page -->
+		<access-denied-handler error-page="/403" />
+		<form-login login-page="/login" default-target-url="/dashboard"
+			authentication-failure-url="/login?error" login-processing-url="/j_spring_security_check"
+			username-parameter="username" password-parameter="password" />
+		<logout logout-success-url="/login?logout" />
+		<!-- enable csrf protection -->
+		<csrf />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="myUserDetailsService">
+			<password-encoder hash="bcrypt" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

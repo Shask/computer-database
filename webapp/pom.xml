@@ -19,7 +19,13 @@
 			<artifactId>computerdb-binding</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<!-- Spring Security Tags -->
 
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
 		<!-- Web -->
 		<dependency>
 			<groupId>jstl</groupId>
@@ -78,7 +84,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<!-- Fail safe to skip some IT test on dockers -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -1,6 +1,10 @@
 
-### Eclipse ###
+###Project Related ###
+
+*.log
 .checkstyle
+
+### Eclipse ###
 .metadata
 bin/
 tmp/

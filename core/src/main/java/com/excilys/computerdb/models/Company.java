@@ -27,6 +27,7 @@ public class Company implements Serializable{
   public Company(long id, String name) {
     this.name = name;
     this.id = id;
+	
   }
 
   public Company() {

@@ -39,6 +39,7 @@
 		<spring.boot>1.3.3.RELEASE</spring.boot>
 		<spring.jpa.version>1.9.4.RELEASE</spring.jpa.version>
 		<spring.version>4.2.5.RELEASE</spring.version>
+		<spring.security.version>4.0.4.RELEASE</spring.security.version>
 	</properties>
 	
 
