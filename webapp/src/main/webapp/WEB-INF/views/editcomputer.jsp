@@ -23,14 +23,8 @@
 
 </head>
 <body>
-	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<mylib:link classe="navbar-brand" target="dashboard" currentpage="${currentpage}">Application - Computer Database</mylib:link>
-			<div class="navbar-right" style="margin-top: 0.15cm;">
-				<a class="right" href="?lang=fr"><img border="10" alt="French" src="https://cdn4.iconfinder.com/data/icons/world-flags/180/flag_france-512.png" width="50" height="35"> </a> <a class="right" href="?lang=en"><img border="10" alt="English" src="https://cdn4.iconfinder.com/data/icons/world-flags/180/flag_australia-512.png" width="50" height="35"> </a>
-			</div>
-		</div>
-	</header>
+	<jsp:include page="header.jsp"/>
+	
 	<section id="main">
 		<div class="container">
 			<div class="row">

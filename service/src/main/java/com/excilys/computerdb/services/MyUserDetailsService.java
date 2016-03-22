@@ -25,6 +25,10 @@ public class MyUserDetailsService implements UserDetailsService {
 	@Transactional(readOnly = true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User userModel = userDao.findByUserName(username);
+		if(userModel ==null)
+		{
+			throw new UsernameNotFoundException(username);
+		}
 		List<GrantedAuthority> authority = new ArrayList<>();
 		authority.add(buildUserAuthority(userModel));
 		return buildUserForAuthentication(userModel, authority);

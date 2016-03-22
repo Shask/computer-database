@@ -11,33 +11,50 @@
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="css/main.css" rel="stylesheet" media="screen">
+
+
+<!-- Setting up messages for i18m -->
+<spring:message code="username" var="username" />
+<spring:message code="password" var="password" />
+<spring:message code="signin" var="signin" />
+
+
 </head>
 <body>
-	<header class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<a class="navbar-brand" href="dashboard"> Application - Computer
-				Database </a>
-		</div>
-	</header>
-
-
+	<jsp:include page="header.jsp" />
 
 	<section id="main">
 
-		
+
 		<div class="col-md-4 col-md-offset-4" style="text-align: center">
+		
+		<!-- Message when loggout -->
+			<c:if test="${not empty logout}">
+				<div class="alert alert-success"><spring:message code="${logout}" text="Logout successful" /></div>
+			</c:if>
+
 			<br /> <br /> <i class="fa fa-user fa-5x"></i> <br /> <br />
+			
+			<!-- Loggin Form -->
 			<form name='loginForm'
 				action="<c:url value='/j_spring_security_check' />" method='POST'>
 				<div class="form-group">
-					<input class="form-control" placeholder="User" type="text"
-						name="username" /> <br /> 
-						<input class="form-control" placeholder="Password" type="password" name="password" /> <br />
-
-					<button type="submit" class="btn btn-success" name="submit">Sign in</button>
+					<input class="form-control" placeholder="${username}" type="text"
+						name="username" /> <br /> <input class="form-control"
+						placeholder="${password}" type="password" name="password" /> <br />
+					
+					<!-- Message when Wrong credentials -->
+					<c:if test="${not empty error}">
+						<div class="alert alert-danger">
+							<spring:message code="${error}" text="Error login" />
+						</div>
+					</c:if>
+					<button type="submit" class="btn btn-success" name="submit">${signin}</button>
 				</div>
-					<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
+				
+				<!-- csrf -->
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
 			</form>
 		</div>
 	</section>

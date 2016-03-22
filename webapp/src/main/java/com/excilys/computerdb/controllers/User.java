@@ -1,8 +1,13 @@
 package com.excilys.computerdb.controllers;
 
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class User {
@@ -23,7 +28,16 @@ public class User {
 	 * @return .
 	 */
 	@RequestMapping(value="/login", method = RequestMethod.GET)
-	public String getMethod() {
+	public String getMethod(@RequestParam(value = "error", required = false) String error,
+			@RequestParam(value = "logout", required = false) String logout, ModelMap model) {
+		if (error != null) {
+			model.addAttribute("error", "error.login");
+		}
+
+		if (logout != null) {
+			model.addAttribute("logout", "logout.success");
+			 
+		}
 		return "login";
 	}
 	
