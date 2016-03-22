@@ -24,8 +24,7 @@
 
 	<section id="main">
 
-		<c:if test="${not empty param.error}">Invalid username and password.</c:if>
-		<c:if test="${not empty param.logout}">You have been logged out.</c:if>
+		
 		<div class="col-md-4 col-md-offset-4" style="text-align: center">
 			<br /> <br /> <i class="fa fa-user fa-5x"></i> <br /> <br />
 			<form name='loginForm'

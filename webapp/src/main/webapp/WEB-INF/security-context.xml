@@ -8,13 +8,15 @@
 	<!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
 		<intercept-url pattern="/dashboard**"
-			access="hasAnyRole('ROLE_ADMIN','ROLE_NEW', 'ROLE_TRUSTED')" />
+			access="hasAnyRole('ROLE_ADMIN','ROLE_NEW', 'ROLE_TRUSTED')" method="GET"/>
+			<intercept-url pattern="/dashboard**"
+			access="hasAnyRole('ROLE_ADMIN')" method="POST"/>
 		<intercept-url pattern="/edit**"
 			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
 		<intercept-url pattern="/add**"
 			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
 				<intercept-url pattern="/**"
-			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
+			access="permitAll" />
 		<!-- access denied page -->
 		<access-denied-handler error-page="/403" />
 		<form-login login-page="/login" default-target-url="/dashboard"

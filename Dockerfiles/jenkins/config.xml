@@ -34,9 +34,9 @@
 
 
 if [ -e $(docker ps -aq -f &quot;name=mysql&quot;) ]
-then 
-	docker run --name=&quot;mysql&quot; -d shask/mysql:2.0 
-fi  
+then
+	docker run --name=&quot;mysql&quot; -d shask/mysql:2.0
+fi
 
 
 
@@ -45,10 +45,10 @@ fi
 
 #Creating the environement to run build the webapp
 if [ -e $(docker ps -aq -f &quot;name=jdk_mvn&quot;) ]
-then 
+then
 #No docker jdk, creating one
   docker create --name=&quot;jdk_mvn&quot; --link=&quot;mysql:localhost&quot; shask/jdk_mvn mvn clean install
-else 
+else
 	if [ -e $(docker ps -f &quot;name=jdk_mvn&quot;) ]
     #if there is a jdk_mvn container running close it
     then
@@ -56,17 +56,17 @@ else
     fi
 fi
  docker cp . jdk_mvn:/.
- docker start -a jdk_mvn 
+ docker start -a jdk_mvn
 
 #Copy of .war from docker jdk-mvn to jenkins
-docker cp jdk_mvn:/root/.m2/repository/com/excilys/computerdb/computerdb/0.6.0/computerdb-0.6.0.war computerdb.war
+docker cp jdk_mvn:/root/.m2/repository/com/excilys/computerdb/computerdb/0.7.0/computerdb-0.7.0.war computerdb.war
 
-#Create tomcat docker and cp the webapp in it 
+#Create tomcat docker and cp the webapp in it
 if [ -e $(docker ps -aq -f &quot;name=computerdb-webapp&quot;) ]
-then 
+then
 	echo No jdk_mvn tomcat running ...
 	docker create --name=&quot;computerdb-webapp&quot;  --restart=no tomcat:8.0
-else 
+else
    	docker cp computerdb.war computerdb-webapp:usr/local/tomcat/webapps/computerdb.war
 	docker commit computerdb-webapp shask/computerdb-webapp
 fi
@@ -79,7 +79,7 @@ docker push shask/computerdb-webapp
 #bash /var/glazer-deploy.sh --host 192.168.10.225 --port 65000 --env MYSQL_ROOT_PASSWORD=root mysql_deploy shask/mysql:2.0
 #bash /var/glazer-deploy.sh --host 192.168.10.225 --port 65000 --link mysql:localhost --publish 65312:8080 shask-computerdb-webapp shask/computerdb-webapp
 
- 
+
  </command>
     </hudson.tasks.Shell>
   </builders>

@@ -625,4 +625,5 @@ insert into role (id,name,creation,edition,deletion,reading) values (  4, 'ROLE_
 insert into user (id,name,password,role_id) values (  1, 'Jean Patrick Saint Antoine de Tranfulion sur Meuse','$2a$04$tT25C6mTsYM6UC3l0CV4F.XVVnP1PDjftnOC1zzNFksnXQ61MzqJe',1);
 insert into user (id,name,password,role_id) values (  2, 'root', '$2a$04$5ZWBdha.sW3D4HFILNZc1OiAS2b6ISuY48SZF0872Rf1ZIhl6Enc6',3);
 insert into user (id,name,password,role_id) values (  3, 'trusted', '$2a$04$dIMxdgycq25v1QKrXDXH3uM77uVni2angP3krMzUfUCfrMl0UI/.O',2);
+name,password,role_id) values (  4, 'new','$2a$04$cVkUxufVSJUEYDIjxnuDnOB7LF1CODFckzs/LikqpgLh7OfzBVeQy',1);
 
