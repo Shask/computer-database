@@ -12,6 +12,7 @@
 	<import resource="classpath*:service-context.xml" />
 	<import resource="classpath*:binding-context.xml" />
 	<import resource="classpath*:spring-security.xml" />
+	<import resource="classpath*:webservice-context.xml" />
 
 	<context:component-scan base-package="com.excilys.computerdb.controllers" />
 </beans>
