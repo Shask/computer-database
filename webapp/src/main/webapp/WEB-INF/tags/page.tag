@@ -8,9 +8,9 @@
 <form class="btn-group btn-group-sm pull-right" role="group">
 
 
-	<mylib:link target="dashboard" classe="btn btn-default" currentpage="1" pagesize="10">10</mylib:link>
-	<mylib:link target="dashboard" classe="btn btn-default" currentpage="1" pagesize="50">50</mylib:link>
-	<mylib:link target="dashboard" classe="btn btn-default" currentpage="1" pagesize="100">100</mylib:link>
+	<mylib:link target="/computerdb/computer/list" classe="btn btn-default" currentpage="1" pagesize="10">10</mylib:link>
+	<mylib:link target="/computerdb/computer/list" classe="btn btn-default" currentpage="1" pagesize="50">50</mylib:link>
+	<mylib:link target="/computerdb/computer/list" classe="btn btn-default" currentpage="1" pagesize="100">100</mylib:link>
 
 
 </form>

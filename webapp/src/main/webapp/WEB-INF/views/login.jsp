@@ -37,7 +37,7 @@
 			
 			<!-- Loggin Form -->
 			<form name='loginForm'
-				action="<c:url value='/j_spring_security_check' />" method='POST'>
+				action="<c:url value='j_spring_security_check' />" method='POST'>
 				<div class="form-group">
 					<input class="form-control" placeholder="${username}" type="text"
 						name="username" /> <br /> <input class="form-control"

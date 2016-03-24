@@ -61,7 +61,7 @@
 			<ref local="mySessionFactory" />
 		</property>
 	</bean>
-	<tx:annotation-driven />
+	
 
 
 

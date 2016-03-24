@@ -65,7 +65,7 @@ $(function() {
 
 		if (confirm(strings['deleteMessage'])) {
 			$('#deleteForm input[name=selection]').setCheckboxValues('selection', 'cb');
-			$('#deleteForm').submit();
+			$('#deleteForm').attr('action', "/computerdb/computer/delete").submit();
 		}
 	};
 }(jQuery));

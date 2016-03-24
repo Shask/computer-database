@@ -7,27 +7,26 @@
 
 	<!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
-		<intercept-url pattern="/dashboard**"
+		<intercept-url pattern="computer/list**"
 			access="hasAnyRole('ROLE_ADMIN','ROLE_NEW', 'ROLE_TRUSTED')" method="GET"/>
-			<intercept-url pattern="/dashboard**"
-			access="hasAnyRole('ROLE_ADMIN')" method="POST"/>
-		<intercept-url pattern="/edit**"
+			<intercept-url pattern="computer/delete**"
+			access="hasAnyRole('ROLE_ADMIN')" method="GET"/>
+		<intercept-url pattern="computer/edit**"
 			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
-		<intercept-url pattern="/add**"
+		<intercept-url pattern="computer/add**"
 			access="hasAnyRole('ROLE_ADMIN', 'ROLE_TRUSTED')" />
-				<intercept-url pattern="/**"
-			access="permitAll" />
+			
 		<!-- access denied page -->
 		<access-denied-handler error-page="/403" />
 		
 		<form-login login-page="/login" 
-		default-target-url="/dashboard"
+		default-target-url="/computer/list"
 			authentication-failure-url="/login?error" 
 			login-processing-url="/j_spring_security_check"
 			username-parameter="username" 
 			password-parameter="password"/>
 			
-		<logout logout-success-url="/login?logout" logout-url="/j_spring_security_logout" />
+		<logout logout-success-url="/login?logout" logout-url="/computer/j_spring_security_logout" />
 		<!-- enable csrf protection -->
 		<csrf />
 	</http>

@@ -8,11 +8,11 @@
 <title>Computer Database</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"
 	charset="utf-8" />
-
 <!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="css/font-awesome.css" rel="stylesheet" media="screen">
-<link href="css/main.css" rel="stylesheet" media="screen">
+<link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="../css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="../css/main.css" rel="stylesheet" media="screen">
+
 
 <!-- Setting up messages for i18m -->
 <spring:message code="filter.name" var="filternames" />
@@ -21,8 +21,8 @@
 
 </head>
 <body>
-	
-<jsp:include page="header.jsp"/>
+
+	<jsp:include page="header.jsp" />
 
 	<section id="main">
 		<div class="container">
@@ -43,7 +43,7 @@
 				<div class="pull-right">
 					<sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_TRUSTED')">
 						<mylib:link classe="btn btn-success" id="addComputer"
-							target="addcomputer">
+							target="/computerdb/computer/add">
 							<spring:message code="add" text="Add" />
 
 						</mylib:link>
@@ -58,7 +58,7 @@
 			</div>
 		</div>
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<form id="deleteForm" action="#" method="POST">
+			<form id="deleteForm" action="#" method="GET">
 				<input type="hidden" name="selection" value="">
 			</form>
 		</sec:authorize>
@@ -124,8 +124,8 @@
 		<mylib:page currentpage="${currentpage}" />
 
 	</footer>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
 
 	<script type="text/javascript">
 		var strings = new Array();
@@ -133,7 +133,7 @@
 		strings['view'] = "<spring:message code='view' javaScriptEscape='true' />";
 		strings['deleteMessage'] = "<spring:message code='delete.message' javaScriptEscape='true' />";
 	</script>
-	<script type="text/javascript" src="js/dashboard.js"></script>
+	<script type="text/javascript" src="../js/dashboard.js"></script>
 
 
 </body>

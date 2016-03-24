@@ -14,11 +14,12 @@
 		<module>binding</module>
 		<module>console</module>
 		<module>webapp</module>
+		<module>webservice</module>
 	</modules>
 
 	<properties>
 		<project.version>0.7.1</project.version>
-		
+
 		<boneCP.version>0.8.0.RELEASE</boneCP.version>
 		<hibernate.validation.version>5.2.4.Final</hibernate.validation.version>
 		<hibernate.ORM.version>5.1.0.Final</hibernate.ORM.version>
@@ -42,10 +43,10 @@
 		<spring.version>4.2.5.RELEASE</spring.version>
 		<spring.security.version>4.0.4.RELEASE</spring.security.version>
 	</properties>
-	
 
 
-	<!-- Import an empty version of commons-logging to be able to log spring 
+
+	<!-- Import an empty version of commons-logging to be able to log spring
 		with logback -->
 	<repositories>
 		<repository>
@@ -71,8 +72,8 @@
 	<dependencies>
 
 
-		
-		
+
+
 		<!-- Log -->
 		<!-- Bridge logging from JCL to SLF4j -->
 
@@ -107,7 +108,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<finalName>computerdb</finalName>
@@ -144,5 +145,5 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 </project>

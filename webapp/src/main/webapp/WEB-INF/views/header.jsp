@@ -1,17 +1,21 @@
 <%@ taglib prefix="mylib" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="sec"
-	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<!-- Bootstrap -->
+<link href="../css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="../css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="../css/main.css" rel="stylesheet" media="screen">
+
 </head>
 <body>
 	<header class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
-			<mylib:link classe="navbar-brand" target="dashboard"
+			<mylib:link classe="navbar-brand" target="/computerdb/computer/list"
 				currentpage="${currentpage}">Application - Computer Database</mylib:link>
 
 			<div class="navbar-right" style="margin-top: 0.15cm;">
